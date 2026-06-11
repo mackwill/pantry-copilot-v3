@@ -1,0 +1,66 @@
+.prompt {
+  background: var(--bg-raised);
+  border: 1.5px solid var(--line);
+  border-radius: 16px;
+  padding: 6px;
+  box-shadow:
+    0 1px 0 rgba(14, 18, 14, 0.03),
+    0 12px 32px -12px rgba(14, 18, 14, 0.1);
+}
+
+.top {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 16px 10px;
+}
+
+.eyebrowRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.textarea {
+  border: none;
+  outline: none;
+  background: transparent;
+  font: 400 22px/1.45 var(--font-display);
+  letter-spacing: -0.015em;
+  color: var(--fg);
+  resize: none;
+  width: 100%;
+  padding: 0;
+}
+
+.footerRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px 10px 16px;
+  border-top: 1px solid var(--line);
+  background: var(--bg);
+  border-radius: 12px;
+}
+
+.footerSlot {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+.mic {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line);
+  background: var(--bg-raised);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--fg-muted);
+  flex-shrink: 0;
+}

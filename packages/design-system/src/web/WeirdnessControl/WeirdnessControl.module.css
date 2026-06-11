@@ -1,0 +1,52 @@
+.control {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.control.sm {
+  gap: 9px;
+}
+
+.label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.labelText {
+  font: 600 10px var(--font-sans);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+
+.sm .labelText {
+  font-size: 9px;
+}
+
+.trackArea {
+  flex: 1;
+  min-width: 110px;
+}
+
+.sm .trackArea {
+  min-width: 72px;
+}
+
+.current {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 16px;
+  color: var(--fg);
+  flex-shrink: 0;
+  min-width: 86px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.sm .current {
+  font-size: 14px;
+  min-width: 60px;
+}

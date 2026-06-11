@@ -377,10 +377,10 @@ Component notes:
 - `WebShell`: top chrome/sidebar layout per `web-shell.jsx`; nav items as props (no routing dependency in the design-system package).
 - `Tabs`: web tab row used by board screens (extract pattern from `web-shell.jsx`/screens; selected state must be unmistakable — v2 bug was "too subtle", board shows the correct treatment).
 
-- [ ] **Step 1:** Failing tests per component.
-- [ ] **Step 2:** Implement to green.
-- [ ] **Step 3:** `pnpm lint && pnpm typecheck && pnpm test` clean.
-- [ ] **Step 4:** Commit `feat(design-system): sheets, prompt, shell, and weirdness controls`.
+- [x] **Step 1:** Failing tests per component.
+- [x] **Step 2:** Implement to green.
+- [x] **Step 3:** `pnpm lint && pnpm typecheck && pnpm test` clean.
+- [x] **Step 4:** Commit `feat(design-system): sheets, prompt, shell, and weirdness controls`.
 
 ---
 

@@ -1,0 +1,26 @@
+.tablist {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--r-pill);
+  font: 500 12px/1.4 var(--font-sans);
+  letter-spacing: 0.005em;
+  white-space: nowrap;
+  background: transparent;
+  color: var(--fg-muted);
+  border: 1px solid var(--line);
+  cursor: pointer;
+}
+
+.active {
+  background: var(--bg-inverse);
+  color: var(--bg);
+  border-color: var(--bg-inverse);
+}

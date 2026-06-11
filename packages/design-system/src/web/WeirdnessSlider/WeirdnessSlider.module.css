@@ -1,0 +1,35 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 14px;
+}
+
+.headerCompact {
+  margin-bottom: 10px;
+}
+
+.current {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-style: italic;
+  color: var(--fg);
+  line-height: 1;
+}
+
+.currentCompact {
+  font-size: 18px;
+}
+
+.vocabRow {
+  display: flex;
+  justify-content: space-between;
+  color: var(--fg-subtle);
+  margin-top: 4px;
+}
+
+.vocabWord {
+  font-style: italic;
+  font-family: var(--font-display);
+  font-size: 14px;
+}

@@ -1,0 +1,144 @@
+.shell {
+  display: grid;
+  grid-template-columns: 232px 1fr;
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+}
+
+.sidebar {
+  background: var(--bg-raised);
+  border-right: 1px solid var(--line);
+  padding: 22px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.brand {
+  padding: 0 8px 22px;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: var(--r-md);
+  cursor: pointer;
+  font: 500 14px var(--font-sans);
+  letter-spacing: -0.005em;
+  background: transparent;
+  border: none;
+  color: var(--fg-muted);
+  text-align: left;
+}
+
+.navSecondary {
+  padding: 8px 12px;
+  font-size: 13px;
+}
+
+.navActive {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.divider {
+  border-top: 1px solid var(--line);
+  margin: 14px 4px;
+}
+
+.user {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 8px 10px;
+  border-top: 1px solid var(--line);
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--r-pill);
+  background: var(--bg-inverse);
+  color: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.userText {
+  min-width: 0;
+}
+
+.userName {
+  font: 500 13px var(--font-sans);
+  color: var(--fg);
+}
+
+.userEmail {
+  font: 400 11px var(--font-sans);
+  color: var(--fg-subtle);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 36px;
+  border-bottom: 1px solid var(--line);
+  background: var(--bg);
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 9px 14px;
+  width: 360px;
+  color: var(--fg-subtle);
+  cursor: pointer;
+}
+
+.searchText {
+  font: 400 13px var(--font-sans);
+}
+
+.shortcut {
+  margin-left: auto;
+  font: 400 11px var(--font-mono);
+  color: var(--fg-subtle);
+  padding: 2px 6px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+
+.topbarRight {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.content {
+  flex: 1;
+  padding: 32px 36px 48px;
+  overflow: hidden;
+}
