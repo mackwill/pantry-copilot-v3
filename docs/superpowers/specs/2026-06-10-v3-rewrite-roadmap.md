@@ -9,18 +9,18 @@
 
 ## Status
 
-| Milestone | State | Detailed plan |
-|---|---|---|
+| Milestone                                        | State           | Detailed plan                                                    |
+| ------------------------------------------------ | --------------- | ---------------------------------------------------------------- |
 | M0 — Scaffold + design system + fidelity harness | **in progress** | `docs/superpowers/plans/2026-06-10-m0-scaffold-design-system.md` |
-| M1 — Auth + app shells | not started | — |
-| M2 — Pantry core (manual entry) | not started | — |
-| M3 — AI service v1 + camera scan | not started | — |
-| M4 — Home + generation + result | not started | — |
-| M5 — Recipe library + detail | not started | — |
-| M6 — Cook sessions + consume flow | not started | — |
-| M7 — Chat against a recipe | not started | — |
-| M8 — Monetization | not started | — |
-| M9 — Hardening + launch readiness | not started | — |
+| M1 — Auth + app shells                           | not started     | —                                                                |
+| M2 — Pantry core (manual entry)                  | not started     | —                                                                |
+| M3 — AI service v1 + camera scan                 | not started     | —                                                                |
+| M4 — Home + generation + result                  | not started     | —                                                                |
+| M5 — Recipe library + detail                     | not started     | —                                                                |
+| M6 — Cook sessions + consume flow                | not started     | —                                                                |
+| M7 — Chat against a recipe                       | not started     | —                                                                |
+| M8 — Monetization                                | not started     | —                                                                |
+| M9 — Hardening + launch readiness                | not started     | —                                                                |
 
 ## Context
 
@@ -30,18 +30,18 @@ Pantry CoPilot v2 (`/Users/mackmindenhall/Documents/pantry-copilot-v2`) drifted 
 
 ## Decisions (settled with user, 2026-06-10)
 
-| Decision | Choice |
-|---|---|
-| Scope | Full greenfield rewrite: web, mobile, API, AI service, DB schema |
-| Stack | Same as v2, latest pinned versions: pnpm monorepo · TanStack Start + React (web) · Expo/expo-router (mobile) · Fastify + tRPC + Drizzle + PostgreSQL + Better Auth (API) · separate AI service (Anthropic primary, OpenAI fallback) · CSS Modules + tokens · Vitest + Playwright · Podman |
-| Features | Everything, including subscriptions/paywalls (RevenueCat) |
-| Design bible | `pantry-copilot-v2/claudeDesignOutput/All Screens.html` — the v1.4 board (composes all screen JSX incl. home-cook-v2, paywalls, consume flow, recipe chat) |
-| Data | Fresh database, no migration from v2 |
-| Sequencing | Design system first, then vertical slices (one board section group at a time) |
-| Fidelity gate | Per-screen screenshot comparison against the rendered board before a screen is "done" |
-| Brand | Kitchen OS only (Cookbook variant stays archived in v2) |
-| Web payments | RevenueCat Web Billing |
-| i18n | Deferred, but drift-proofed: all strings in typed per-feature `strings.ts` modules; eslint forbids inline JSX literals |
+| Decision      | Choice                                                                                                                                                                                                                                                                                    |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Scope         | Full greenfield rewrite: web, mobile, API, AI service, DB schema                                                                                                                                                                                                                          |
+| Stack         | Same as v2, latest pinned versions: pnpm monorepo · TanStack Start + React (web) · Expo/expo-router (mobile) · Fastify + tRPC + Drizzle + PostgreSQL + Better Auth (API) · separate AI service (Anthropic primary, OpenAI fallback) · CSS Modules + tokens · Vitest + Playwright · Podman |
+| Features      | Everything, including subscriptions/paywalls (RevenueCat)                                                                                                                                                                                                                                 |
+| Design bible  | `pantry-copilot-v2/claudeDesignOutput/All Screens.html` — the v1.4 board (composes all screen JSX incl. home-cook-v2, paywalls, consume flow, recipe chat)                                                                                                                                |
+| Data          | Fresh database, no migration from v2                                                                                                                                                                                                                                                      |
+| Sequencing    | Design system first, then vertical slices (one board section group at a time)                                                                                                                                                                                                             |
+| Fidelity gate | Per-screen screenshot comparison against the rendered board before a screen is "done"                                                                                                                                                                                                     |
+| Brand         | Kitchen OS only (Cookbook variant stays archived in v2)                                                                                                                                                                                                                                   |
+| Web payments  | RevenueCat Web Billing                                                                                                                                                                                                                                                                    |
+| i18n          | Strings must be translated from the get go. No hardcoded user facing strings. literals                                                                                                                                                                                                    |
 
 ## Monorepo structure
 
@@ -72,6 +72,7 @@ DB schema (fresh, informed by v2 `services/api/src/db/schema.ts`): Better Auth t
 Every feature milestone follows: **contracts → DB/API → AI (if any) → web UI → mobile UI → screenshot gate → e2e smoke**.
 
 ### M0 — Scaffold + design system + fidelity harness
+
 - git init; pnpm workspaces; `packages/config` (strict tsconfig, eslint flat config, prettier); Vitest/Playwright wiring; GitHub Actions CI; Podman compose with postgres + Containerfile stubs; `.env.example`.
 - Port `claudeDesignOutput/design-system/tokens.css` verbatim into design-system; **generate** `tokens/native.ts` for RN from the CSS source (v2 maintained two copies by hand).
 - Port primitives faithfully from `claudeDesignOutput/components/primitives.jsx`, `web-shell.jsx`, `nl-prompt.jsx`, `bottom-sheet.jsx`: Button, Card, Badge/Chip, Field/Input, Eyebrow, Tabs, **one canonical BottomSheet** (web + RN), WebShell, MobileTabBar, WeirdnessSlider, skeletons/empty states, icons.
@@ -79,23 +80,27 @@ Every feature milestone follows: **contracts → DB/API → AI (if any) → web 
 - **Gate:** CI green; primitives gallery screenshot-matches board equivalents; `podman compose up` boots.
 
 ### M1 — Auth + app shells (board §00)
+
 - Better Auth (Google OAuth, magic link, expo plugin — reference v2 `services/api/src/auth/instance.ts`); Drizzle migrations; helmet + rate limits + CORS **now**; tRPC init; `/health` `/ready`. No dev auto-login (dev convenience = seeded magic link behind explicit dev flag, excluded from builds).
 - Web shell + `Web · Login`; expo-router tab skeleton + `Mobile · Login`.
 - **Gate:** 2 login frames matched; e2e sign-in; API integration tests vs ephemeral postgres in CI.
 
 ### M2 — Pantry core, manual entry (board §05 inventory, §06, §07, §09, §09.5, §10 shells)
+
 - Contracts + API: pantry CRUD, category/location/unit enums, inventory event log, expiration ranking (pure logic in `packages/utils`, unit-tested).
 - Web: Inventory, Ingredient form, Account (subscription rows stubbed).
 - Mobile: Pantry with tap-to-cook selection tray, Add/Edit ingredient, Category/Location/Best-by picker sheets (all on canonical BottomSheet), Account shell.
 - **Gate:** ~11 frames matched; CRUD integration tests; web e2e add→edit→delete.
 
 ### M3 — AI service v1 + camera scan (board §08)
+
 - AI service stood up properly: provider interface (`generateStructured` / `streamStructured` / `extractFromImage`), `anthropic.ts` / `openai.ts` / `mock.ts` implementations, single `withFallback` decorator, prompts in `prompts/`, normalization in `pipelines/`, service-token auth, request IDs, cost logging. (Kills v2's duplicated adapters; the API service consumes exactly one AI client via `packages/api-client`.)
 - API: image upload, scan job lifecycle, confirm-to-pantry transaction.
 - Mobile: 4-step flow Viewfinder → Detecting → Review → Added (expo-camera), each step its own route/component — this is the screen that hit 1,219 LOC in v2; enforce extraction norms hard.
 - **Gate:** 4 frames matched (Detecting frozen via mock provider); normalization unit tests; fixture-image integration test.
 
 ### M4 — Home + generation + result (board §01, §04, §02)
+
 - Contracts: generation request (prompt, pantry chips, weirdness 0–100), full streaming event union, recipe DTO, 4 branch-chip actions. Reference v2 `contracts/src/ai/events.ts`, `weirdness.ts`.
 - AI: streaming pipeline with two beats — thinking (prose + tool events) then drafting (recipe streams top→bottom). Reference v2 `providers/stream-orchestrator.ts`, `recipe-partial-emitter.ts`, `prompts/recipes.ts`.
 - **Early spike:** SSE through TanStack Start/Nitro proxy layers (classic buffering failure mode) — testable via mock-provider event tape.
@@ -103,27 +108,32 @@ Every feature milestone follows: **contracts → DB/API → AI (if any) → web 
 - **Gate:** ~10 frames matched (streaming states frozen via scripted event tape); orchestrator unit tests incl. abort/error/fallback; e2e prompt→stream→result.
 
 ### M5 — Recipe library + detail (board §03 library, §05/§07 recipe detail)
+
 - Library queries + favorites; Web Cook·empty + Recipe detail; Mobile Cook·default, New-tapped (NewAskSheet), Recipe detail incl. inline pantry block (frame ★-1).
 - **Gate:** ~6 frames matched; e2e generate→library→detail→favorite.
 
 ### M6 — Cook sessions + consume flow (board §03.5, §03 resume, §★)
+
 - Short design doc first (net-new, no v2 precedent): session state machine, timers, resume semantics.
 - Persisted resumable `cook_sessions`; consume transaction → pantry deductions + inventory events.
 - Web Cook·in-session (dark stove theme via token overrides, not ad-hoc colors); Mobile in-session, resume banner, End-of-cook ask, Consume sheet (editable quantities).
 - **Gate:** ~6 frames matched; deduction math unit tests; e2e start→kill/reopen→resume→finish→consume→pantry reduced.
 
 ### M7 — Chat against a recipe (board §✦)
+
 - Tweak stream pipeline (reference v2 `prompts/recipe-tweak.ts`, `providers/tweak-stream.ts`); `recipe_tweaks` lineage.
 - Web: entry chips + slide-in chat panel (recipe stays live). Mobile: floating chat button + chat bottom sheet — decomposed from day one (message list / composer / diff summary / apply bar + `useRecipeChat` hook; v2's 852-LOC sheet is the cautionary tale).
 - **Gate:** 4 frames matched; e2e tweak→summary→applied version persisted.
 
 ### M8 — Monetization (board §11–§15)
+
 - RevenueCat: mobile via react-native-purchases, **web via RevenueCat Web Billing**. Webhook ingestion (idempotent, signature-verified — reference v2 `modules/subscription/*`, `docs/revenuecat-e2e-testing.md`); entitlement middleware on generation/scan; usage counters; trial lifecycle; top-up credits.
 - Screens: Paywall A (editorial), Paywall B (ledger), contextual limit-hit modal/sheet, pre-trial offer, trial-ending (mobile + web), settings subscription rows (free/trial/pro), manage subscription.
 - **Gate:** ~13 frames matched; webhook fixture tests; e2e limit-hit→paywall→sandbox purchase→unlock.
 
 ### M9 — Hardening + launch readiness
-- Full e2e regression green in CI; security pass (CSP audit, rate-limit tuning, dep audit, secret scanning); observability (structured logs, end-to-end request IDs, AI cost logging); EAS build profiles; production Containerfiles + compose; accessibility/performance passes; **final full-board screenshot sweep**. Use v2 `GAP_ANALYSIS.md` as the launch checklist.
+
+- Full e2e regression green in CI; security pass (CSP audit, rate-limit tuning, dep audit, secret scanning); observability (structured logs, end-to-end request IDs, AI cost logging); EAS build profiles; production Containerfiles + compose; accessibility/performance passes; **final full-board screenshot sweep**.
 
 ## Engineering standards (CI-enforced from M0)
 
