@@ -441,9 +441,9 @@ jobs:
       - run: pnpm build
 ```
 
-- [ ] **Step 1:** Write workflow; validate YAML locally (`node -e` yaml parse or `actionlint` if available).
-- [ ] **Step 2:** Run the four commands locally in sequence — all green (this is the M0 "CI green" gate; actual GitHub run happens when a remote exists).
-- [ ] **Step 3:** Commit `ci: lint/typecheck/test/build pipeline`.
+- [x] **Step 1:** Write workflow; validate YAML locally (`node -e` yaml parse or `actionlint` if available). *(yaml parse OK; actionlint not installed)*
+- [x] **Step 2:** Run the four commands locally in sequence — all green (this is the M0 "CI green" gate; actual GitHub run happens when a remote exists).
+- [x] **Step 3:** Commit `ci: lint/typecheck/test/build pipeline`.
 
 ---
 
