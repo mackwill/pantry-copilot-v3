@@ -344,10 +344,10 @@ Porting rules (apply to every component in Tasks 4–5):
 5. Each component: one Testing Library test asserting render + variant class/behavior (e.g. Button fires onClick, disabled state; Field shows error over hint).
 6. Files stay under 300 lines; no `any`; no inline string literals needed (primitives take children).
 
-- [ ] **Step 1:** Write failing tests for the batch (one `.test.tsx` per component, assertions per rule 5). Run `pnpm --filter @pantry/design-system test` — FAIL.
-- [ ] **Step 2:** Implement the eight components + CSS modules per porting rules. Tests PASS.
-- [ ] **Step 3:** `pnpm lint && pnpm --filter @pantry/design-system typecheck` — clean.
-- [ ] **Step 4:** Commit `feat(design-system): core web primitives ported from design board`.
+- [x] **Step 1:** Write failing tests for the batch (one `.test.tsx` per component, assertions per rule 5). Run `pnpm --filter @pantry/design-system test` — FAIL.
+- [x] **Step 2:** Implement the eight components + CSS modules per porting rules. Tests PASS.
+- [x] **Step 3:** `pnpm lint && pnpm --filter @pantry/design-system typecheck` — clean.
+- [x] **Step 4:** Commit `feat(design-system): core web primitives ported from design board`.
 
 ---
 
