@@ -473,9 +473,9 @@ volumes:
   pgdata:
 ```
 
-- [ ] **Step 1:** Write compose file.
-- [ ] **Step 2:** Verify: `podman compose -f infra/podman/compose.yaml up -d && podman compose -f infra/podman/compose.yaml ps` shows healthy postgres; `down` cleans up. (If podman isn't installed locally, note it in the commit and verify with docker compose syntax-check only.)
-- [ ] **Step 3:** Commit `infra: podman compose with postgres 17`.
+- [x] **Step 1:** Write compose file.
+- [x] **Step 2:** Verify: `podman compose -f infra/podman/compose.yaml up -d && podman compose -f infra/podman/compose.yaml ps` shows healthy postgres; `down` cleans up. (If podman isn't installed locally, note it in the commit and verify with docker compose syntax-check only.) *(podman 5.7.1; postgres came up healthy; down removed container + network)*
+- [x] **Step 3:** Commit `infra: podman compose with postgres 17`.
 
 ---
 
