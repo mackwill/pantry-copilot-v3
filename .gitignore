@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.tanstack/
+.nitro/
+.output/
+.expo/
+coverage/
+*.tsbuildinfo
+.env
+.env.local
+.DS_Store
+playwright-report/
+test-results/
+tools/design-fidelity/output/
