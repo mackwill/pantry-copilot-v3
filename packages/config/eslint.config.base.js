@@ -1,0 +1,38 @@
+import js from '@eslint/js';
+import tseslint from 'typescript-eslint';
+import react from 'eslint-plugin-react';
+import reactHooks from 'eslint-plugin-react-hooks';
+import comments from '@eslint-community/eslint-plugin-eslint-comments/configs';
+
+export default tseslint.config(
+  {
+    ignores: [
+      '**/dist/**',
+      '**/node_modules/**',
+      '**/.expo/**',
+      '**/.output/**',
+      '**/.tanstack/**',
+      '**/coverage/**',
+      '**/playwright-report/**',
+      '**/test-results/**',
+    ],
+  },
+  js.configs.recommended,
+  ...tseslint.configs.strictTypeChecked,
+  comments.recommended,
+  {
+    plugins: { react, 'react-hooks': reactHooks },
+    rules: {
+      // v2 anti-recurrence: zero suppressions, zero any, bounded files
+      '@eslint-community/eslint-comments/no-use': 'error',
+      '@typescript-eslint/no-explicit-any': 'error',
+      'max-lines': ['error', { max: 300, skipBlankLines: true, skipComments: true }],
+      ...reactHooks.configs.recommended.rules,
+    },
+  },
+  {
+    // app code only: user-facing strings belong in per-feature strings.ts modules
+    files: ['apps/**/src/**/*.tsx'],
+    rules: { 'react/jsx-no-literals': 'error' },
+  },
+);
