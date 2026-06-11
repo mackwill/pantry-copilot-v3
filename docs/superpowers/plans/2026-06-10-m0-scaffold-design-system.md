@@ -351,6 +351,20 @@ Porting rules (apply to every component in Tasks 4–5):
 
 ---
 
+### Task 5M (done, 2026-06-11): Native primitives — Icon, BottomSheet, SheetRow, MobileTabBar, WeirdnessSlider, WeirdnessControl
+
+> Inserted by user direction: "do mobile instead of web" for the next batch. Pulled the RN
+> primitives forward from M1. Details and caveats in `docs/decisions.md` (2026-06-11 entry).
+> Tested on react-native-web under vitest; screenshot verification deferred to M1.
+> Native NLPrompt deferred (needs native Button/Pill/Eyebrow). Task 5 below remains pending
+> and is still required for Tasks 6–7.
+
+- [x] RN test infra: react-native 0.86.0 / react-native-web 0.21.2 / react-native-svg 15.15.5 (dev+optional peers), `lucide-react-native` via `/icons` subpath, vitest alias config, `./native` export
+- [x] Failing tests first per component; 30 native tests green (50 package-wide)
+- [x] `pnpm lint && pnpm typecheck && pnpm test` clean; committed per slice
+
+---
+
 ### Task 5: Web primitives, batch 2 — WeirdnessSlider, WeirdnessControl, BottomSheet, NLPrompt, WebShell, Tabs
 
 **Files:** same per-component layout as Task 4.
