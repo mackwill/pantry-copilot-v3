@@ -2,6 +2,21 @@
 
 Board-silent composition calls and scope deviations, newest first.
 
+## 2026-06-11 — M0 fidelity gate notes (Task 7)
+
+- **NLPrompt vs HeroPrompt:** the board's Home screens use `HeroPrompt`
+  (`screens/home-cook-v2.jsx`) — a larger, focus-ringed composition (32px display text,
+  stacked weirdness row + chips row in the footer area). The `NLPrompt` primitive ports
+  `components/nl-prompt.jsx` as the plan specifies. HeroPrompt is a screen-level
+  composition to build at M1/M2 from primitives; do not retrofit it into NLPrompt.
+- **Gallery BottomSheet is toggle-opened** (button or `?sheet` query param) rather than
+  statically open: the sheet is a fixed full-viewport overlay, and leaving it open would
+  scrim every other gallery section in captures.
+- **Web BottomSheet drops the board's 54px container top padding** — that offset is the
+  mockup's phone status bar, not sheet treatment; `max-height: 78%` governs height.
+- Side-by-side review of gallery captures vs board frames (web shell chrome, tabs row,
+  weirdness controls, NL prompt, sheet anatomy): no visible drift found.
+
 ## 2026-06-11 — Native (RN) primitives pulled forward from M1 into M0
 
 User direction: implement the mobile counterparts of plan Task 5 instead of the web batch.

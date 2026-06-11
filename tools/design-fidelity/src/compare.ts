@@ -82,7 +82,7 @@ await copyFile(referencePath, `${rowDir}reference.png`);
 await copyFile(actualPath, `${rowDir}actual.png`);
 
 const reportJson = `${OUT_DIR}report.json`;
-let rows: ReportRow[] = [];
+let rows: ReportRow[];
 try {
   rows = JSON.parse(await readFile(reportJson, 'utf8')) as ReportRow[];
 } catch {

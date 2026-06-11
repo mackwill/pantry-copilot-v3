@@ -15,6 +15,8 @@ export default tseslint.config(
       '**/coverage/**',
       '**/playwright-report/**',
       '**/test-results/**',
+      // vendored third-party bundles (e.g. tools/design-fidelity/vendor)
+      '**/vendor/**',
     ],
   },
   js.configs.recommended,
