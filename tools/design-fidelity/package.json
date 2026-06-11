@@ -1,0 +1,21 @@
+{
+  "name": "@pantry/design-fidelity",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "serve": "tsx src/serve-board.ts",
+    "capture:references": "tsx src/capture-references.ts",
+    "compare": "tsx src/compare.ts"
+  },
+  "devDependencies": {
+    "@types/node": "25.9.3",
+    "@types/pngjs": "6.0.5",
+    "pixelmatch": "7.2.0",
+    "playwright": "1.60.0",
+    "pngjs": "7.0.0",
+    "tsx": "4.22.4",
+    "typescript": "6.0.3"
+  }
+}

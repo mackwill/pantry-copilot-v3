@@ -1,0 +1,442 @@
+[
+  {
+    "section": "Pantry consume flow",
+    "label": "1. RESULT · PANTRY SHOWN INLINE",
+    "kind": "mobile",
+    "file": "pantry-consume-flow--1-result-pantry-shown-inline.png",
+    "width": 390,
+    "height": 800
+  },
+  {
+    "section": "Pantry consume flow",
+    "label": "2. END OF COOK · THE ASK",
+    "kind": "mobile",
+    "file": "pantry-consume-flow--2-end-of-cook-the-ask.png",
+    "width": 390,
+    "height": 800
+  },
+  {
+    "section": "Pantry consume flow",
+    "label": "3. CONSUME SHEET",
+    "kind": "mobile",
+    "file": "pantry-consume-flow--3-consume-sheet.png",
+    "width": 390,
+    "height": 800
+  },
+  {
+    "section": "Chat against a recipe",
+    "label": "WEB · 1. ENTRY ON RECIPE",
+    "kind": "web",
+    "file": "chat-against-a-recipe--web-1-entry-on-recipe.png",
+    "width": 1280,
+    "height": 860
+  },
+  {
+    "section": "Chat against a recipe",
+    "label": "WEB · 2. CHAT PANEL OPEN",
+    "kind": "web",
+    "file": "chat-against-a-recipe--web-2-chat-panel-open.png",
+    "width": 1280,
+    "height": 860
+  },
+  {
+    "section": "Chat against a recipe",
+    "label": "MOBILE · 1. ENTRY ON RECIPE",
+    "kind": "mobile",
+    "file": "chat-against-a-recipe--mobile-1-entry-on-recipe.png",
+    "width": 390,
+    "height": 800
+  },
+  {
+    "section": "Chat against a recipe",
+    "label": "MOBILE · 2. CHAT SHEET OPEN",
+    "kind": "mobile",
+    "file": "chat-against-a-recipe--mobile-2-chat-sheet-open.png",
+    "width": 390,
+    "height": 800
+  },
+  {
+    "section": "Marketing & Auth",
+    "label": "WEB · LOGIN",
+    "kind": "web",
+    "file": "marketing-auth--web-login.png",
+    "width": 1280,
+    "height": 860
+  },
+  {
+    "section": "Marketing & Auth",
+    "label": "MOBILE · LOGIN",
+    "kind": "mobile",
+    "file": "marketing-auth--mobile-login.png",
+    "width": 390,
+    "height": 800
+  },
+  {
+    "section": "Home",
+    "label": "WEB · HOME",
+    "kind": "web",
+    "file": "home--web-home.png",
+    "width": 1280,
+    "height": 860
+  },
+  {
+    "section": "Home",
+    "label": "MOBILE · HOME",
+    "kind": "mobile",
+    "file": "home--mobile-home.png",
+    "width": 390,
+    "height": 800
+  },
+  {
+    "section": "Home",
+    "label": "MOBILE · HOME · SELECTING",
+    "kind": "mobile",
+    "file": "home--mobile-home-selecting.png",
+    "width": 390,
+    "height": 800
+  },
+  {
+    "section": "Home",
+    "label": "MOBILE · HOME · BROWSE PANTRY",
+    "kind": "mobile",
+    "file": "home--mobile-home-browse-pantry.png",
+    "width": 390,
+    "height": 800
+  },
+  {
+    "section": "Result · after generation",
+    "label": "WEB · RESULT",
+    "kind": "web",
+    "file": "result-after-generation--web-result.png",
+    "width": 1280,
+    "height": 860
+  },
+  {
+    "section": "Result · after generation",
+    "label": "MOBILE · RESULT",
+    "kind": "mobile",
+    "file": "result-after-generation--mobile-result.png",
+    "width": 390,
+    "height": 800
+  },
+  {
+    "section": "Cook tab · library",
+    "label": "MOBILE · COOK · DEFAULT",
+    "kind": "mobile",
+    "file": "cook-tab-library--mobile-cook-default.png",
+    "width": 390,
+    "height": 800
+  },
+  {
+    "section": "Cook tab · library",
+    "label": "MOBILE · COOK · WITH RESUME",
+    "kind": "mobile",
+    "file": "cook-tab-library--mobile-cook-with-resume.png",
+    "width": 390,
+    "height": 800
+  },
+  {
+    "section": "Cook tab · library",
+    "label": "MOBILE · COOK · NEW TAPPED",
+    "kind": "mobile",
+    "file": "cook-tab-library--mobile-cook-new-tapped.png",
+    "width": 390,
+    "height": 800
+  },
+  {
+    "section": "Cook tab · library",
+    "label": "WEB · COOK · EMPTY",
+    "kind": "web",
+    "file": "cook-tab-library--web-cook-empty.png",
+    "width": 1280,
+    "height": 860
+  },
+  {
+    "section": "Cook tab · at the stove",
+    "label": "MOBILE · COOK · IN SESSION",
+    "kind": "mobile",
+    "file": "cook-tab-at-the-stove--mobile-cook-in-session.png",
+    "width": 390,
+    "height": 800
+  },
+  {
+    "section": "Cook tab · at the stove",
+    "label": "WEB · COOK · IN SESSION",
+    "kind": "web",
+    "file": "cook-tab-at-the-stove--web-cook-in-session.png",
+    "width": 1280,
+    "height": 860
+  },
+  {
+    "section": "Generating state",
+    "label": "WEB · 1. THINKING",
+    "kind": "web",
+    "file": "generating-state--web-1-thinking.png",
+    "width": 1280,
+    "height": 860
+  },
+  {
+    "section": "Generating state",
+    "label": "WEB · 2. DRAFTING",
+    "kind": "web",
+    "file": "generating-state--web-2-drafting.png",
+    "width": 1280,
+    "height": 860
+  },
+  {
+    "section": "Generating state",
+    "label": "MOBILE · 1. THINKING",
+    "kind": "mobile",
+    "file": "generating-state--mobile-1-thinking.png",
+    "width": 390,
+    "height": 800
+  },
+  {
+    "section": "Generating state",
+    "label": "MOBILE · 2. DRAFTING",
+    "kind": "mobile",
+    "file": "generating-state--mobile-2-drafting.png",
+    "width": 390,
+    "height": 800
+  },
+  {
+    "section": "Inventory & Recipe detail",
+    "label": "WEB · INVENTORY (FULL PANTRY)",
+    "kind": "web",
+    "file": "inventory-recipe-detail--web-inventory-full-pantry.png",
+    "width": 1280,
+    "height": 860
+  },
+  {
+    "section": "Inventory & Recipe detail",
+    "label": "WEB · RECIPE DETAIL",
+    "kind": "web",
+    "file": "inventory-recipe-detail--web-recipe-detail.png",
+    "width": 1280,
+    "height": 860
+  },
+  {
+    "section": "Ingredient form & Account",
+    "label": "WEB · INGREDIENT FORM",
+    "kind": "web",
+    "file": "ingredient-form-account--web-ingredient-form.png",
+    "width": 1280,
+    "height": 860
+  },
+  {
+    "section": "Ingredient form & Account",
+    "label": "WEB · USER ACCOUNT",
+    "kind": "web",
+    "file": "ingredient-form-account--web-user-account.png",
+    "width": 1280,
+    "height": 860
+  },
+  {
+    "section": "Mobile · Pantry & Recipe",
+    "label": "PANTRY (TAP-TO-COOK)",
+    "kind": "mobile",
+    "file": "mobile-pantry-recipe--pantry-tap-to-cook.png",
+    "width": 390,
+    "height": 800
+  },
+  {
+    "section": "Mobile · Pantry & Recipe",
+    "label": "RECIPE DETAIL",
+    "kind": "mobile",
+    "file": "mobile-pantry-recipe--recipe-detail.png",
+    "width": 390,
+    "height": 800
+  },
+  {
+    "section": "Mobile · Camera scan flow",
+    "label": "1. VIEWFINDER",
+    "kind": "mobile",
+    "file": "mobile-camera-scan-flow--1-viewfinder.png",
+    "width": 390,
+    "height": 800
+  },
+  {
+    "section": "Mobile · Camera scan flow",
+    "label": "2. DETECTING",
+    "kind": "mobile",
+    "file": "mobile-camera-scan-flow--2-detecting.png",
+    "width": 390,
+    "height": 800
+  },
+  {
+    "section": "Mobile · Camera scan flow",
+    "label": "3. REVIEW ITEMS",
+    "kind": "mobile",
+    "file": "mobile-camera-scan-flow--3-review-items.png",
+    "width": 390,
+    "height": 800
+  },
+  {
+    "section": "Mobile · Camera scan flow",
+    "label": "4. ADDED TO PANTRY",
+    "kind": "mobile",
+    "file": "mobile-camera-scan-flow--4-added-to-pantry.png",
+    "width": 390,
+    "height": 800
+  },
+  {
+    "section": "Mobile · Add ingredient & Edit ingredient",
+    "label": "ADD INGREDIENT",
+    "kind": "mobile",
+    "file": "mobile-add-ingredient-edit-ingredient--add-ingredient.png",
+    "width": 390,
+    "height": 800
+  },
+  {
+    "section": "Mobile · Add ingredient & Edit ingredient",
+    "label": "EDIT INGREDIENT",
+    "kind": "mobile",
+    "file": "mobile-add-ingredient-edit-ingredient--edit-ingredient.png",
+    "width": 390,
+    "height": 800
+  },
+  {
+    "section": "Mobile · Bottom sheets",
+    "label": "CATEGORY PICKER",
+    "kind": "mobile",
+    "file": "mobile-bottom-sheets--category-picker.png",
+    "width": 390,
+    "height": 800
+  },
+  {
+    "section": "Mobile · Bottom sheets",
+    "label": "LOCATION PICKER",
+    "kind": "mobile",
+    "file": "mobile-bottom-sheets--location-picker.png",
+    "width": 390,
+    "height": 800
+  },
+  {
+    "section": "Mobile · Bottom sheets",
+    "label": "BEST-BY PICKER",
+    "kind": "mobile",
+    "file": "mobile-bottom-sheets--best-by-picker.png",
+    "width": 390,
+    "height": 800
+  },
+  {
+    "section": "Mobile · Account",
+    "label": "ACCOUNT",
+    "kind": "mobile",
+    "file": "mobile-account--account.png",
+    "width": 390,
+    "height": 800
+  },
+  {
+    "section": "Paywall · Variation A",
+    "label": "WEB · PAYWALL (ONBOARDING)",
+    "kind": "web",
+    "file": "paywall-variation-a--web-paywall-onboarding.png",
+    "width": 1280,
+    "height": 860
+  },
+  {
+    "section": "Paywall · Variation A",
+    "label": "MOBILE · PAYWALL",
+    "kind": "mobile",
+    "file": "paywall-variation-a--mobile-paywall.png",
+    "width": 390,
+    "height": 800
+  },
+  {
+    "section": "Paywall · Variation B",
+    "label": "WEB · PAYWALL (PLAN COMPARE)",
+    "kind": "web",
+    "file": "paywall-variation-b--web-paywall-plan-compare.png",
+    "width": 1280,
+    "height": 860
+  },
+  {
+    "section": "Paywall · Variation B",
+    "label": "MOBILE · PAYWALL",
+    "kind": "mobile",
+    "file": "paywall-variation-b--mobile-paywall.png",
+    "width": 390,
+    "height": 800
+  },
+  {
+    "section": "Contextual paywalls",
+    "label": "WEB · LIMIT-HIT MODAL",
+    "kind": "web",
+    "file": "contextual-paywalls--web-limit-hit-modal.png",
+    "width": 1280,
+    "height": 860
+  },
+  {
+    "section": "Contextual paywalls",
+    "label": "MOBILE · LIMIT-HIT SHEET",
+    "kind": "mobile",
+    "file": "contextual-paywalls--mobile-limit-hit-sheet.png",
+    "width": 390,
+    "height": 800
+  },
+  {
+    "section": "Free trial lifecycle",
+    "label": "MOBILE · PRE-TRIAL OFFER",
+    "kind": "mobile",
+    "file": "free-trial-lifecycle--mobile-pre-trial-offer.png",
+    "width": 390,
+    "height": 800
+  },
+  {
+    "section": "Free trial lifecycle",
+    "label": "MOBILE · TRIAL-ENDING",
+    "kind": "mobile",
+    "file": "free-trial-lifecycle--mobile-trial-ending.png",
+    "width": 390,
+    "height": 800
+  },
+  {
+    "section": "Free trial lifecycle",
+    "label": "WEB · TRIAL-ENDING PAGE",
+    "kind": "web",
+    "file": "free-trial-lifecycle--web-trial-ending-page.png",
+    "width": 1280,
+    "height": 860
+  },
+  {
+    "section": "Subscription in settings",
+    "label": "WEB · SETTINGS → SUBSCRIPTION (PRO ACTIVE)",
+    "kind": "web",
+    "file": "subscription-in-settings--web-settings-subscription-pro-active.png",
+    "width": 1280,
+    "height": 860
+  },
+  {
+    "section": "Subscription in settings",
+    "label": "MOBILE · SETTINGS (FREE USER)",
+    "kind": "mobile",
+    "file": "subscription-in-settings--mobile-settings-free-user.png",
+    "width": 390,
+    "height": 800
+  },
+  {
+    "section": "Subscription in settings",
+    "label": "MOBILE · SETTINGS (TRIAL)",
+    "kind": "mobile",
+    "file": "subscription-in-settings--mobile-settings-trial.png",
+    "width": 390,
+    "height": 800
+  },
+  {
+    "section": "Subscription in settings",
+    "label": "MOBILE · SETTINGS (PRO ACTIVE)",
+    "kind": "mobile",
+    "file": "subscription-in-settings--mobile-settings-pro-active.png",
+    "width": 390,
+    "height": 800
+  },
+  {
+    "section": "Subscription in settings",
+    "label": "MOBILE · MANAGE SUBSCRIPTION",
+    "kind": "mobile",
+    "file": "subscription-in-settings--mobile-manage-subscription.png",
+    "width": 390,
+    "height": 800
+  }
+]
