@@ -1,0 +1,33 @@
+export const WEIRDNESS_LABELS = ['normal', 'curious', 'adventurous', 'chaotic evil'] as const;
+
+export type WeirdnessLabel = (typeof WEIRDNESS_LABELS)[number];
+
+export function weirdnessLabel(value: number): WeirdnessLabel {
+  if (value < 25) return WEIRDNESS_LABELS[0];
+  if (value < 55) return WEIRDNESS_LABELS[1];
+  if (value < 85) return WEIRDNESS_LABELS[2];
+  return WEIRDNESS_LABELS[3];
+}
+
+export interface GradientStop {
+  color: string;
+  offset: number;
+}
+
+/** Parse `#hex NN%` stops out of a CSS linear-gradient token. */
+export function parseGradientStops(gradient: string): GradientStop[] {
+  const stops: GradientStop[] = [];
+  for (const match of gradient.matchAll(/(#[0-9A-Fa-f]{3,8})\s+([\d.]+)%/g)) {
+    const [, color, offset] = match;
+    if (color !== undefined && offset !== undefined) {
+      stops.push({ color, offset: Number(offset) });
+    }
+  }
+  return stops;
+}
+
+/** Convert a touch x offset on the track into a 0–100 slider value. */
+export function valueFromTouch(x: number, trackWidth: number): number {
+  if (trackWidth <= 0) return 0;
+  return Math.min(100, Math.max(0, Math.round((x / trackWidth) * 100)));
+}
