@@ -5,15 +5,14 @@ import { defineConfig } from 'vitest/config';
 // react-native-svg resolves its DOM build.
 export default defineConfig({
   resolve: {
-    alias: [
-      { find: /^react-native$/, replacement: 'react-native-web' },
+    // String keys (not regexes) — some resolution stages skip regex aliases.
+    // Order matters: the svg entry must win before the react-native prefix.
+    alias: {
       // Bare-specifier resolution lands on the native entry; point straight
       // at the DOM implementation.
-      {
-        find: /^react-native-svg$/,
-        replacement: 'react-native-svg/lib/module/ReactNativeSVG.web.js',
-      },
-    ],
+      'react-native-svg': 'react-native-svg/lib/module/ReactNativeSVG.web.js',
+      'react-native': 'react-native-web',
+    },
     extensions: [
       '.web.tsx',
       '.web.ts',
