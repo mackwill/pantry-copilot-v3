@@ -2,6 +2,19 @@
 
 Board-silent composition calls and scope deviations, newest first.
 
+## 2026-06-11 — M0 close-out scope notes (Task 10)
+
+- **RN primitive components were planned to move wholesale to M1**, but user direction
+  mid-milestone pulled most of them forward (see the entry below). What still lands at M1:
+  native NLPrompt, real-device/simulator rendering, and the native screenshot fidelity gate.
+  M0 ships the generated native token mirror (`src/tokens/native.ts`) either way.
+- **Containerfiles land with their services (M1+).** M0 compose
+  (`infra/podman/compose.yaml`) runs postgres 17 only.
+- **tokens.css body-background deviation:** the source file's `body { background: #E5E5DD }`
+  is the mockup board canvas, not an app surface; the ported
+  `packages/design-system/src/styles/tokens.css` uses `var(--bg)` instead (noted in a comment
+  at the top of the file). This is the only divergence from the verbatim port.
+
 ## 2026-06-11 — M0 fidelity gate notes (Task 7)
 
 - **NLPrompt vs HeroPrompt:** the board's Home screens use `HeroPrompt`

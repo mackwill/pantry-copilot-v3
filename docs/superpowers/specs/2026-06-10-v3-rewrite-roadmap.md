@@ -11,8 +11,8 @@
 
 | Milestone                                        | State           | Detailed plan                                                    |
 | ------------------------------------------------ | --------------- | ---------------------------------------------------------------- |
-| M0 — Scaffold + design system + fidelity harness | **in progress** | `docs/superpowers/plans/2026-06-10-m0-scaffold-design-system.md` |
-| M1 — Auth + app shells                           | not started     | —                                                                |
+| M0 — Scaffold + design system + fidelity harness | done            | `docs/superpowers/plans/2026-06-10-m0-scaffold-design-system.md` |
+| M1 — Auth + app shells                           | **in progress** | plan pending (separate writing-plans session)                    |
 | M2 — Pantry core (manual entry)                  | not started     | —                                                                |
 | M3 — AI service v1 + camera scan                 | not started     | —                                                                |
 | M4 — Home + generation + result                  | not started     | —                                                                |

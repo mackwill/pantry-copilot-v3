@@ -481,7 +481,7 @@ volumes:
 
 ### Task 10: Close out M0
 
-- [ ] **Step 1:** Create `docs/decisions.md` with the two M0 scope notes (RN primitives → M1; Containerfiles land with services) and the tokens.css body-background deviation.
-- [ ] **Step 2:** Run full gate: `pnpm lint && pnpm typecheck && pnpm test && pnpm build` — all green.
-- [ ] **Step 3:** Update roadmap Status table: M0 → done, M1 → in progress; write M1 detailed plan (separate writing-plans session) and link it.
-- [ ] **Step 4:** Commit `docs: M0 complete; roadmap status updated`.
+- [x] **Step 1:** Create `docs/decisions.md` with the two M0 scope notes (RN primitives → M1; Containerfiles land with services) and the tokens.css body-background deviation. *(file already existed; added the close-out scope-notes entry)*
+- [x] **Step 2:** Run full gate: `pnpm lint && pnpm typecheck && pnpm test && pnpm build` — all green.
+- [x] **Step 3:** Update roadmap Status table: M0 → done, M1 → in progress; write M1 detailed plan (separate writing-plans session) and link it. *(status updated; M1 plan to be written in its own writing-plans session, then linked)*
+- [x] **Step 4:** Commit `docs: M0 complete; roadmap status updated`.
