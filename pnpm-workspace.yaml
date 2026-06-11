@@ -2,5 +2,5 @@ packages:
   - apps/*
   - services/*
   - packages/*
-  - tools/*
+  - tools/**
   - e2e/*

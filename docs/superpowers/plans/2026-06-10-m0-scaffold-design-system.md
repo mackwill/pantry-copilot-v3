@@ -391,9 +391,9 @@ Component notes:
 
 `Gallery.tsx` renders every primitive in the states the board shows them (all Button kinds/sizes, all Pill tones, Field with hint and with error, Input empty/filled, Card, Wordmark, both weirdness controls at values 10/40/70/95, BottomSheet open, NLPrompt, WebShell frame, Tabs) on a `var(--bg)` page, grouped under Eyebrow headings, max-width 1280.
 
-- [ ] **Step 1:** Scaffold gallery app; `pnpm --filter @pantry/design-fidelity-gallery dev` serves it; verify it renders by loading the page with Playwright (`page.goto` + screenshot) rather than eyeballing only.
-- [ ] **Step 2:** `pnpm lint && pnpm typecheck` clean. *(gallery uses placeholder-free composition; jsx-no-literals does not apply outside `apps/`)*
-- [ ] **Step 3:** Commit `feat(tools): primitives gallery for fidelity checks`.
+- [x] **Step 1:** Scaffold gallery app; `pnpm --filter @pantry/design-fidelity-gallery dev` serves it; verify it renders by loading the page with Playwright (`page.goto` + screenshot) rather than eyeballing only. *(`pnpm --filter @pantry/design-fidelity-gallery verify` runs the Playwright check; sheet opens via button or `?sheet` param so it doesn't scrim the whole gallery.)*
+- [x] **Step 2:** `pnpm lint && pnpm typecheck` clean. *(gallery uses placeholder-free composition; jsx-no-literals does not apply outside `apps/`)*
+- [x] **Step 3:** Commit `feat(tools): primitives gallery for fidelity checks`.
 
 ---
 
