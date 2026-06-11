@@ -1,0 +1,56 @@
+/* Pantry CoPilot — Kitchen OS design tokens.
+   Ported verbatim from claudeDesignOutput/design-system/tokens.css (design contract).
+   Single deviation: body background is var(--bg) — the source file's #E5E5DD was the
+   mockup board canvas, not the app surface. */
+@font-face { font-family: 'Newsreader'; src: url('../../fonts/Newsreader-Variable.woff2') format('woff2-variations'); font-weight: 200 800; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Newsreader'; src: url('../../fonts/Newsreader-Italic.woff2') format('woff2-variations'); font-weight: 200 800; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Inter'; src: url('../../fonts/Inter-Variable.woff2') format('woff2-variations'); font-weight: 100 900; font-style: normal; font-display: swap; }
+@font-face { font-family: 'JetBrains Mono'; src: url('../../fonts/JetBrainsMono-Variable.woff2') format('woff2-variations'); font-weight: 100 800; font-style: normal; font-display: swap; }
+
+:root {
+  --bg: #FAFAF7;
+  --bg-raised: #FFFFFF;
+  --bg-sunk: #F1F1EC;
+  --bg-inverse: #0E120E;
+  --line: #E6E6E0;
+  --line-strong: #C9C9C0;
+  --fg: #0E120E;
+  --fg-muted: #545955;
+  --fg-subtle: #8A8F88;
+  --fg-on-inverse: #FAFAF7;
+  --accent: #4F6B2E;
+  --accent-hover: #3F5724;
+  --accent-press: #2F4219;
+  --accent-soft: #E9EFDC;
+  --accent-fg: #FFFFFF;
+  --success: #3F6B2E;
+  --warning: #A67614;
+  --warning-soft: #FBEEC8;
+  --warning-fg: #6B4A0A;
+  --danger: #A8331E;
+  --danger-soft: #F2DAD3;
+  --danger-fg: #6B1F12;
+  --info: #2E5B6B;
+  --weird-gradient: linear-gradient(90deg, #D8E6B8 0%, #A4C46B 35%, #4F6B2E 70%, #2B3B6E 100%);
+  --font-display: 'Newsreader', Georgia, serif;
+  --font-sans: 'Inter', -apple-system, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --shadow-xs: 0 1px 0 rgba(14,18,14,0.04);
+  --shadow-sm: 0 1px 2px rgba(14,18,14,0.05), 0 1px 0 rgba(14,18,14,0.03);
+  --shadow-md: 0 4px 14px rgba(14,18,14,0.07), 0 1px 0 rgba(14,18,14,0.03);
+  --shadow-lg: 0 18px 40px rgba(14,18,14,0.10), 0 2px 0 rgba(14,18,14,0.03);
+  --ring: 0 0 0 3px rgba(79,107,46,0.22);
+  --r-sm: 6px; --r-md: 10px; --r-lg: 14px; --r-xl: 20px; --r-pill: 999px;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: var(--font-sans);
+  color: var(--fg);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+button { font-family: inherit; }
+img { display: block; }
