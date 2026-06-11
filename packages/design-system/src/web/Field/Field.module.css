@@ -1,0 +1,22 @@
+.field {
+  display: block;
+}
+
+.label {
+  font: 500 12px var(--font-sans);
+  color: var(--fg-muted);
+  margin-bottom: 6px;
+  letter-spacing: 0.005em;
+}
+
+.hint {
+  font: 400 12px var(--font-sans);
+  color: var(--fg-subtle);
+  margin-top: 6px;
+}
+
+.error {
+  font: 500 12px var(--font-sans);
+  color: var(--danger);
+  margin-top: 6px;
+}

@@ -1,0 +1,34 @@
+.wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 11px 14px;
+}
+
+.wrap:focus-within {
+  box-shadow: var(--ring);
+}
+
+.leftIcon {
+  color: var(--fg-subtle);
+  display: flex;
+}
+
+.input {
+  flex: 1;
+  font: 400 14px var(--font-sans);
+  color: var(--fg);
+  letter-spacing: -0.005em;
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 0;
+  min-width: 0;
+}
+
+.input::placeholder {
+  color: var(--fg-subtle);
+}

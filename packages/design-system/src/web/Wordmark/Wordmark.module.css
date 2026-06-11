@@ -1,0 +1,10 @@
+.wordmark {
+  font-family: var(--font-display);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-weight: 500;
+}
+
+.co {
+  font-style: italic;
+}
