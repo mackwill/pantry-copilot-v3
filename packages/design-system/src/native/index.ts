@@ -3,6 +3,11 @@ export { SheetRow, type SheetRowProps } from './BottomSheet/SheetRow.js';
 export { fonts, type Fonts } from './fonts.js';
 export { Icon, type IconName, type IconProps } from './Icon/Icon.js';
 export {
+  MobileTabBar,
+  type MobileTabBarItem,
+  type MobileTabBarProps,
+} from './MobileTabBar/MobileTabBar.js';
+export {
   WeirdnessControl,
   type WeirdnessControlProps,
   type WeirdnessControlSize,
