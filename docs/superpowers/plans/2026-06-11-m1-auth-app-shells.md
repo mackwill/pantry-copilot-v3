@@ -1010,7 +1010,7 @@ await app.register(fastifyTRPCPlugin, {
 - Modify: `services/api/src/server.ts`
 - Test: `services/api/test/dev-magic-link.integration.test.ts`
 
-- [ ] **Step 1: Write failing tests**
+- [x] **Step 1: Write failing tests**
 
 ```ts
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
@@ -1077,7 +1077,7 @@ describe('dev magic link', () => {
 });
 ```
 
-- [ ] **Step 2: Implement `src/auth/dev-magic-link.ts`**
+- [x] **Step 2: Implement `src/auth/dev-magic-link.ts`**
 
 ```ts
 import type { FastifyInstance } from 'fastify';
@@ -1107,7 +1107,7 @@ export function registerDevMagicLink(app: FastifyInstance, deps: AppDeps): void 
 
 In `server.ts`: `if (env.AUTH_DEV_MAGIC_LINK) registerDevMagicLink(app, deps);` (If `auth.api.signInMagicLink` is named differently in the installed version, find the magic-link plugin's server API in its docs; the outbox capture is the part that matters.)
 
-- [ ] **Step 3: Run tests** — PASS. **Step 4: Commit** — `git commit -m "feat(api): flag-gated dev magic-link endpoint for e2e session bootstrap"`
+- [x] **Step 3: Run tests** — PASS. **Step 4: Commit** — `git commit -m "feat(api): flag-gated dev magic-link endpoint for e2e session bootstrap"`
 
 ---
 

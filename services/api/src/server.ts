@@ -5,6 +5,7 @@ import { fastifyTRPCPlugin } from '@trpc/server/adapters/fastify';
 import { sql } from 'drizzle-orm';
 import Fastify, { type FastifyInstance } from 'fastify';
 import type { Pool } from 'pg';
+import { registerDevMagicLink } from './auth/dev-magic-link.js';
 import { createAuth, type Auth } from './auth/instance.js';
 import { MagicLinkOutbox } from './auth/magic-link-outbox.js';
 import { registerAuthRoutes } from './auth/routes.js';
@@ -70,6 +71,8 @@ export async function buildServer(deps: AppDeps): Promise<FastifyInstance> {
   });
 
   registerAuthRoutes(app, auth, { rateLimitMax: env.AUTH_RATE_LIMIT_MAX });
+
+  if (env.AUTH_DEV_MAGIC_LINK) registerDevMagicLink(app, deps);
 
   await app.register(fastifyTRPCPlugin, {
     prefix: '/trpc',
