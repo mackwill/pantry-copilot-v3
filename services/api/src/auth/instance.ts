@@ -12,7 +12,11 @@ export function createAuth(opts: { env: Env; db: Db; outbox: MagicLinkOutbox }) 
   return betterAuth({
     secret: env.BETTER_AUTH_SECRET,
     baseURL: env.BETTER_AUTH_URL,
-    trustedOrigins: [...webOrigins(env), 'pantrycopilot://', 'exp://'],
+    trustedOrigins: [
+      ...webOrigins(env),
+      'pantrycopilot://',
+      ...(env.NODE_ENV !== 'production' ? ['exp://'] : []),
+    ],
     database: drizzleAdapter(db, {
       provider: 'pg',
       schema: { users, sessions, accounts, verifications },
