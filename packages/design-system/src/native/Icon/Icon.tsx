@@ -1,4 +1,5 @@
 import {
+  Apple,
   Archive,
   ArrowRight,
   AtSign,
@@ -35,8 +36,10 @@ import {
 } from 'lucide-react-native/icons';
 import type { ComponentType } from 'react';
 import { tokens } from '../../tokens/native.js';
+import { Chrome } from './Chrome.js';
 
 export type IconName =
+  | 'Apple'
   | 'Archive'
   | 'ArrowRight'
   | 'AtSign'
@@ -46,6 +49,7 @@ export type IconName =
   | 'ChevronDown'
   | 'ChevronLeft'
   | 'ChevronRight'
+  | 'Chrome'
   | 'Clock'
   | 'Flame'
   | 'Heart'
@@ -77,6 +81,7 @@ interface RenderedIconProps {
 }
 
 const iconMap: Record<IconName, ComponentType<RenderedIconProps>> = {
+  Apple,
   Archive,
   ArrowRight,
   AtSign,
@@ -86,6 +91,7 @@ const iconMap: Record<IconName, ComponentType<RenderedIconProps>> = {
   ChevronDown,
   ChevronLeft,
   ChevronRight,
+  Chrome,
   Clock,
   Flame,
   Heart,

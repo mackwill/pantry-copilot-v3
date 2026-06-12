@@ -2,6 +2,21 @@
 
 Board-silent composition calls and scope deviations, newest first.
 
+## 2026-06-12 — M1 native batch-1 primitives (Task 8)
+
+- **Native Pill deferred to M2:** the §00 login screens don't use it; it ships with the next
+  native batch that does.
+- **Chrome icon pinned locally:** the board's "Continue with Google" button uses lucide's
+  `chrome` brand glyph, which lucide removed before 1.17.0 (the pinned version). The v0.460.0
+  geometry (read from the v2 reference's lucide copy) is vendored as
+  `src/{web,native}/Icon/Chrome.tsx` and registered in both icon maps under the original
+  `Chrome` name, keeping screenshot fidelity with the board.
+- **Native Eyebrow defaults `color` to `tokens.fgSubtle`** — the plan draft said `fgMuted`, but
+  the web sibling's CSS (`--fg-subtle`) is the source of truth it mirrors.
+- **Em-relative tracking mirrored as size-scaled points:** web Wordmark (-0.02em), Button
+  labels and Input text (-0.005em), Field label (0.005em) become `fontSize * factor` on native
+  (RN letterSpacing takes absolute units).
+
 ## 2026-06-11 — M0 close-out scope notes (Task 10)
 
 - **RN primitive components were planned to move wholesale to M1**, but user direction

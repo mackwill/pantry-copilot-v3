@@ -1293,9 +1293,9 @@ The mobile login needs native **Wordmark, Eyebrow, Button, Field, Input** (Pill 
 
 **Method per component (TDD):** write the test first, run to FAIL, implement, run to PASS. Before implementing each, open the web sibling's `.module.css` and mirror its exact values (the numbers below were read from the web sources on 2026-06-11 — re-verify Eyebrow/Wordmark whose CSS wasn't re-read; board spec: Eyebrow 600 11px sans 0.14em uppercase).
 
-- [ ] **Step 1: Icon additions + fonts.ts** (tests: extend existing Icon tests with one render assertion per new name).
+- [x] **Step 1: Icon additions + fonts.ts** (tests: extend existing Icon tests with one render assertion per new name). *(lucide 1.17.0 has no `Chrome` — old v0.460.0 glyph vendored locally; see decisions.md.)*
 
-- [ ] **Step 2: Native Eyebrow**
+- [x] **Step 2: Native Eyebrow** *(default color is `fgSubtle`, mirroring the web CSS — plan draft said `fgMuted`)*
 
 ```tsx
 import type { ReactNode } from 'react';
@@ -1326,7 +1326,7 @@ const styles = StyleSheet.create({
 
 Test: renders children uppercase with the sans family.
 
-- [ ] **Step 3: Native Wordmark** (mirror web Wordmark: Pantry + italic accent "Co" + Pilot, display font, size prop default 26)
+- [x] **Step 3: Native Wordmark** (mirror web Wordmark: Pantry + italic accent "Co" + Pilot, display font, size prop default 26)
 
 ```tsx
 import { StyleSheet, Text } from 'react-native';
@@ -1359,7 +1359,7 @@ const styles = StyleSheet.create({
 
 Mirror weight/letter-spacing from `web/Wordmark/Wordmark.module.css`. Test: renders "Pantry", "Co", "Pilot"; Co segment gets the accent color.
 
-- [ ] **Step 4: Native Button** (mirrors `Button.module.css`: sm 32/13, md 38/14, lg 46/15; radius `tokens.rMd`; primary accent/accentFg; secondary transparent + 1px lineStrong border; ghost transparent; inverse bgInverse/bg; danger transparent + dangerSoft border, danger text; disabled opacity 0.5)
+- [x] **Step 4: Native Button** (mirrors `Button.module.css`: sm 32/13, md 38/14, lg 46/15; radius `tokens.rMd`; primary accent/accentFg; secondary transparent + 1px lineStrong border; ghost transparent; inverse bgInverse/bg; danger transparent + dangerSoft border, danger text; disabled opacity 0.5)
 
 ```tsx
 import type { ReactNode } from 'react';
@@ -1448,7 +1448,7 @@ const styles = StyleSheet.create({
 
 Tests: onPress fires; disabled blocks press; primary vs secondary styles; `full` stretches; leftIcon slot renders.
 
-- [ ] **Step 5: Native Field** (mirrors `Field.module.css`: label 500 12 fgMuted mb6; hint 12 fgSubtle; error 500 12 danger; error wins over hint)
+- [x] **Step 5: Native Field** (mirrors `Field.module.css`: label 500 12 fgMuted mb6; hint 12 fgSubtle; error 500 12 danger; error wins over hint)
 
 ```tsx
 import type { ReactNode } from 'react';
@@ -1496,7 +1496,7 @@ const styles = StyleSheet.create({
 
 Tests: label renders; error suppresses hint.
 
-- [ ] **Step 6: Native Input** (mirrors `Input.module.css`: row, gap 10, bgRaised, 1px line border, radius rMd, padding 11/14, 14px sans text, subtle placeholder)
+- [x] **Step 6: Native Input** (mirrors `Input.module.css`: row, gap 10, bgRaised, 1px line border, radius rMd, padding 11/14, 14px sans text, subtle placeholder)
 
 ```tsx
 import type { ReactNode } from 'react';
@@ -1568,9 +1568,9 @@ const styles = StyleSheet.create({
 
 Tests: controlled value + onChangeText; leftIcon renders; secureTextEntry passthrough.
 
-- [ ] **Step 7: Barrel + run** — export all five from `src/native/index.ts`; `pnpm --filter @pantry/design-system test` PASS; gallery still typechecks.
+- [x] **Step 7: Barrel + run** — export all five from `src/native/index.ts`; `pnpm --filter @pantry/design-system test` PASS; gallery still typechecks.
 
-- [ ] **Step 8: Commit** — `git commit -m "feat(design-system): native batch-1 primitives (wordmark, eyebrow, button, field, input) + login icons"`
+- [x] **Step 8: Commit** — `git commit -m "feat(design-system): native batch-1 primitives (wordmark, eyebrow, button, field, input) + login icons"`
 
 ---
 

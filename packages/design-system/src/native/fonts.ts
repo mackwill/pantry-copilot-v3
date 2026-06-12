@@ -2,6 +2,7 @@
 // Apps must load these families (expo-font) before rendering primitives.
 export const fonts = {
   display: 'Newsreader',
+  displayItalic: 'Newsreader-Italic',
   sans: 'Inter',
   mono: 'JetBrains Mono',
 } as const;

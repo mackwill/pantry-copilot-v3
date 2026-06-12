@@ -31,4 +31,12 @@ describe('Icon (native)', () => {
       unmount();
     }
   });
+
+  it('exposes the §00 oauth button icons', () => {
+    for (const name of ['Apple', 'Chrome'] as const) {
+      const { unmount } = render(<Icon name={name} testID={`icon-${name}`} />);
+      expect(screen.getByTestId(`icon-${name}`)).toBeTruthy();
+      unmount();
+    }
+  });
 });

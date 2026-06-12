@@ -17,4 +17,12 @@ describe('Icon', () => {
     expect(svg?.getAttribute('width')).toBe('18');
     expect(svg?.getAttribute('stroke-width')).toBe('1.6');
   });
+
+  it('exposes the §00 auth icons (inputs + oauth buttons)', () => {
+    for (const name of ['AtSign', 'Lock', 'Apple', 'Chrome'] as const) {
+      const { container, unmount } = render(<Icon name={name} size={16} />);
+      expect(container.querySelector('svg'), name).not.toBeNull();
+      unmount();
+    }
+  });
 });

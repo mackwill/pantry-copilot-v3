@@ -1,6 +1,8 @@
 import type { CSSProperties } from 'react';
 import {
+  Apple,
   ArrowRight,
+  AtSign,
   Bell,
   BookOpen,
   Camera,
@@ -14,6 +16,7 @@ import {
   Heart,
   LayoutDashboard,
   Leaf,
+  Lock,
   Mic,
   Minus,
   Pencil,
@@ -30,11 +33,14 @@ import {
   User,
   X,
 } from 'lucide-react';
+import { Chrome } from './Chrome.js';
 
 /* Curated lucide set — add icons here as board sections need them, never import the
    full icon barrel (bundle size). Stroke width 1.6 is the Kitchen OS spec. */
 const iconMap = {
+  Apple,
   ArrowRight,
+  AtSign,
   Bell,
   BookOpen,
   Camera,
@@ -43,11 +49,13 @@ const iconMap = {
   ChevronDown,
   ChevronLeft,
   ChevronRight,
+  Chrome,
   Clock,
   Flame,
   Heart,
   LayoutDashboard,
   Leaf,
+  Lock,
   Mic,
   Minus,
   Pencil,
