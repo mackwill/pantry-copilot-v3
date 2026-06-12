@@ -3,6 +3,7 @@ import type { FastifyInstance } from 'fastify';
 import { readEnv } from '../src/env.js';
 import { buildServer, createDeps } from '../src/server.js';
 import { createTestDb, type TestDb } from './helpers/test-db.js';
+import { cookieOf } from './helpers/cookie.js';
 
 describe('trpc user.me', () => {
   let testDb: TestDb;
@@ -25,12 +26,9 @@ describe('trpc user.me', () => {
       url: '/api/auth/sign-up/email',
       payload: { name: 'Mara', email: 'mara@example.com', password: 'hunter2hunter2' },
     });
-    const raw = signup.headers['set-cookie'];
-    const arr = Array.isArray(raw) ? raw : [raw];
-    cookie = arr
-      .filter((c): c is string => typeof c === 'string')
-      .map((c) => c.split(';')[0] ?? '')
-      .join('; ');
+    expect(signup.statusCode, 'signup in beforeAll must succeed').toBe(200);
+    cookie = cookieOf(signup);
+    expect(cookie, 'cookie must be set after signup').toContain('better-auth');
   });
   afterAll(async () => {
     await app.close();

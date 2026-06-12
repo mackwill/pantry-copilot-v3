@@ -3,15 +3,7 @@ import type { FastifyInstance } from 'fastify';
 import { readEnv } from '../src/env.js';
 import { buildServer, createDeps } from '../src/server.js';
 import { createTestDb, type TestDb } from './helpers/test-db.js';
-
-function cookieOf(res: { headers: Record<string, unknown> }): string {
-  const raw = res.headers['set-cookie'];
-  const arr = Array.isArray(raw) ? raw : [raw];
-  return arr
-    .filter((c): c is string => typeof c === 'string')
-    .map((c) => c.split(';')[0] ?? '')
-    .join('; ');
-}
+import { cookieOf } from './helpers/cookie.js';
 
 describe('better auth over fastify', () => {
   let testDb: TestDb;
