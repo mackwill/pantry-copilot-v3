@@ -569,7 +569,7 @@ await app.listen({ port: env.PORT, host: '0.0.0.0' });
 - Modify: `services/api/src/server.ts` (deps grow `auth` + `outbox`; register routes)
 - Test: `services/api/test/auth.integration.test.ts`
 
-- [ ] **Step 1: Write failing integration tests**
+- [x] **Step 1: Write failing integration tests**
 
 ```ts
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
@@ -846,9 +846,11 @@ export function registerAuthRoutes(
 
 Modify `src/server.ts`: `AppDeps` gains `auth: Auth; outbox: MagicLinkOutbox`; `createDeps` constructs the outbox then `createAuth({ env, db, outbox })`; after the CORS registration add `registerAuthRoutes(app, deps.auth, { rateLimitMax: env.AUTH_RATE_LIMIT_MAX });`.
 
-- [ ] **Step 3: Run tests** — `pnpm --filter @pantry/api test`. PASS. If cookie names differ (`better-auth.session_token` vs prefix), loosen the assertion to the actual prefix observed — verify by printing the header once, then pin the assertion.
+- [x] **Step 2: Implement the pieces**
 
-- [ ] **Step 4: Commit** — `git commit -m "feat(api): better auth instance mounted at /api/auth with stricter rate limit"`
+- [x] **Step 3: Run tests** — `pnpm --filter @pantry/api test`. PASS. If cookie names differ (`better-auth.session_token` vs prefix), loosen the assertion to the actual prefix observed — verify by printing the header once, then pin the assertion.
+
+- [x] **Step 4: Commit** — `git commit -m "feat(api): better auth instance mounted at /api/auth with stricter rate limit"`
 
 ---
 

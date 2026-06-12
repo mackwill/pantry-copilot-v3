@@ -4,6 +4,9 @@ import rateLimit from '@fastify/rate-limit';
 import { sql } from 'drizzle-orm';
 import Fastify, { type FastifyInstance } from 'fastify';
 import type { Pool } from 'pg';
+import { createAuth, type Auth } from './auth/instance.js';
+import { MagicLinkOutbox } from './auth/magic-link-outbox.js';
+import { registerAuthRoutes } from './auth/routes.js';
 import { createDb, type Db } from './db/client.js';
 import { webOrigins, type Env } from './env.js';
 
@@ -11,15 +14,19 @@ export interface AppDeps {
   env: Env;
   db: Db;
   pool: Pool;
+  auth: Auth;
+  outbox: MagicLinkOutbox;
 }
 
 export function createDeps(env: Env): AppDeps {
   const { db, pool } = createDb(env.DATABASE_URL);
-  return { env, db, pool };
+  const outbox = new MagicLinkOutbox();
+  const auth = createAuth({ env, db, outbox });
+  return { env, db, pool, auth, outbox };
 }
 
 export async function buildServer(deps: AppDeps): Promise<FastifyInstance> {
-  const { env, db, pool } = deps;
+  const { env, db, pool, auth } = deps;
   const app = Fastify({ logger: env.NODE_ENV !== 'test' });
 
   app.addHook('onClose', async () => {
@@ -58,6 +65,8 @@ export async function buildServer(deps: AppDeps): Promise<FastifyInstance> {
     allowedHeaders: ['content-type', 'authorization', 'cookie', 'x-request-id'],
     exposedHeaders: ['x-request-id'],
   });
+
+  registerAuthRoutes(app, auth, { rateLimitMax: env.AUTH_RATE_LIMIT_MAX });
 
   app.get('/health', () => ({ status: 'ok' }));
 
