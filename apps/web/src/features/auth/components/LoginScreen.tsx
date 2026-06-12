@@ -1,6 +1,12 @@
-import { Wordmark } from '@pantry/design-system/web';
+import { LoginForm } from './LoginForm';
+import { LoginHero } from './LoginHero';
+import styles from './login.module.css';
 
-/** Placeholder for the Task 9 SSR spike — the board §00 screen lands in Task 10. */
 export function LoginScreen() {
-  return <Wordmark size={26} />;
+  return (
+    <div className={styles['screen']}>
+      <LoginForm />
+      <LoginHero />
+    </div>
+  );
 }

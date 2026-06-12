@@ -1747,7 +1747,7 @@ export const Route = createFileRoute('/_authed')({
 - Modify: `apps/web/src/routes/login.tsx`
 - Test: `apps/web/src/features/auth/LoginForm.test.tsx`, `useLogin.test.ts`
 
-- [ ] **Step 1: strings.ts** (exact board copy — em-split headings use a `{before, em}` pair, reused on mobile):
+- [x] **Step 1: strings.ts** (exact board copy — em-split headings use a `{before, em}` pair, reused on mobile):
 
 ```ts
 export const authStrings = {
@@ -1788,14 +1788,14 @@ export const authStrings = {
 
 (Watch the apostrophes: the board uses straight text; typographic quotes are fine and consistent — pick one and keep it identical across web/mobile.)
 
-- [ ] **Step 2: Failing hook test** (`useLogin.test.ts`, mock `../../lib/auth-client` and `@tanstack/react-router`'s `useNavigate`):
+- [x] **Step 2: Failing hook test** (`useLogin.test.ts`, mock `../../lib/auth-client` and `@tanstack/react-router`'s `useNavigate`):
 
 - submit with empty email sets `errors.emailRequired`, does not call signIn
 - submit with valid fields calls `authClient.signIn.email({ email, password, rememberMe: true })` and navigates to `/home`
 - signIn resolving with `{ error: {...} }` sets `errors.invalidCredentials`
 - `oauth('google')` calls `authClient.signIn.social({ provider: 'google', callbackURL: <origin>/home })`
 
-- [ ] **Step 3: Implement `useLogin.ts`**
+- [x] **Step 3: Implement `useLogin.ts`**
 
 ```ts
 import { useNavigate } from '@tanstack/react-router';
@@ -1856,7 +1856,7 @@ export function useLogin() {
 }
 ```
 
-- [ ] **Step 4: Components.** `LoginScreen.tsx` = two-column grid (`login.module.css`: `grid-template-columns: 1fr 1fr; min-height: 100vh; background: var(--bg)`), left `<LoginForm/>`, right `<LoginHero/>`.
+- [x] **Step 4: Components.** `LoginScreen.tsx` = two-column grid (`login.module.css`: `grid-template-columns: 1fr 1fr; min-height: 100vh; background: var(--bg)`), left `<LoginForm/>`, right `<LoginHero/>`.
 
 `LoginForm.tsx` (composition; board values in the css module):
 
@@ -2000,9 +2000,9 @@ export const Route = createFileRoute('/login')({
 });
 ```
 
-- [ ] **Step 5: Component tests** (`LoginForm.test.tsx`): renders email/password fields, sign-in + both OAuth buttons, forgot link — all asserted against `authStrings` values; submit path calls mocked signIn; error string appears after failed signIn.
+- [x] **Step 5: Component tests** (`LoginForm.test.tsx`): renders email/password fields, sign-in + both OAuth buttons, forgot link — all asserted against `authStrings` values; submit path calls mocked signIn; error string appears after failed signIn.
 
-- [ ] **Step 6: Run** `pnpm --filter @pantry/web test` PASS, repo lint/typecheck. Eyeball at `localhost:3000/login` against the board. **Step 7: Commit** — `git commit -m "feat(web): board §00 login screen"`
+- [x] **Step 6: Run** `pnpm --filter @pantry/web test` PASS, repo lint/typecheck. Eyeball at `localhost:3000/login` against the board. *(Compared screenshot to `references/marketing-auth--web-login.png`: matches; only diff is the mock's pre-filled input values.)* **Step 7: Commit** — `git commit -m "feat(web): board §00 login screen"`
 
 ---
 
