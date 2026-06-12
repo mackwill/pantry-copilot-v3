@@ -1210,7 +1210,7 @@ AUTH_DEV_MAGIC_LINK=false
 - Create: `packages/api-client/package.json`, `tsconfig.json`, `vitest.config.ts`, `src/index.ts`
 - Test: `packages/api-client/src/index.test.ts`
 
-- [ ] **Step 1: Scaffold + install**
+- [x] **Step 1: Scaffold + install**
 
 ```bash
 mkdir -p packages/api-client/src && cd packages/api-client
@@ -1221,7 +1221,7 @@ pnpm add -D @pantry/api --workspace
 
 package.json name `@pantry/api-client`, `"exports": { ".": "./src/index.ts" }` (source exports like design-system if that's the M0 pattern — mirror it), scripts test/typecheck/lint.
 
-- [ ] **Step 2: Write the failing test** (`src/index.test.ts`)
+- [x] **Step 2: Write the failing test** (`src/index.test.ts`)
 
 ```ts
 import { describe, expect, expectTypeOf, it, vi } from 'vitest';
@@ -1247,7 +1247,7 @@ describe('createApiClient', () => {
 });
 ```
 
-- [ ] **Step 3: Implement `src/index.ts`**
+- [x] **Step 3: Implement `src/index.ts`**
 
 ```ts
 import { createTRPCClient, httpBatchLink } from '@trpc/client';
@@ -1276,7 +1276,7 @@ export function createApiClient(opts: ApiClientOptions) {
 export type { AppRouter };
 ```
 
-- [ ] **Step 4: Run** `pnpm --filter @pantry/api-client test` → PASS; repo `pnpm lint && pnpm typecheck`. **Step 5: Commit** — `git commit -m "feat(api-client): typed trpc client factory"`
+- [x] **Step 4: Run** `pnpm --filter @pantry/api-client test` → PASS; repo `pnpm lint && pnpm typecheck`. **Step 5: Commit** — `git commit -m "feat(api-client): typed trpc client factory"`
 
 ---
 
