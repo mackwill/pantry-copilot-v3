@@ -29,9 +29,16 @@ export async function createTestDb(): Promise<TestDb> {
   const url = new URL(ADMIN_URL);
   url.pathname = `/${name}`;
   const { db, pool } = createDb(url.toString());
-  await migrate(db, {
-    migrationsFolder: fileURLToPath(new URL('../../drizzle', import.meta.url)),
-  });
+  try {
+    await migrate(db, {
+      migrationsFolder: fileURLToPath(new URL('../../drizzle', import.meta.url)),
+    });
+  } catch (cause) {
+    await pool.end();
+    await admin.query(`DROP DATABASE ${name} WITH (FORCE)`);
+    await admin.end();
+    throw new Error(`Migration failed for test database ${name}`, { cause });
+  }
   return {
     db,
     url: url.toString(),

@@ -7,7 +7,10 @@ const url = process.env['DATABASE_URL'];
 if (url === undefined) throw new Error('DATABASE_URL is required');
 
 const pool = new Pool({ connectionString: url, max: 1 });
-await migrate(drizzle(pool), {
-  migrationsFolder: fileURLToPath(new URL('../drizzle', import.meta.url)),
-});
-await pool.end();
+try {
+  await migrate(drizzle(pool), {
+    migrationsFolder: fileURLToPath(new URL('../drizzle', import.meta.url)),
+  });
+} finally {
+  await pool.end();
+}
