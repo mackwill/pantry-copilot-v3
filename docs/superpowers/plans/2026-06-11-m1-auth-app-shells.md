@@ -1582,7 +1582,7 @@ Tests: controlled value + onChangeText; leftIcon renders; secureTextEntry passth
 - Create: `apps/web/src/lib/env.ts`, `src/lib/auth-client.ts`, `src/lib/session.ts`, `src/lib/api.ts`, `src/styles/app.css`
 - Test: `apps/web/src/lib/session.test.ts`
 
-- [ ] **Step 1: Scaffold.** Follow the current TanStack Start docs for the canonical Vite setup (the plugin import path has churned across versions — verify against the installed version, do not copy blindly):
+- [x] **Step 1: Scaffold.** Follow the current TanStack Start docs for the canonical Vite setup (the plugin import path has churned across versions — verify against the installed version, do not copy blindly):
 
 ```bash
 mkdir -p apps/web/src && cd apps/web
@@ -1646,7 +1646,7 @@ export const api = createApiClient({
 });
 ```
 
-- [ ] **Step 2: Session helper with SSR cookie forwarding** (`src/lib/session.ts`). This is the milestone's riskiest seam — get it green before any screen work.
+- [x] **Step 2: Session helper with SSR cookie forwarding** (`src/lib/session.ts`). This is the milestone's riskiest seam — get it green before any screen work.
 
 ```ts
 import { createServerFn } from '@tanstack/react-start';
@@ -1696,7 +1696,7 @@ If `getRequestHeaders` lives elsewhere in the installed version (it has moved be
 
 Unit tests (`src/lib/session.test.ts`, mock `fetch`): returns parsed session on 200 with user; returns null on null body or non-OK.
 
-- [ ] **Step 3: Routes** (composition-only):
+- [x] **Step 3: Routes** (composition-only): *(`/_authed/home` is `ssr: false` — the SSR auth guard lives in `_authed`'s beforeLoad; the tRPC loader needs browser cookies)*
 
 `src/routes/__root.tsx` — standard Start root document importing `../styles/app.css`.
 
@@ -1734,9 +1734,9 @@ export const Route = createFileRoute('/_authed')({
 
 `src/routes/login.tsx` / `signup.tsx` — render `<LoginScreen />` / `<SignupScreen />` (built in Tasks 10–11; stub the import with a placeholder component now so the spike runs).
 
-- [ ] **Step 4: SPIKE VERIFICATION (manual, blocking):** run api (`pnpm --filter @pantry/api dev` with `.env`) + web (`pnpm --filter @pantry/web dev`). In a browser: sign up via `curl`-created user or the auth client console, then confirm (a) hard reload of `/home` stays on home (SSR path forwarded the cookie), (b) client-side nav from `/login` to `/home` works, (c) unauthenticated `/home` redirects to `/login`. Do not proceed until all three hold.
+- [x] **Step 4: SPIKE VERIFICATION (manual, blocking):** *(verified 2026-06-12 via curl + playwright against the compose api: (a) hard /home with cookie → 200 and renders the user via client tRPC, (b) router `navigate('/home')` from /login works, (c) unauthenticated /home → 307 /login)* run api (`pnpm --filter @pantry/api dev` with `.env`) + web (`pnpm --filter @pantry/web dev`). In a browser: sign up via `curl`-created user or the auth client console, then confirm (a) hard reload of `/home` stays on home (SSR path forwarded the cookie), (b) client-side nav from `/login` to `/home` works, (c) unauthenticated `/home` redirects to `/login`. Do not proceed until all three hold.
 
-- [ ] **Step 5: Run** unit tests + repo lint/typecheck. **Step 6: Commit** — `git commit -m "feat(web): tanstack start scaffold with auth client and ssr session guard"`
+- [x] **Step 5: Run** unit tests + repo lint/typecheck. **Step 6: Commit** — `git commit -m "feat(web): tanstack start scaffold with auth client and ssr session guard"`
 
 ---
 

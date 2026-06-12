@@ -19,4 +19,14 @@ export default tseslint.config(
     languageOptions: { globals: globals.node },
     extends: [tseslint.configs.disableTypeChecked],
   },
+  {
+    // TanStack Router's control flow throws Redirect (a Response subtype) by design
+    files: ['apps/web/**/*.ts', 'apps/web/**/*.tsx'],
+    rules: {
+      '@typescript-eslint/only-throw-error': [
+        'error',
+        { allow: [{ from: 'package', name: 'Redirect', package: '@tanstack/router-core' }] },
+      ],
+    },
+  },
 );
