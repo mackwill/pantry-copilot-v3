@@ -400,7 +400,7 @@ describe('auth schema migrations', () => {
 - Create: `services/api/src/server.ts`, `src/index.ts`
 - Test: `services/api/test/server.integration.test.ts`
 
-- [ ] **Step 1: Write failing integration tests**
+- [x] **Step 1: Write failing integration tests**
 
 ```ts
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
@@ -478,7 +478,7 @@ describe('server skeleton', () => {
 
 Run: FAIL (server.ts missing).
 
-- [ ] **Step 2: Implement `src/server.ts`**
+- [x] **Step 2: Implement `src/server.ts`**
 
 ```ts
 import cors from '@fastify/cors';
@@ -556,9 +556,9 @@ const app = await buildServer(createDeps(env));
 await app.listen({ port: env.PORT, host: '0.0.0.0' });
 ```
 
-- [ ] **Step 3: Run tests** — PASS. Note: with `@fastify/cors`, a denied origin gets a CORS error response; if the "ignores others" assertion fails on the exact behavior, assert instead that `access-control-allow-origin` is absent/not the evil origin — the security property is the same.
+- [x] **Step 3: Run tests** — PASS. Note: with `@fastify/cors`, a denied origin gets a CORS error response; if the "ignores others" assertion fails on the exact behavior, assert instead that `access-control-allow-origin` is absent/not the evil origin — the security property is the same.
 
-- [ ] **Step 4: Commit** — `git commit -m "feat(api): fastify server with helmet, rate limits, cors, health/ready"`
+- [x] **Step 4: Commit** — `git commit -m "feat(api): fastify server with helmet, rate limits, cors, health/ready"`
 
 ---
 
