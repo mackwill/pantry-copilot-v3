@@ -1117,7 +1117,7 @@ In `server.ts`: `if (env.AUTH_DEV_MAGIC_LINK) registerDevMagicLink(app, deps);` 
 - Create: `services/api/Containerfile`
 - Modify: `infra/podman/compose.yaml`, `.env.example`, `.github/workflows/ci.yml`
 
-- [ ] **Step 1: Containerfile**
+- [x] **Step 1: Containerfile**
 
 ```dockerfile
 FROM docker.io/library/node:22-slim AS build
@@ -1137,7 +1137,7 @@ CMD ["sh", "-c", "node dist/migrate.js && node dist/index.js"]
 
 (`pnpm deploy` copies the built `dist/` and `drizzle/` because they're package files; if `drizzle/` is excluded by default, add a `files` array to `services/api/package.json` listing `dist` and `drizzle`.)
 
-- [ ] **Step 2: Compose service** (append to `infra/podman/compose.yaml` services)
+- [x] **Step 2: Compose service** (append to `infra/podman/compose.yaml` services)
 
 ```yaml
   api:
@@ -1177,7 +1177,7 @@ AUTH_DEV_MAGIC_LINK=false
 # ANTHROPIC_API_KEY=
 ```
 
-- [ ] **Step 3: CI postgres.** In `.github/workflows/ci.yml`, add to the job that runs `pnpm test`:
+- [x] **Step 3: CI postgres.** In `.github/workflows/ci.yml`, add to the job that runs `pnpm test`:
 
 ```yaml
     services:
@@ -1198,9 +1198,9 @@ AUTH_DEV_MAGIC_LINK=false
       TEST_DATABASE_URL: postgres://pantry:pantry@localhost:5432/pantry
 ```
 
-- [ ] **Step 4: Verify** — `podman build -f services/api/Containerfile -t pantry-api .` succeeds; `BETTER_AUTH_SECRET=$(openssl rand -hex 32) podman compose -f infra/podman/compose.yaml up -d --build` then `curl localhost:4000/ready` → `{"status":"ready"}`. Push a branch / run CI to confirm the service container works.
+- [x] **Step 4: Verify** — `podman build -f services/api/Containerfile -t pantry-api .` succeeds; `BETTER_AUTH_SECRET=$(openssl rand -hex 32) podman compose -f infra/podman/compose.yaml up -d --build` then `curl localhost:4000/ready` → `{"status":"ready"}`. Push a branch / run CI to confirm the service container works. *(CI service-container run deferred to branch push at milestone end.)*
 
-- [ ] **Step 5: Commit** — `git commit -m "infra(api): containerfile, compose service, ci postgres"`
+- [x] **Step 5: Commit** — `git commit -m "infra(api): containerfile, compose service, ci postgres"`
 
 ---
 
