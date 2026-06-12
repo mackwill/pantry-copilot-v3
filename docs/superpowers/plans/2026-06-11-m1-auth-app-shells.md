@@ -692,7 +692,7 @@ describe('better auth over fastify', () => {
 
 Run: FAIL.
 
-- [ ] **Step 2: Implement the pieces**
+- [x] **Step 2: Implement the pieces**
 
 `src/auth/headers.ts`:
 
@@ -845,8 +845,6 @@ export function registerAuthRoutes(
 ```
 
 Modify `src/server.ts`: `AppDeps` gains `auth: Auth; outbox: MagicLinkOutbox`; `createDeps` constructs the outbox then `createAuth({ env, db, outbox })`; after the CORS registration add `registerAuthRoutes(app, deps.auth, { rateLimitMax: env.AUTH_RATE_LIMIT_MAX });`.
-
-- [x] **Step 2: Implement the pieces**
 
 - [x] **Step 3: Run tests** — `pnpm --filter @pantry/api test`. PASS. If cookie names differ (`better-auth.session_token` vs prefix), loosen the assertion to the actual prefix observed — verify by printing the header once, then pin the assertion.
 
