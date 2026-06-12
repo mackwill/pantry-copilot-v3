@@ -2013,13 +2013,13 @@ export const Route = createFileRoute('/login')({
 - Modify: `apps/web/src/routes/signup.tsx`
 - Test: `apps/web/src/features/auth/SignupScreen.test.tsx`
 
-- [ ] **Step 1:** Extend `authStrings` with a `signup` block: eyebrow `'Get started'`, heading `{ before: 'Set up your', em: 'kitchen.' }`, lede, `nameLabel: 'Name'`, email/password labels reused, `submit: 'Create account'`, footer `'Already have an account?'` / `'Sign in →'`, errors (`nameRequired`, `emailTaken`, generic). **This is a board-silent screen: primitives only, mirroring login's left column exactly (same grid + hero on the right reuses `LoginHero`).** Record in `docs/decisions.md` at Task 17.
+- [x] **Step 1:** Extend `authStrings` with a `signup` block: eyebrow `'Get started'`, heading `{ before: 'Set up your', em: 'kitchen.' }`, lede, `nameLabel: 'Name'`, email/password labels reused, `submit: 'Create account'`, footer `'Already have an account?'` / `'Sign in →'`, errors (`nameRequired`, `emailTaken`, generic). **This is a board-silent screen: primitives only, mirroring login's left column exactly (same grid + hero on the right reuses `LoginHero`).** Record in `docs/decisions.md` at Task 17.
 
-- [ ] **Step 2:** Failing tests: renders name/email/password + create-account button from strings; submit calls `authClient.signUp.email({ name, email, password })` then navigates `/home`; server error surfaces `emailTaken` string; footer link routes to `/login`.
+- [x] **Step 2:** Failing tests: renders name/email/password + create-account button from strings; submit calls `authClient.signUp.email({ name, email, password })` then navigates `/home`; server error surfaces `emailTaken` string; footer link routes to `/login`.
 
-- [ ] **Step 3:** Implement `useSignup.ts` (same shape as `useLogin`, calling `authClient.signUp.email`) and `SignupScreen.tsx` (reuses `login.module.css` layout classes + `LoginHero`). Route `signup.tsx` mirrors `login.tsx` (redirect if authed, component only).
+- [x] **Step 3:** Implement `useSignup.ts` (same shape as `useLogin`, calling `authClient.signUp.email`) and `SignupScreen.tsx` (reuses `login.module.css` layout classes + `LoginHero`). Route `signup.tsx` mirrors `login.tsx` (redirect if authed, component only).
 
-- [ ] **Step 4: Run tests** PASS. **Step 5: Commit** — `git commit -m "feat(web): composed sign-up screen (board-silent, primitives only)"`
+- [x] **Step 4: Run tests** PASS. **Step 5: Commit** — `git commit -m "feat(web): composed sign-up screen (board-silent, primitives only)"`
 
 ---
 
