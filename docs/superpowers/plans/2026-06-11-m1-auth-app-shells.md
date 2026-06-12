@@ -859,7 +859,7 @@ Modify `src/server.ts`: `AppDeps` gains `auth: Auth; outbox: MagicLinkOutbox`; `
 - Modify: `services/api/src/server.ts`
 - Test: `services/api/test/trpc.integration.test.ts`
 
-- [ ] **Step 1: Write failing tests**
+- [x] **Step 1: Write failing tests**
 
 ```ts
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
@@ -918,7 +918,7 @@ describe('trpc user.me', () => {
 });
 ```
 
-- [ ] **Step 2: Implement**
+- [x] **Step 2: Implement**
 
 `src/trpc/context.ts`:
 
@@ -997,9 +997,9 @@ await app.register(fastifyTRPCPlugin, {
 });
 ```
 
-- [ ] **Step 3: Run tests** — PASS. (If the unauthenticated case surfaces as a 200 envelope with an error body rather than HTTP 401 in your tRPC version, assert on the body containing `UNAUTHORIZED` instead.)
+- [x] **Step 3: Run tests** — PASS. (If the unauthenticated case surfaces as a 200 envelope with an error body rather than HTTP 401 in your tRPC version, assert on the body containing `UNAUTHORIZED` instead.)
 
-- [ ] **Step 4: Commit** — `git commit -m "feat(api): trpc init with session context and user.me"`
+- [x] **Step 4: Commit** — `git commit -m "feat(api): trpc init with session context and user.me"`
 
 ---
 

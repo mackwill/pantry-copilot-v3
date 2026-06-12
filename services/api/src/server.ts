@@ -1,6 +1,7 @@
 import cors from '@fastify/cors';
 import helmet from '@fastify/helmet';
 import rateLimit from '@fastify/rate-limit';
+import { fastifyTRPCPlugin } from '@trpc/server/adapters/fastify';
 import { sql } from 'drizzle-orm';
 import Fastify, { type FastifyInstance } from 'fastify';
 import type { Pool } from 'pg';
@@ -9,6 +10,8 @@ import { MagicLinkOutbox } from './auth/magic-link-outbox.js';
 import { registerAuthRoutes } from './auth/routes.js';
 import { createDb, type Db } from './db/client.js';
 import { webOrigins, type Env } from './env.js';
+import { createContextFactory } from './trpc/context.js';
+import { appRouter } from './trpc/router.js';
 
 export interface AppDeps {
   env: Env;
@@ -67,6 +70,11 @@ export async function buildServer(deps: AppDeps): Promise<FastifyInstance> {
   });
 
   registerAuthRoutes(app, auth, { rateLimitMax: env.AUTH_RATE_LIMIT_MAX });
+
+  await app.register(fastifyTRPCPlugin, {
+    prefix: '/trpc',
+    trpcOptions: { router: appRouter, createContext: createContextFactory(deps) },
+  });
 
   app.get('/health', () => ({ status: 'ok' }));
 
