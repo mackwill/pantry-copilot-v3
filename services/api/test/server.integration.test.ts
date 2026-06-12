@@ -32,6 +32,7 @@ describe('server skeleton', () => {
   it('GET /ready returns ready when the database answers', async () => {
     const res = await app.inject({ method: 'GET', url: '/ready' });
     expect(res.statusCode).toBe(200);
+    expect(res.json()).toEqual({ status: 'ready' });
   });
 
   it('sets hardening headers', async () => {
@@ -47,6 +48,7 @@ describe('server skeleton', () => {
       headers: { origin: 'http://localhost:3000' },
     });
     expect(ok.headers['access-control-allow-credentials']).toBe('true');
+    expect(ok.headers['access-control-allow-origin']).toBe('http://localhost:3000');
     const bad = await app.inject({
       method: 'GET',
       url: '/health',
