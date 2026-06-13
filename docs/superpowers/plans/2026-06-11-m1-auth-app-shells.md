@@ -2411,9 +2411,9 @@ All error states display via `Field`'s `error` prop using strings.
 - Create: `e2e/mobile/sign-in.yaml`
 - Modify: `docs/checklists/m1-auth.md`
 
-- [ ] **Step 1: Pin the simulator.** Choose the current iPhone Pro simulator (e.g. iPhone 16 Pro, latest iOS); record name + iOS version in `docs/checklists/m1-auth.md`.
+- [x] **Step 1: Pin the simulator.** Choose the current iPhone Pro simulator (e.g. iPhone 16 Pro, latest iOS); record name + iOS version in `docs/checklists/m1-auth.md`. *(Pinned iPhone 16 Pro / iOS 18.5, Expo Go — recorded in checklist.)*
 
-- [ ] **Step 2: Capture.**
+- [x] **Step 2: Capture.** *(Captured live from Expo Go with fixture content `mara@home.kitchen` + 12-char password and status-bar override; compared via `pnpm -C tools/design-fidelity compare …` → report.html. Human-approved 2026-06-13; pixelmatch non-gate per plan. Two environmental deltas noted in checklist: Expo Go dev-menu gear + email caret.)*
 
 ```bash
 xcrun simctl status_bar booted override --time "9:41" --batteryState charged --batteryLevel 100
@@ -2423,7 +2423,7 @@ xcrun simctl io booted screenshot tools/design-fidelity/output/app/marketing-aut
 
 Side-by-side against `references/marketing-auth--mobile-login.png` (the compare report renders both even when pixelmatch is meaningless at mismatched dimensions — if `compare.ts` hard-fails on size mismatch, view them manually side by side instead). **Gate = human approval of layout/spacing/type/color.** Iterate, then record approval in the checklist.
 
-- [ ] **Step 3: Maestro flow** (`e2e/mobile/sign-in.yaml`) — run locally once, record the result in the checklist (CI execution deferred):
+- [x] **Step 3: Maestro flow** (`e2e/mobile/sign-in.yaml`) — run locally once, record the result in the checklist (CI execution deferred): *(Verified 2026-06-13 against Expo Go via an adapted copy — appId `host.exp.Exponent`, `eraseText` before input — all steps COMPLETED through `assertVisible: 'Home'`. Committed yaml stays targeted at the `com.pantrycopilot.app` dev build, not produced in M1.)*
 
 ```yaml
 appId: com.pantrycopilot.app # match app.json ios.bundleIdentifier
