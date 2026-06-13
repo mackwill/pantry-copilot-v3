@@ -2,6 +2,43 @@
 
 Board-silent composition calls and scope deviations, newest first.
 
+## 2026-06-13 — M1 close-out (Task 17)
+
+- **Auth scope:** board-faithful email/password plus Google and Apple OAuth, both
+  conditional on env credentials. Magic link is **plumbing only** (no UI); it doubles as the
+  dev/e2e session bootstrap behind `AUTH_DEV_MAGIC_LINK`, which the env schema **rejects when
+  `NODE_ENV=production`**. No dev auto-login (v2's anti-pattern).
+- **Web sign-up is a composed, board-silent screen** (primitives only, mirroring the login
+  left column + reusing `LoginHero`). **Mobile sign-up is deferred** — the board has no mobile
+  sign-up frame, so account creation on mobile goes through OAuth/web for now; the mobile
+  login footer ("New here? Create an account") is informational/non-interactive in M1.
+- **`packages/contracts` deferred to M2** — M1 has no shared DTO; tRPC types flow via
+  `AppRouter`. **`packages/api-client` is tRPC-client-only**; the Better Auth clients live
+  per-app (`apps/web` browser client, `apps/mobile` expo client) since their transports differ
+  (SSR cookie forwarding vs. SecureStore token + cookie-header injection).
+- **Ephemeral-postgres test strategy:** a real postgres server (compose locally, GH Actions
+  service container in CI) with `CREATE DATABASE pantry_test_<id>` per test file, drizzle
+  `migrate()`, dropped in cleanup. No testcontainers. Migrations are **committed SQL only** —
+  never `drizzle-kit push`. Because `pnpm test` now needs a running postgres, that requirement
+  is documented in `CLAUDE.md`.
+- **Cookies:** no explicit override — Better Auth's default `sameSite: lax` is correct for dev
+  (localhost:3000 → :4000 is same-site); production cookie attributes will be env-driven at a
+  later milestone. **v2's `stripSessionToken` was not adopted** — it would interfere with the
+  `@better-auth/expo` client's token delivery (the mobile client reads the session token from
+  the response and stores it in SecureStore), and the web client relies on the standard cookie.
+- **Mobile fidelity gate is human side-by-side, not pixelmatch:** the board frame is 390×801
+  and no device screen matches it (iPhone 16 Pro is 393×852), so pixelmatch is meaningless
+  across the size/bezel difference. Pinned simulator (iPhone 16 Pro / iOS 18.5, Expo Go) is
+  recorded in `docs/checklists/m1-auth.md`; the Maestro flow is authored and verified locally
+  only (CI execution deferred). The committed `e2e/mobile/sign-in.yaml` targets the
+  `com.pantrycopilot.app` dev build, which M1 does not produce — it was verified against Expo
+  Go (`host.exp.Exponent`) via an adapted copy.
+- **No iOS font fallback needed:** the design-system's woff2 variable fonts (Newsreader +
+  italic, Inter, JetBrains Mono) load and render on iOS 18.5 via Expo `useFonts`; the planned
+  TTF static-instance fallback was not required.
+- **Web Containerfile deferred** until the web app actually deploys; M1 ships a Containerfile
+  for `services/api` only.
+
 ## 2026-06-12 — M1 native batch-1 primitives (Task 8)
 
 - **Native Pill deferred to M2:** the §00 login screens don't use it; it ships with the next

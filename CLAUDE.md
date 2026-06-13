@@ -20,5 +20,6 @@ Greenfield rewrite of Pantry CoPilot, built to exactly match the Kitchen OS desi
 ## Commands
 
 - `pnpm install` — install workspace deps
+- `podman compose -f infra/podman/compose.yaml up -d` — start postgres; **required before `pnpm test`** (the `@pantry/api` suites create ephemeral databases against a live postgres)
 - `pnpm lint` / `pnpm typecheck` / `pnpm test` — repo-wide gates (run all three before any commit that claims completion)
 - `pnpm -r build` — build all workspaces

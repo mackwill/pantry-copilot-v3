@@ -2449,7 +2449,7 @@ appId: com.pantrycopilot.app # match app.json ios.bundleIdentifier
 **Files:**
 - Modify: `docs/decisions.md`, `docs/checklists/m1-auth.md`, `CLAUDE.md`, `docs/superpowers/specs/2026-06-10-v3-rewrite-roadmap.md`
 
-- [ ] **Step 1: decisions.md entries (dated 2026-06-XX, M1):**
+- [x] **Step 1: decisions.md entries (dated 2026-06-XX, M1):** *(added "2026-06-13 — M1 close-out" section; `stripSessionToken` dropped — incompatible with the expo client's token delivery; no iOS font fallback needed.)*
 - Auth scope: board-faithful email/password + conditional Google/Apple; magic link plumbing-only (no UI), doubles as dev/e2e bootstrap behind `AUTH_DEV_MAGIC_LINK` (env schema rejects it in production); no dev auto-login.
 - Web sign-up screen composed from primitives (board-silent); **mobile sign-up deferred** (no board frame; footer link non-interactive in M1).
 - `packages/contracts` deferred to M2 (no shared DTO in M1); `packages/api-client` is tRPC-client-only, Better Auth clients live per-app.
@@ -2460,9 +2460,9 @@ appId: com.pantrycopilot.app # match app.json ios.bundleIdentifier
 - Web Containerfile deferred until web deploys.
 - Any font fallback taken (woff2 vs TTF static instances).
 
-- [ ] **Step 2: CLAUDE.md** — note `pnpm test` now needs the compose postgres: add to Commands: `podman compose -f infra/podman/compose.yaml up -d` before `pnpm test`.
+- [x] **Step 2: CLAUDE.md** — note `pnpm test` now needs the compose postgres: add to Commands: `podman compose -f infra/podman/compose.yaml up -d` before `pnpm test`.
 
-- [ ] **Step 3: Full gate (superpowers:verification-before-completion):**
+- [x] **Step 3: Full gate (superpowers:verification-before-completion):** *(All green 2026-06-13: api container built+booted via `podman compose up --build api` (postgres already healthy), `/health` + `/ready` → 200; `pnpm lint` (0 warnings), `pnpm typecheck`, `pnpm test` (165 tests across 8 workspaces), `pnpm -r build` all pass; `pnpm --filter @pantry/e2e-web e2e` → 2/2. Both §00 login frames approved in the checklist. Required `pnpm install` first — e2e/web deps were missing in this working copy; lockfile was already up to date.)*
 
 ```bash
 podman compose -f infra/podman/compose.yaml up -d --build
@@ -2473,9 +2473,9 @@ pnpm --filter @pantry/e2e-web e2e
 
 All green + both frames approved in `docs/checklists/m1-auth.md` + CI green on the branch.
 
-- [ ] **Step 4: Roadmap** — Status table: M1 → done with plan link; M2 → in progress, plan pending.
+- [x] **Step 4: Roadmap** — Status table: M1 → done with plan link; M2 → in progress, plan pending.
 
-- [ ] **Step 5: Commit** — `git commit -m "docs: M1 complete; roadmap status updated"`
+- [x] **Step 5: Commit** — `git commit -m "docs: M1 complete; roadmap status updated"`
 
 ---
 
