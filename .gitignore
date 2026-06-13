@@ -15,3 +15,7 @@ coverage/
 playwright-report/
 test-results/
 tools/design-fidelity/output/
+# local agent state and git worktrees (never commit into the repo)
+.claude/worktrees/
+.claude/settings.local.json
+.clone/

@@ -12,7 +12,7 @@
 | Milestone                                        | State           | Detailed plan                                                    |
 | ------------------------------------------------ | --------------- | ---------------------------------------------------------------- |
 | M0 — Scaffold + design system + fidelity harness | done            | `docs/superpowers/plans/2026-06-10-m0-scaffold-design-system.md` |
-| M1 — Auth + app shells                           | **in progress** | plan pending (separate writing-plans session)                    |
+| M1 — Auth + app shells                           | **in progress** | `docs/superpowers/plans/2026-06-11-m1-auth-app-shells.md` — branch `worktree-m1-auth-app-shells` fast-forward merged to `main` on 2026-06-13 |
 | M2 — Pantry core (manual entry)                  | not started     | —                                                                |
 | M3 — AI service v1 + camera scan                 | not started     | —                                                                |
 | M4 — Home + generation + result                  | not started     | —                                                                |
