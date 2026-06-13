@@ -2029,9 +2029,9 @@ export const Route = createFileRoute('/login')({
 - Create: `e2e/web/package.json`, `playwright.config.ts`, `global-setup.ts`, `specs/auth.spec.ts`
 - Modify: `.github/workflows/ci.yml`
 
-- [ ] **Step 1: Scaffold** — `cd e2e/web && pnpm add -D @playwright/test pg @types/pg typescript`. package.json name `@pantry/e2e-web`, script `"test": "playwright test"`, and **exclude it from the repo-wide `pnpm test`** if that runs `-r` (give it a distinct script name like `e2e` instead of `test` so CI controls when browsers run): `"e2e": "playwright test"`.
+- [x] **Step 1: Scaffold** — `cd e2e/web && pnpm add -D @playwright/test pg @types/pg typescript`. package.json name `@pantry/e2e-web`, script `"test": "playwright test"`, and **exclude it from the repo-wide `pnpm test`** if that runs `-r` (give it a distinct script name like `e2e` instead of `test` so CI controls when browsers run): `"e2e": "playwright test"`.
 
-- [ ] **Step 2: `global-setup.ts`** — create+migrate the e2e database:
+- [x] **Step 2: `global-setup.ts`** — create+migrate the e2e database:
 
 ```ts
 import { execSync } from 'node:child_process';
@@ -2056,7 +2056,7 @@ export default async function globalSetup(): Promise<void> {
 }
 ```
 
-- [ ] **Step 3: `playwright.config.ts`**
+- [x] **Step 3: `playwright.config.ts`** *(adds AUTH_RATE_LIMIT_MAX/RATE_LIMIT_MAX overrides — the 10/min auth default 429s on the specs' combined get-session traffic)*
 
 ```ts
 import { defineConfig } from '@playwright/test';
@@ -2091,7 +2091,7 @@ export default defineConfig({
 });
 ```
 
-- [ ] **Step 4: `specs/auth.spec.ts`**
+- [x] **Step 4: `specs/auth.spec.ts`** *(adds a hydration wait before form interaction — clicking the SSR form pre-hydration native-submits it)*
 
 ```ts
 import { expect, test } from '@playwright/test';
@@ -2130,9 +2130,9 @@ test('sign up → authed home → sign back in', async ({ page }) => {
 });
 ```
 
-- [ ] **Step 5: Run locally** — `pnpm --filter @pantry/e2e-web exec playwright install chromium`, then `pnpm --filter @pantry/e2e-web e2e`. PASS.
+- [x] **Step 5: Run locally** — `pnpm --filter @pantry/e2e-web exec playwright install chromium`, then `pnpm --filter @pantry/e2e-web e2e`. PASS.
 
-- [ ] **Step 6: CI job** — add to `ci.yml` after the checks job (same postgres `services:` block as Task 6, plus):
+- [x] **Step 6: CI job** — add to `ci.yml` after the checks job (same postgres `services:` block as Task 6, plus):
 
 ```yaml
   e2e-web:
@@ -2166,7 +2166,7 @@ test('sign up → authed home → sign back in', async ({ page }) => {
 
 (Match the existing workflow's action versions/steps style.)
 
-- [ ] **Step 7: Commit** — `git commit -m "test(e2e): web auth happy path + ci job"`
+- [x] **Step 7: Commit** — `git commit -m "test(e2e): web auth happy path + ci job"`
 
 ---### Task 13: Web fidelity capture + approval (gate frame 1/2)
 
