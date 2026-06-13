@@ -4,6 +4,9 @@ dist/
 .nitro/
 .output/
 .expo/
+# native projects are generated (expo prebuild / run)
+apps/mobile/ios/
+apps/mobile/android/
 coverage/
 *.tsbuildinfo
 .env

@@ -1,0 +1,20 @@
+# Local-only flow (CI execution deferred — see docs/checklists/m1-auth.md).
+# Precondition: api on :4000 with the maestro user created:
+#   curl -X POST localhost:4000/api/auth/sign-up/email -H 'content-type: application/json' \
+#     -d '{"name":"Maestro","email":"maestro@example.com","password":"hunter2hunter2"}'
+appId: com.pantrycopilot.app
+---
+- launchApp
+- assertVisible: 'Welcome back'
+- tapOn:
+    id: 'login-email'
+- waitForAnimationToEnd
+- inputText: 'maestro@example.com'
+- assertVisible: 'maestro@example.com'
+- tapOn:
+    id: 'login-password'
+- waitForAnimationToEnd
+- inputText: 'hunter2hunter2'
+- hideKeyboard
+- tapOn: 'Sign in'
+- assertVisible: 'Home'
