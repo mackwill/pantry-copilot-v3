@@ -20,6 +20,11 @@ export default tseslint.config(
     extends: [tseslint.configs.disableTypeChecked],
   },
   {
+    // CommonJS config files (metro) have no import syntax
+    files: ['**/*.cjs'],
+    rules: { '@typescript-eslint/no-require-imports': 'off' },
+  },
+  {
     // TanStack Router's control flow throws Redirect (a Response subtype) by design
     files: ['apps/web/**/*.ts', 'apps/web/**/*.tsx'],
     rules: {

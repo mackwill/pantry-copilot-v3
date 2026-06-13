@@ -2203,7 +2203,7 @@ Pinned simulator: <device name>, iOS <version> (set at Task 16).
 - Create: `apps/mobile/src/lib/env.ts`, `src/lib/auth-client.ts`, `src/lib/api.ts`, `src/lib/useAuthGate.ts`, `src/features/shell/strings.ts`
 - Test: `apps/mobile/src/lib/useAuthGate.test.ts`, `src/app/tabs-layout.test.tsx`
 
-- [ ] **Step 1: Scaffold with the current Expo SDK.** Use `pnpm create expo-app@latest apps/mobile --template blank-typescript`, then convert: package name `@pantry/mobile`, `"main": "expo-router/entry"`, move routes under `src/app/` (expo-router supports `src/app`; **required** so the `react/jsx-no-literals` glob `apps/**/src/**/*.tsx` covers route files). Install with `npx expo install` so versions match the SDK:
+- [x] **Step 1: Scaffold with the current Expo SDK.** *(SDK 56 / RN 0.85; metro needs a resolveRequest fallback mapping design-system's NodeNext `./X.js` specifiers to .tsx sources; `expo-network` added — @better-auth/expo peer; its lazy import is also preloaded statically in auth-client.ts because Expo Go can't fetch split segments)* Use `pnpm create expo-app@latest apps/mobile --template blank-typescript`, then convert: package name `@pantry/mobile`, `"main": "expo-router/entry"`, move routes under `src/app/` (expo-router supports `src/app`; **required** so the `react/jsx-no-literals` glob `apps/**/src/**/*.tsx` covers route files). Install with `npx expo install` so versions match the SDK:
 
 ```bash
 cd apps/mobile
@@ -2215,7 +2215,7 @@ pnpm add -D react-native-web react-dom vitest jsdom @testing-library/react
 
 `app.json`: `"scheme": "pantrycopilot"`, name/slug `pantry-copilot`. `metro.config.cjs`: extend `expo/metro-config` default, add repo root to `watchFolders`, and push `'woff2'` onto `resolver.assetExts` (fonts ship as woff2 in design-system). `vitest.config.ts`: copy `packages/design-system/vitest.config.ts`'s alias/inline setup verbatim (react-native → react-native-web, `.web.*` extension priority, inlined deps) — it's the proven pattern.
 
-- [ ] **Step 2: Fonts + root layout** (`src/app/_layout.tsx`):
+- [x] **Step 2: Fonts + root layout** (`src/app/_layout.tsx`): *(verified on iPhone 16 Pro / iOS 18.5 via Expo Go — woff2 variable fonts render, Newsreader + italic accent confirmed; no TTF fallback needed; asset imports use static `import` + a `*.woff2` module declaration since eslint-disable for `require` is banned)*
 
 ```tsx
 import { useFonts } from 'expo-font';
@@ -2237,7 +2237,7 @@ export default function RootLayout() {
 
 **Day-one simulator verification (blocking):** boot the iOS simulator (`npx expo run:ios` or Expo Go) and confirm Newsreader/Inter render. If woff2 variable fonts fail on iOS, download the static TTF instances (Newsreader 400 + italic, Inter 400/500/600), put them in `packages/design-system/fonts/native/`, point `useFonts` there, and log the decision in `docs/decisions.md`. (`require` of a package asset may also need a metro `extraNodeModules` entry — if `require('@pantry/design-system/fonts/...')` fails, use a relative path `../../../../packages/design-system/fonts/...` and note it.)
 
-- [ ] **Step 3: lib.** `src/lib/env.ts`:
+- [x] **Step 3: lib.** `src/lib/env.ts`:
 
 ```ts
 import { z } from 'zod';
@@ -2306,7 +2306,7 @@ export function useAuthGate(): void {
 }
 ```
 
-- [ ] **Step 4: Tabs.** `src/features/shell/strings.ts`:
+- [x] **Step 4: Tabs.** `src/features/shell/strings.ts`:
 
 ```ts
 export const shellStrings = {
@@ -2353,9 +2353,9 @@ export default function TabsLayout() {
 
 The five tab screens are placeholder shells (e.g. `index.tsx` renders an empty `View` with `tokens.bg` background; no literals).
 
-- [ ] **Step 5: Tests** — `useAuthGate.test.ts` (mock `expo-router` + `authClient.useSession`): redirects to login when session null outside `(auth)`; redirects to tabs when session present inside `(auth)`; no redirect while pending. `tabs-layout.test.tsx`: rendering `MobileTabBar` with `items` shows the five labels from `shellStrings` (render the bar directly with rn-web; don't fight expo-router's native Tabs in jsdom).
+- [x] **Step 5: Tests** — `useAuthGate.test.ts` (mock `expo-router` + `authClient.useSession`): redirects to login when session null outside `(auth)`; redirects to tabs when session present inside `(auth)`; no redirect while pending. `tabs-layout.test.tsx`: rendering `MobileTabBar` with `items` shows the five labels from `shellStrings` (render the bar directly with rn-web; don't fight expo-router's native Tabs in jsdom). *(test lives in `src/features/shell/` — anything under `src/app` becomes an expo-router route and pulled vitest/vite into the app bundle)*
 
-- [ ] **Step 6: Run** mobile tests + repo lint/typecheck; boot once on the simulator to confirm the gate redirects to the (placeholder) login route. **Step 7: Commit** — `git commit -m "feat(mobile): expo scaffold with router tabs, fonts, auth client and gate"`
+- [x] **Step 6: Run** mobile tests + repo lint/typecheck; boot once on the simulator to confirm the gate redirects to the (placeholder) login route. *(Confirmed: gate lands on (auth)/login with the wordmark placeholder.)* **Step 7: Commit** — `git commit -m "feat(mobile): expo scaffold with router tabs, fonts, auth client and gate"`
 
 ---
 
