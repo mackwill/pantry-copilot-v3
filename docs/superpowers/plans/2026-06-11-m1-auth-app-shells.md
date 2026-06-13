@@ -2366,11 +2366,11 @@ The five tab screens are placeholder shells (e.g. `index.tsx` renders an empty `
 - Modify: `apps/mobile/src/app/(auth)/login.tsx` (composition-only)
 - Test: `apps/mobile/src/features/auth/useLogin.test.ts`, `LoginForm.test.tsx`
 
-- [ ] **Step 1: strings.ts** — same vocabulary as web's `authStrings.login` with the board's mobile lede (it differs: no "exactly"): `'Pick up where you left off — your pantry, your saved recipes, the chaos slider where you parked it.'`; footer `'New here?'` / `'Create an account'` (no arrow on mobile).
+- [x] **Step 1: strings.ts** — same vocabulary as web's `authStrings.login` with the board's mobile lede (it differs: no "exactly"): `'Pick up where you left off — your pantry, your saved recipes, the chaos slider where you parked it.'`; footer `'New here?'` / `'Create an account'` (no arrow on mobile).
 
-- [ ] **Step 2: Failing hook test** — `useLogin` mirrors web: empty-field errors; success calls `authClient.signIn.email` then `router.replace('/(tabs)')`; failure sets `invalidCredentials`; `oauth('google')` calls `signIn.social`.
+- [x] **Step 2: Failing hook test** — `useLogin` mirrors web: empty-field errors; success calls `authClient.signIn.email` then `router.replace('/(tabs)')`; failure sets `invalidCredentials`; `oauth('google')` calls `signIn.social`.
 
-- [ ] **Step 3: Implement.** `useLogin.ts` is the web hook with `useRouter` from expo-router and `router.replace('/(tabs)')`. `LoginScreen.tsx` (board values: bg screen, paddingTop 54, content padding 40/24/0, flex column with bottom-anchored footer):
+- [x] **Step 3: Implement.** `useLogin.ts` is the web hook with `useRouter` from expo-router and `router.replace('/(tabs)')`. `LoginScreen.tsx` (board values: bg screen, paddingTop 54, content padding 40/24/0, flex column with bottom-anchored footer):
 
 ```tsx
 import { ScrollView, StyleSheet, View } from 'react-native';
@@ -2399,9 +2399,9 @@ const styles = StyleSheet.create({
 
 All error states display via `Field`'s `error` prop using strings.
 
-- [ ] **Step 4: Component test** — renders the five strings-driven controls (email, password, sign in, both OAuth buttons) and the forgot link; submit path calls the mocked client.
+- [x] **Step 4: Component test** — renders the five strings-driven controls (email, password, sign in, both OAuth buttons) and the forgot link; submit path calls the mocked client.
 
-- [ ] **Step 5: Run** tests PASS; boot the simulator and visually sanity-check. **Step 6: Commit** — `git commit -m "feat(mobile): board §00 login screen"`
+- [x] **Step 5: Run** tests PASS; boot the simulator and visually sanity-check. *(Renders board-faithful on iPhone 16 Pro: heading/lede/fields/oauth/footer all correct.)* **Step 6: Commit** — `git commit -m "feat(mobile): board §00 login screen"`
 
 ---
 
