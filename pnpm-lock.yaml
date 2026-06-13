@@ -317,6 +317,9 @@ importers:
       '@pantry/config':
         specifier: workspace:*
         version: link:../../packages/config
+      '@pantry/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
       '@trpc/server':
         specifier: 11.17.0
         version: 11.17.0(typescript@6.0.3)

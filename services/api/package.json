@@ -27,6 +27,7 @@
     "@fastify/helmet": "13.0.2",
     "@fastify/rate-limit": "11.0.0",
     "@pantry/config": "workspace:*",
+    "@pantry/contracts": "workspace:*",
     "@trpc/server": "11.17.0",
     "better-auth": "1.6.16",
     "drizzle-orm": "0.45.2",
