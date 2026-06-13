@@ -2174,11 +2174,11 @@ test('sign up → authed home → sign back in', async ({ page }) => {
 - Create: `tools/design-fidelity/src/capture-app-web.ts`; add script `"capture:web"` to `tools/design-fidelity/package.json`
 - Create: `docs/checklists/m1-auth.md`
 
-- [ ] **Step 1: Capture script.** Mirror `capture-references.ts`'s browser settings exactly (viewport 1280×860, same deviceScaleFactor — read that file and copy its values). Behavior: launch chromium → `goto('http://localhost:3000/login')` → wait for `document.fonts.ready` and network idle → **fill the board's fixture state** (the reference frame shows populated fields): email `mara@home.kitchen`, password any 12-char value (renders as 12 dots), keep-signed-in already defaults to checked → blur focus (`page.mouse.click(0,0)` is not enough if it triggers overlays; use `page.locator('body').press('Escape')` or blur via evaluate so no focus ring shows) → screenshot to `tools/design-fidelity/output/app/marketing-auth--web-login.png`.
+- [x] **Step 1: Capture script.** Mirror `capture-references.ts`'s browser settings exactly (viewport 1280×860, same deviceScaleFactor — read that file and copy its values). Behavior: launch chromium → `goto('http://localhost:3000/login')` → wait for `document.fonts.ready` and network idle → **fill the board's fixture state** (the reference frame shows populated fields): email `mara@home.kitchen`, password any 12-char value (renders as 12 dots), keep-signed-in already defaults to checked → blur focus (`page.mouse.click(0,0)` is not enough if it triggers overlays; use `page.locator('body').press('Escape')` or blur via evaluate so no focus ring shows) → screenshot to `tools/design-fidelity/output/app/marketing-auth--web-login.png`.
 
-- [ ] **Step 2: Compare** — `pnpm -C tools/design-fidelity compare references/marketing-auth--web-login.png output/app/marketing-auth--web-login.png` → open `output/report.html`. Iterate on `login.module.css` until layout/spacing/type/color match (human judgment, not pixel identity).
+- [x] **Step 2: Compare** — `pnpm -C tools/design-fidelity compare references/marketing-auth--web-login.png output/app/marketing-auth--web-login.png` → open `output/report.html`. Iterate on `login.module.css` until layout/spacing/type/color match (human judgment, not pixel identity). *(0.265% mismatch on first capture — apostrophe glyphs, one AA line, ~1px track offset; no CSS iteration needed.)*
 
-- [ ] **Step 3: Record** — create `docs/checklists/m1-auth.md`:
+- [x] **Step 3: Record** — create `docs/checklists/m1-auth.md`:
 
 ```markdown
 # M1 — Auth + app shells: fidelity checklist
@@ -2191,7 +2191,7 @@ test('sign up → authed home → sign back in', async ({ page }) => {
 Pinned simulator: <device name>, iOS <version> (set at Task 16).
 ```
 
-- [ ] **Step 4: Commit** — `git commit -m "feat(tools): web app capture; m1 web login frame approved"`
+- [x] **Step 4: Commit** — `git commit -m "feat(tools): web app capture; m1 web login frame approved"`
 
 ---
 
