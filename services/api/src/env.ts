@@ -20,6 +20,10 @@ const schema = z
       .transform((v) => v === 'true'),
     RATE_LIMIT_MAX: z.coerce.number().int().positive().default(300),
     AUTH_RATE_LIMIT_MAX: z.coerce.number().int().positive().default(10),
+    /** Network-isolated AI service the scan router calls over REST. */
+    AI_SERVICE_URL: z.url().default('http://localhost:4001'),
+    /** Bearer token presented to the AI service (must match its AI_SERVICE_TOKEN). */
+    AI_SERVICE_TOKEN: z.string().optional(),
   })
   .refine((env) => !(env.AUTH_DEV_MAGIC_LINK && env.NODE_ENV === 'production'), {
     message: 'AUTH_DEV_MAGIC_LINK must not be enabled in production',
