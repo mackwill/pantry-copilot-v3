@@ -130,6 +130,23 @@
   color: var(--fg);
 }
 
+.itemName {
+  all: unset;
+  cursor: pointer;
+  font: 500 14px/1.4 var(--font-sans);
+  color: var(--fg);
+}
+
+.itemName:hover {
+  color: var(--accent);
+}
+
+.itemName:focus-visible {
+  outline: none;
+  box-shadow: var(--ring);
+  border-radius: var(--r-sm);
+}
+
 .dot {
   width: 8px;
   height: 8px;

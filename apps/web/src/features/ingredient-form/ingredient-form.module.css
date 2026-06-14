@@ -1,0 +1,142 @@
+/* Ingredient form (board §06) — back link, header, field grid, sidebar cards. */
+
+.backRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.editingNote {
+  font: 400 13px/1 var(--font-sans);
+  color: var(--fg-subtle);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 36px;
+  max-width: 1040px;
+}
+
+.title {
+  font: 400 48px/1 var(--font-display);
+  letter-spacing: -0.025em;
+  color: var(--fg);
+  margin: 10px 0 28px;
+}
+
+/* Field grid */
+.fieldGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.notesField {
+  grid-column: span 2;
+}
+
+/* Native select + textarea styled to match Input. */
+.control {
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 11px 14px;
+  font: 400 14px/1.4 var(--font-sans);
+  color: var(--fg);
+  letter-spacing: -0.005em;
+}
+
+.control:focus-visible {
+  outline: none;
+  box-shadow: var(--ring);
+  border-color: var(--line-strong);
+}
+
+.select {
+  appearance: none;
+  cursor: pointer;
+}
+
+.textarea {
+  min-height: 72px;
+  resize: vertical;
+  line-height: 1.55;
+}
+
+/* Action row */
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.removeAction {
+  margin-left: auto;
+}
+
+/* Sidebar */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.freshnessBar {
+  position: relative;
+  height: 8px;
+  border-radius: var(--r-pill);
+  background: var(--bg-sunk);
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.freshnessFill {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--r-pill);
+  background: var(--weird-gradient);
+}
+
+.freshnessMeta {
+  display: flex;
+  justify-content: space-between;
+  font: 400 12px/1 var(--font-sans);
+  color: var(--fg-subtle);
+}
+
+.useItRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.useItRow:last-child {
+  border-bottom: none;
+}
+
+.useItName {
+  font: 500 13px/1.4 var(--font-sans);
+  color: var(--fg);
+}
+
+.boughtCopy {
+  font: 400 13px/1.5 var(--font-sans);
+  color: var(--fg-muted);
+}
+
+.boughtStrong {
+  color: var(--fg);
+  font-weight: 500;
+}
+
+.boughtPills {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}

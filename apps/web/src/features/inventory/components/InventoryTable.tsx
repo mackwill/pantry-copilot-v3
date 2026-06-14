@@ -15,14 +15,22 @@ function relativeTime(iso: string, now: Date = new Date()): string {
   return `${String(Math.floor(days / 30))}mo ago`;
 }
 
-function InventoryRow({ item }: { item: PantryItem }) {
+function InventoryRow({
+  item,
+  onOpen,
+}: {
+  item: PantryItem;
+  onOpen?: ((id: string) => void) | undefined;
+}) {
   const freshness = freshnessFor(item.bestBy);
   const dotClass = `${styles['dot'] ?? ''} ${styles[freshness.tone] ?? ''}`;
   return (
     <div className={styles['row']}>
       <div className={styles['itemCell']}>
         <span className={dotClass} />
-        {item.name}
+        <button type="button" className={styles['itemName']} onClick={() => onOpen?.(item.id)}>
+          {item.name}
+        </button>
       </div>
       <div className={styles['qtyCell']}>
         {item.quantity} {unitLabels[item.unit]}
@@ -37,7 +45,13 @@ function InventoryRow({ item }: { item: PantryItem }) {
   );
 }
 
-export function InventoryTable({ items }: { items: PantryItem[] }) {
+export function InventoryTable({
+  items,
+  onOpen,
+}: {
+  items: PantryItem[];
+  onOpen?: ((id: string) => void) | undefined;
+}) {
   if (items.length === 0) {
     return <div className={styles['empty']}>{inventoryStrings.empty}</div>;
   }
@@ -52,7 +66,7 @@ export function InventoryTable({ items }: { items: PantryItem[] }) {
         <div className={styles['headRight']}>{c.added}</div>
       </div>
       {items.map((item) => (
-        <InventoryRow key={item.id} item={item} />
+        <InventoryRow key={item.id} item={item} onOpen={onOpen} />
       ))}
     </>
   );

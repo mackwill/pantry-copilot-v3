@@ -15,6 +15,8 @@ import { Route as AuthedRouteImport } from './routes/_authed'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthedPantryRouteImport } from './routes/_authed/pantry'
 import { Route as AuthedHomeRouteImport } from './routes/_authed/home'
+import { Route as AuthedPantryNewRouteImport } from './routes/_authed/pantry.new'
+import { Route as AuthedPantryItemIdRouteImport } from './routes/_authed/pantry.$itemId'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -45,20 +47,34 @@ const AuthedHomeRoute = AuthedHomeRouteImport.update({
   path: '/home',
   getParentRoute: () => AuthedRoute,
 } as any)
+const AuthedPantryNewRoute = AuthedPantryNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => AuthedPantryRoute,
+} as any)
+const AuthedPantryItemIdRoute = AuthedPantryItemIdRouteImport.update({
+  id: '/$itemId',
+  path: '/$itemId',
+  getParentRoute: () => AuthedPantryRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/home': typeof AuthedHomeRoute
-  '/pantry': typeof AuthedPantryRoute
+  '/pantry': typeof AuthedPantryRouteWithChildren
+  '/pantry/$itemId': typeof AuthedPantryItemIdRoute
+  '/pantry/new': typeof AuthedPantryNewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/home': typeof AuthedHomeRoute
-  '/pantry': typeof AuthedPantryRoute
+  '/pantry': typeof AuthedPantryRouteWithChildren
+  '/pantry/$itemId': typeof AuthedPantryItemIdRoute
+  '/pantry/new': typeof AuthedPantryNewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -67,13 +83,29 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/_authed/home': typeof AuthedHomeRoute
-  '/_authed/pantry': typeof AuthedPantryRoute
+  '/_authed/pantry': typeof AuthedPantryRouteWithChildren
+  '/_authed/pantry/$itemId': typeof AuthedPantryItemIdRoute
+  '/_authed/pantry/new': typeof AuthedPantryNewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/signup' | '/home' | '/pantry'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/signup'
+    | '/home'
+    | '/pantry'
+    | '/pantry/$itemId'
+    | '/pantry/new'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/signup' | '/home' | '/pantry'
+  to:
+    | '/'
+    | '/login'
+    | '/signup'
+    | '/home'
+    | '/pantry'
+    | '/pantry/$itemId'
+    | '/pantry/new'
   id:
     | '__root__'
     | '/'
@@ -82,6 +114,8 @@ export interface FileRouteTypes {
     | '/signup'
     | '/_authed/home'
     | '/_authed/pantry'
+    | '/_authed/pantry/$itemId'
+    | '/_authed/pantry/new'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -135,17 +169,45 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthedHomeRouteImport
       parentRoute: typeof AuthedRoute
     }
+    '/_authed/pantry/new': {
+      id: '/_authed/pantry/new'
+      path: '/new'
+      fullPath: '/pantry/new'
+      preLoaderRoute: typeof AuthedPantryNewRouteImport
+      parentRoute: typeof AuthedPantryRoute
+    }
+    '/_authed/pantry/$itemId': {
+      id: '/_authed/pantry/$itemId'
+      path: '/$itemId'
+      fullPath: '/pantry/$itemId'
+      preLoaderRoute: typeof AuthedPantryItemIdRouteImport
+      parentRoute: typeof AuthedPantryRoute
+    }
   }
 }
 
+interface AuthedPantryRouteChildren {
+  AuthedPantryItemIdRoute: typeof AuthedPantryItemIdRoute
+  AuthedPantryNewRoute: typeof AuthedPantryNewRoute
+}
+
+const AuthedPantryRouteChildren: AuthedPantryRouteChildren = {
+  AuthedPantryItemIdRoute: AuthedPantryItemIdRoute,
+  AuthedPantryNewRoute: AuthedPantryNewRoute,
+}
+
+const AuthedPantryRouteWithChildren = AuthedPantryRoute._addFileChildren(
+  AuthedPantryRouteChildren,
+)
+
 interface AuthedRouteChildren {
   AuthedHomeRoute: typeof AuthedHomeRoute
-  AuthedPantryRoute: typeof AuthedPantryRoute
+  AuthedPantryRoute: typeof AuthedPantryRouteWithChildren
 }
 
 const AuthedRouteChildren: AuthedRouteChildren = {
   AuthedHomeRoute: AuthedHomeRoute,
-  AuthedPantryRoute: AuthedPantryRoute,
+  AuthedPantryRoute: AuthedPantryRouteWithChildren,
 }
 
 const AuthedRouteWithChildren =
