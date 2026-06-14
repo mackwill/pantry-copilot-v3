@@ -15,6 +15,7 @@ export interface ButtonProps {
   full?: boolean;
   disabled?: boolean;
   onPress?: (() => void) | undefined;
+  testID?: string;
   style?: ViewStyle;
 }
 
@@ -41,6 +42,7 @@ export function Button({
   full = false,
   disabled = false,
   onPress,
+  testID,
   style,
 }: ButtonProps) {
   const s = sizing[size];
@@ -50,6 +52,7 @@ export function Button({
       role="button"
       disabled={disabled}
       onPress={onPress}
+      {...(testID === undefined ? {} : { testID })}
       style={[
         styles.base,
         {

@@ -13,7 +13,9 @@
   "dependencies": {
     "@better-auth/expo": "1.6.16",
     "@pantry/api-client": "workspace:*",
+    "@pantry/contracts": "workspace:*",
     "@pantry/design-system": "workspace:*",
+    "@pantry/utils": "workspace:*",
     "better-auth": "1.6.16",
     "expo": "~56.0.11",
     "expo-constants": "~56.0.18",

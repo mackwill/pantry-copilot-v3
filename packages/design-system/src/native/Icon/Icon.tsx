@@ -3,6 +3,7 @@ import {
   Archive,
   ArrowRight,
   AtSign,
+  Beef,
   Camera,
   Check,
   ChefHat,
@@ -10,6 +11,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Clock,
+  Cookie,
   Flame,
   Heart,
   House,
@@ -17,6 +19,7 @@ import {
   Lock,
   MessageSquare,
   Mic,
+  Milk,
   Minus,
   Pencil,
   Plus,
@@ -30,6 +33,8 @@ import {
   Sparkles,
   Trash2,
   User,
+  Wheat,
+  Wine,
   X,
   // The package root barrel is broken in 1.17.0 (re-exports a LucideProvider
   // that context.mjs never defines); the /icons subpath sidesteps it.
@@ -43,6 +48,7 @@ export type IconName =
   | 'Archive'
   | 'ArrowRight'
   | 'AtSign'
+  | 'Beef'
   | 'Camera'
   | 'Check'
   | 'ChefHat'
@@ -51,6 +57,7 @@ export type IconName =
   | 'ChevronRight'
   | 'Chrome'
   | 'Clock'
+  | 'Cookie'
   | 'Flame'
   | 'Heart'
   | 'House'
@@ -58,6 +65,7 @@ export type IconName =
   | 'Lock'
   | 'MessageSquare'
   | 'Mic'
+  | 'Milk'
   | 'Minus'
   | 'Pencil'
   | 'Plus'
@@ -71,6 +79,8 @@ export type IconName =
   | 'Sparkles'
   | 'Trash2'
   | 'User'
+  | 'Wheat'
+  | 'Wine'
   | 'X';
 
 interface RenderedIconProps {
@@ -85,6 +95,7 @@ const iconMap: Record<IconName, ComponentType<RenderedIconProps>> = {
   Archive,
   ArrowRight,
   AtSign,
+  Beef,
   Camera,
   Check,
   ChefHat,
@@ -93,6 +104,7 @@ const iconMap: Record<IconName, ComponentType<RenderedIconProps>> = {
   ChevronRight,
   Chrome,
   Clock,
+  Cookie,
   Flame,
   Heart,
   House,
@@ -100,6 +112,7 @@ const iconMap: Record<IconName, ComponentType<RenderedIconProps>> = {
   Lock,
   MessageSquare,
   Mic,
+  Milk,
   Minus,
   Pencil,
   Plus,
@@ -113,6 +126,8 @@ const iconMap: Record<IconName, ComponentType<RenderedIconProps>> = {
   Sparkles,
   Trash2,
   User,
+  Wheat,
+  Wine,
   X,
 };
 

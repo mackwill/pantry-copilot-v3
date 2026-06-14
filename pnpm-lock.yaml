@@ -56,9 +56,15 @@ importers:
       '@pantry/api-client':
         specifier: workspace:*
         version: link:../../packages/api-client
+      '@pantry/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
       '@pantry/design-system':
         specifier: workspace:*
         version: link:../../packages/design-system
+      '@pantry/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
       better-auth:
         specifier: 1.6.16
         version: 1.6.16(@tanstack/react-start@1.168.25(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(vite@8.0.16(@types/node@25.9.3)(esbuild@0.28.0)(jiti@2.7.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0)))(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@types/pg@8.20.0)(kysely@0.29.2)(pg@8.21.0))(pg@8.21.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(vitest@4.1.8)
@@ -141,9 +147,15 @@ importers:
       '@pantry/config':
         specifier: workspace:*
         version: link:../../packages/config
+      '@pantry/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
       '@pantry/design-system':
         specifier: workspace:*
         version: link:../../packages/design-system
+      '@pantry/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
       '@tanstack/react-router':
         specifier: 1.170.15
         version: 1.170.15(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -234,6 +246,16 @@ importers:
         specifier: 25.9.3
         version: 25.9.3
 
+  packages/contracts:
+    dependencies:
+      zod:
+        specifier: 4.4.3
+        version: 4.4.3
+    devDependencies:
+      vitest:
+        specifier: 4.1.8
+        version: 4.1.8(@types/node@25.9.3)(@vitest/coverage-v8@4.1.8)(jsdom@29.1.1(@noble/hashes@2.2.0))(vite@8.0.16(@types/node@25.9.3)(esbuild@0.28.0)(jiti@2.7.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))
+
   packages/design-system:
     dependencies:
       lucide-react:
@@ -280,6 +302,16 @@ importers:
         specifier: 4.22.4
         version: 4.22.4
 
+  packages/utils:
+    dependencies:
+      '@pantry/contracts':
+        specifier: workspace:*
+        version: link:../contracts
+    devDependencies:
+      vitest:
+        specifier: 4.1.8
+        version: 4.1.8(@types/node@25.9.3)(@vitest/coverage-v8@4.1.8)(jsdom@29.1.1(@noble/hashes@2.2.0))(vite@8.0.16(@types/node@25.9.3)(esbuild@0.28.0)(jiti@2.7.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))
+
   services/api:
     dependencies:
       '@better-auth/expo':
@@ -297,6 +329,9 @@ importers:
       '@pantry/config':
         specifier: workspace:*
         version: link:../../packages/config
+      '@pantry/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
       '@trpc/server':
         specifier: 11.17.0
         version: 11.17.0(typescript@6.0.3)

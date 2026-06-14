@@ -25,12 +25,17 @@ export default tseslint.config(
     rules: { '@typescript-eslint/no-require-imports': 'off' },
   },
   {
-    // TanStack Router's control flow throws Redirect (a Response subtype) by design
+    // TanStack Router's control flow throws Redirect / NotFoundError by design
     files: ['apps/web/**/*.ts', 'apps/web/**/*.tsx'],
     rules: {
       '@typescript-eslint/only-throw-error': [
         'error',
-        { allow: [{ from: 'package', name: 'Redirect', package: '@tanstack/router-core' }] },
+        {
+          allow: [
+            { from: 'package', name: 'Redirect', package: '@tanstack/router-core' },
+            { from: 'package', name: 'NotFoundError', package: '@tanstack/router-core' },
+          ],
+        },
       ],
     },
   },

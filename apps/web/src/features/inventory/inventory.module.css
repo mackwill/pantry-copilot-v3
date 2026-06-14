@@ -1,0 +1,189 @@
+/* Inventory screen (board §05) — header, stat cards, filter row, item table. */
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 18px;
+}
+
+.title {
+  font: 400 48px/1 var(--font-display);
+  letter-spacing: -0.025em;
+  margin: 0;
+}
+
+.subtitle {
+  font: 400 14px/1.4 var(--font-sans);
+  color: var(--fg-muted);
+  margin-top: 8px;
+}
+
+.subtitleCount {
+  font-family: var(--font-mono);
+}
+
+/* Topbar / filter-row action button groups. */
+.actions {
+  display: flex;
+  gap: 6px;
+}
+
+/* Stats row */
+.stats {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.statCard {
+  flex: 1;
+}
+
+.statLabel {
+  font: 600 11px/1 var(--font-sans);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--fg-subtle);
+}
+
+.statValue {
+  font: 400 32px/1 var(--font-display);
+  letter-spacing: -0.02em;
+  color: var(--fg);
+  margin-top: 10px;
+}
+
+.statDelta {
+  font: 400 12px/1.4 var(--font-sans);
+  color: var(--fg-subtle);
+  margin-top: 8px;
+}
+
+.statDelta.warn {
+  color: var(--warning);
+}
+
+.statDelta.danger {
+  color: var(--danger);
+}
+
+/* Category filter row */
+.filterRow {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 14px;
+  align-items: center;
+}
+
+.pillButton {
+  all: unset;
+  cursor: pointer;
+  display: inline-flex;
+  border-radius: var(--r-pill);
+}
+
+.pillButton:focus-visible {
+  box-shadow: var(--ring);
+}
+
+.filterActions {
+  margin-left: auto;
+  display: flex;
+  gap: 6px;
+}
+
+/* Table */
+.row {
+  display: grid;
+  grid-template-columns: 1fr 0.6fr 0.7fr 0.7fr 0.7fr 0.5fr;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 20px;
+  border-bottom: 1px solid var(--line);
+  font: 400 14px/1.4 var(--font-sans);
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.headRow {
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--line);
+  background: var(--bg-sunk);
+  font: 600 11px/1 var(--font-sans);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--fg-subtle);
+}
+
+.headRight {
+  text-align: right;
+}
+
+.itemCell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font: 500 14px/1.4 var(--font-sans);
+  color: var(--fg);
+}
+
+.itemName {
+  all: unset;
+  cursor: pointer;
+  font: 500 14px/1.4 var(--font-sans);
+  color: var(--fg);
+}
+
+.itemName:hover {
+  color: var(--accent);
+}
+
+.itemName:focus-visible {
+  outline: none;
+  box-shadow: var(--ring);
+  border-radius: var(--r-sm);
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--r-pill);
+  flex-shrink: 0;
+}
+
+.dot.success {
+  background: var(--success);
+}
+
+.dot.warning {
+  background: var(--warning);
+}
+
+.dot.danger {
+  background: var(--danger);
+}
+
+.qtyCell {
+  font: 400 13px/1.4 var(--font-mono);
+  color: var(--fg-muted);
+}
+
+.mutedCell {
+  color: var(--fg-muted);
+}
+
+.addedCell {
+  text-align: right;
+  font: 400 12px/1.4 var(--font-mono);
+  color: var(--fg-subtle);
+}
+
+.empty {
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--fg-subtle);
+  font: 400 14px/1.4 var(--font-sans);
+}

@@ -4,6 +4,7 @@ import { readEnv } from '../src/env.js';
 import { buildServer, createDeps } from '../src/server.js';
 import { createTestDb, type TestDb } from './helpers/test-db.js';
 import { cookieOf } from './helpers/cookie.js';
+import { signUp } from './helpers/auth.js';
 
 describe('trpc user.me', () => {
   let testDb: TestDb;
@@ -21,10 +22,10 @@ describe('trpc user.me', () => {
         }),
       ),
     );
-    const signup = await app.inject({
-      method: 'POST',
-      url: '/api/auth/sign-up/email',
-      payload: { name: 'Mara', email: 'mara@example.com', password: 'hunter2hunter2' },
+    const signup = await signUp(app, {
+      name: 'Mara',
+      email: 'mara@example.com',
+      password: 'hunter2hunter2',
     });
     expect(signup.statusCode, 'signup in beforeAll must succeed').toBe(200);
     cookie = cookieOf(signup);
