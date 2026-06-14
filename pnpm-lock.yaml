@@ -141,9 +141,15 @@ importers:
       '@pantry/config':
         specifier: workspace:*
         version: link:../../packages/config
+      '@pantry/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
       '@pantry/design-system':
         specifier: workspace:*
         version: link:../../packages/design-system
+      '@pantry/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
       '@tanstack/react-router':
         specifier: 1.170.15
         version: 1.170.15(react-dom@19.2.7(react@19.2.7))(react@19.2.7)

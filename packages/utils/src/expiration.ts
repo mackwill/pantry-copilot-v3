@@ -18,6 +18,16 @@ export function freshnessFor(bestBy: string | null, now: Date = new Date()): Fre
   return { tone: 'success', daysLeft };
 }
 
+/** Short, board-style freshness label for the Status column (e.g. "2 days", "3 wk", "6 mo"). */
+export function freshnessLabel(f: Freshness): string {
+  const { daysLeft } = f;
+  if (daysLeft === null) return 'fresh';
+  if (daysLeft < 0) return 'past prime';
+  if (daysLeft <= 14) return daysLeft === 1 ? '1 day' : `${String(daysLeft)} days`;
+  if (daysLeft < 60) return `${String(Math.round(daysLeft / 7))} wk`;
+  return `${String(Math.round(daysLeft / 30))} mo`;
+}
+
 const TONE_RANK: Record<FreshnessTone, number> = { danger: 0, warning: 1, success: 2 };
 
 export function rankByExpiration<T extends { bestBy: string | null }>(items: readonly T[], now: Date = new Date()): T[] {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { freshnessFor, rankByExpiration } from './expiration';
+import { freshnessFor, freshnessLabel, rankByExpiration } from './expiration';
 
 const today = new Date('2026-04-21T12:00:00Z');
 
@@ -28,5 +28,26 @@ describe('rankByExpiration', () => {
       { id: 'c', bestBy: '2026-04-23' },
     ];
     expect(rankByExpiration(items, today).map((i) => i.id)).toEqual(['b', 'c', 'a']);
+  });
+});
+
+describe('freshnessLabel', () => {
+  it('reports "fresh" when untracked (daysLeft null)', () => {
+    expect(freshnessLabel({ tone: 'success', daysLeft: null })).toBe('fresh');
+  });
+  it('reports "past prime" when overdue', () => {
+    expect(freshnessLabel({ tone: 'danger', daysLeft: -2 })).toBe('past prime');
+  });
+  it('reports days within two weeks', () => {
+    expect(freshnessLabel({ tone: 'warning', daysLeft: 2 })).toBe('2 days');
+  });
+  it('uses the singular form for one day', () => {
+    expect(freshnessLabel({ tone: 'warning', daysLeft: 1 })).toBe('1 day');
+  });
+  it('reports weeks under 60 days', () => {
+    expect(freshnessLabel({ tone: 'success', daysLeft: 21 })).toBe('3 wk');
+  });
+  it('reports months for longer horizons', () => {
+    expect(freshnessLabel({ tone: 'success', daysLeft: 180 })).toBe('6 mo');
   });
 });
