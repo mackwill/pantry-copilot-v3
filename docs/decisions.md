@@ -2,6 +2,45 @@
 
 Board-silent composition calls and scope deviations, newest first.
 
+## 2026-06-14 — M3 (AI service v1 + camera scan)
+
+Settled scope (agreed with user 2026-06-14):
+
+- **Synchronous extract + persisted `image_scans` record, no polling.** `scan.extract` forwards
+  the base64 image to the AI service and returns the extracted items in one tRPC round-trip,
+  writing an `image_scans` row (`status` lifecycle + extracted JSON + provider/model/tokens) for
+  audit. No job queue or polling endpoint — extraction is a few seconds; the board "Detecting"
+  frame is the client-side waiting state. A separate `scan.confirm` mutation creates the selected
+  pantry items in one transaction (reusing M2's insert + `inventory_events` `added` pattern).
+- **Deferred blob storage / nullable `raw_image_url`.** The image travels base64 api→ai and the
+  raw bytes are discarded after extraction. `image_scans.raw_image_url` stays nullable; no object
+  store this milestone.
+- **"Added" screen CTAs are stubs until M4.** Board frame 4 ("See tonight's ideas" / "3 new ideas
+  ready") points at generation (M4). The CTAs render per board; "See tonight's ideas" is a no-op
+  and "View pantry" navigates to the pantry tab. The ideas card count (3) is a static board value.
+- **Camera fidelity over a reproduced fixture scene.** The iOS simulator has no camera; the board
+  itself composites a *fake* fridge scene from CSS gradients + blurred colored rectangles (not a
+  photo), so `ViewfinderStep`/`DetectingOverlay` reproduce that scene with RN `View`s. A bundled
+  tiny sample JPEG (`SAMPLE_IMAGE_BASE64`) feeds the no-camera dev/CI intake (gallery button +
+  Maestro), exercising the same `extract` path. The mock provider makes the Detecting/Review
+  frames deterministic.
+- **AI extraction reuses the M2 pantry enums + normalization coercion.** `ExtractedIngredient`
+  reuses `pantryCategory`/`pantryLocation`/`pantryUnit`; every enum/number field is defensively
+  `.catch(null)` so malformed model output never throws. The AI-service normalization pipeline
+  alias-maps free-form model units/categories onto our enums (e.g. tub→jar, meat→protein) and
+  dedupes by `normalizedName`, so AI output and storage never drift.
+- **`AI_SERVICE_TOKEN` is optional on the api side, required on the ai side.** The AI service
+  validates a ≥32-char token (fail-fast); the api treats it as optional (the AI service is the
+  auth authority) so existing integration tests need no token. Dev/compose supply a shared token.
+- **Scan is a full-screen modal flow, not a tab destination.** Route groups are URL-transparent,
+  so the flow lives at `app/(scan)/scan.tsx` (URL `/scan`, `fullScreenModal` presentation,
+  mirroring the `(modals)` pattern). The tab-bar "Scan" item intercepts its press to
+  `router.push('/scan')` rather than navigating to a tab, so the dark viewfinder is not framed by
+  the tab bar (per board §08, which shows no tab bar on the scan flow).
+- **Added `Zap` + `Image` icons to the design-system registry.** Board §08 viewfinder chrome uses
+  a flash (zap) and gallery (image) glyph; both were missing from the curated lucide set. Adding
+  them is faithful to the board, not invented visual language.
+
 ## 2026-06-14 — M2 close-out (Pantry core, Slice J)
 
 Settled scope (agreed with user 2026-06-13):

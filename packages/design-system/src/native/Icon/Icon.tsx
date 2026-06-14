@@ -15,6 +15,7 @@ import {
   Flame,
   Heart,
   House,
+  Image as ImageIcon,
   Leaf,
   Lock,
   MessageSquare,
@@ -36,6 +37,7 @@ import {
   Wheat,
   Wine,
   X,
+  Zap,
   // The package root barrel is broken in 1.17.0 (re-exports a LucideProvider
   // that context.mjs never defines); the /icons subpath sidesteps it.
 } from 'lucide-react-native/icons';
@@ -61,6 +63,7 @@ export type IconName =
   | 'Flame'
   | 'Heart'
   | 'House'
+  | 'Image'
   | 'Leaf'
   | 'Lock'
   | 'MessageSquare'
@@ -81,7 +84,8 @@ export type IconName =
   | 'User'
   | 'Wheat'
   | 'Wine'
-  | 'X';
+  | 'X'
+  | 'Zap';
 
 interface RenderedIconProps {
   size?: number;
@@ -108,6 +112,7 @@ const iconMap: Record<IconName, ComponentType<RenderedIconProps>> = {
   Flame,
   Heart,
   House,
+  Image: ImageIcon,
   Leaf,
   Lock,
   MessageSquare,
@@ -129,6 +134,7 @@ const iconMap: Record<IconName, ComponentType<RenderedIconProps>> = {
   Wheat,
   Wine,
   X,
+  Zap,
 };
 
 export interface IconProps {

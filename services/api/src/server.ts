@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import cors from '@fastify/cors';
 import helmet from '@fastify/helmet';
 import rateLimit from '@fastify/rate-limit';
@@ -11,6 +12,7 @@ import { MagicLinkOutbox } from './auth/magic-link-outbox.js';
 import { registerAuthRoutes } from './auth/routes.js';
 import { createDb, type Db } from './db/client.js';
 import { webOrigins, type Env } from './env.js';
+import { type AiClient, createHttpAiClient } from './lib/ai-client.js';
 import { createContextFactory } from './trpc/context.js';
 import { appRouter } from './trpc/router.js';
 
@@ -20,18 +22,26 @@ export interface AppDeps {
   pool: Pool;
   auth: Auth;
   outbox: MagicLinkOutbox;
+  aiClient: AiClient;
 }
 
-export function createDeps(env: Env): AppDeps {
+export function createDeps(env: Env, overrides: Partial<Pick<AppDeps, 'aiClient'>> = {}): AppDeps {
   const { db, pool } = createDb(env.DATABASE_URL);
   const outbox = new MagicLinkOutbox();
   const auth = createAuth({ env, db, outbox });
-  return { env, db, pool, auth, outbox };
+  const aiClient = overrides.aiClient ?? createHttpAiClient({ baseUrl: env.AI_SERVICE_URL, token: env.AI_SERVICE_TOKEN });
+  return { env, db, pool, auth, outbox, aiClient };
 }
 
 export async function buildServer(deps: AppDeps): Promise<FastifyInstance> {
   const { env, db, pool, auth } = deps;
-  const app = Fastify({ logger: env.NODE_ENV !== 'test' });
+  const app = Fastify({
+    logger: env.NODE_ENV !== 'test',
+    genReqId: (req) => {
+      const header = req.headers['x-request-id'];
+      return typeof header === 'string' && header.length > 0 ? header : randomUUID();
+    },
+  });
 
   app.addHook('onClose', async () => {
     await pool.end();

@@ -1,0 +1,13 @@
+FROM docker.io/library/node:22-slim AS build
+RUN corepack enable
+WORKDIR /repo
+COPY . .
+RUN pnpm install --frozen-lockfile --filter @pantry/ai...
+RUN pnpm --filter @pantry/ai... build
+RUN pnpm --config.force-legacy-deploy=true deploy --filter @pantry/ai --prod /out
+
+FROM docker.io/library/node:22-slim
+WORKDIR /app
+COPY --from=build /out .
+EXPOSE 4001
+CMD ["node", "dist/index.js"]

@@ -1,5 +1,5 @@
 import { MobileTabBar, type MobileTabBarItem } from '@pantry/design-system/native';
-import { Tabs } from 'expo-router';
+import { Tabs, useRouter } from 'expo-router';
 import { shellStrings } from '../../features/shell/strings';
 
 const items: MobileTabBarItem[] = [
@@ -11,6 +11,7 @@ const items: MobileTabBarItem[] = [
 ];
 
 export default function TabsLayout() {
+  const router = useRouter();
   return (
     <Tabs
       screenOptions={{ headerShown: false }}
@@ -19,6 +20,11 @@ export default function TabsLayout() {
           items={items}
           active={state.routes[state.index]?.name ?? 'index'}
           onPress={(id) => {
+            // Scan is a full-screen modal flow, not a tab destination.
+            if (id === 'scan') {
+              router.push('/scan');
+              return;
+            }
             navigation.navigate(id);
           }}
         />
@@ -27,7 +33,6 @@ export default function TabsLayout() {
       <Tabs.Screen name="index" />
       <Tabs.Screen name="pantry" />
       <Tabs.Screen name="cook" />
-      <Tabs.Screen name="scan" />
       <Tabs.Screen name="me" />
     </Tabs>
   );
