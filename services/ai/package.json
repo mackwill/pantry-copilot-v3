@@ -14,10 +14,12 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "0.104.1",
     "@fastify/helmet": "13.0.2",
     "@pantry/config": "workspace:*",
     "@pantry/contracts": "workspace:*",
     "fastify": "5.8.5",
+    "openai": "6.42.0",
     "zod": "4.4.3"
   },
   "devDependencies": {
