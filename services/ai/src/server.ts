@@ -3,6 +3,7 @@ import helmet from '@fastify/helmet';
 import Fastify, { type FastifyInstance } from 'fastify';
 import type { Env } from './env.js';
 import type { AIProvider } from './providers/types.js';
+import { registerScanRoutes } from './routes/scans.js';
 
 export interface AppDeps {
   env: Env;
@@ -38,6 +39,8 @@ export async function buildServer(deps: AppDeps): Promise<FastifyInstance> {
   });
 
   app.get('/health', () => ({ status: 'ok' }));
+
+  registerScanRoutes(app, deps);
 
   return app;
 }
