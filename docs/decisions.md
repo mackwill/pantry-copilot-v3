@@ -2,6 +2,66 @@
 
 Board-silent composition calls and scope deviations, newest first.
 
+## 2026-06-14 — M2 close-out (Pantry core, Slice J)
+
+Settled scope (agreed with user 2026-06-13):
+
+- **Account screens are display-only shells (web §06 + mobile §10).** Avatar initials, name,
+  and email wire to the real session user (web `api.user.me`; mobile `authClient.useSession()`).
+  Every preference/profile/stat/subscription row renders static board content. Sign out is
+  functional on both. A `user_preferences` table and editable preferences are deferred to a
+  later milestone.
+- **Mobile tap-to-cook tray = full selection, stubbed Cook action.** The tap-to-select tray and
+  `useCookSelection` state are implemented and tested; the `Cook` button renders per board but
+  its press is a no-op placeholder until M4 wires generation.
+- **Recipe detail frame excluded from M2** (roadmap assigns it to M5). M2 shipped 10 frames
+  (3 web + 7 mobile).
+
+Inventory event log:
+
+- `inventory_events` records `added`/`edited` rows inside the same transaction as the item
+  mutation. The `removed` event is **intentionally not persisted**: `inventory_events.item_id`
+  cascades on item delete, so a delete leaves no orphan event. If an audit trail outliving the
+  item is ever needed, drop the FK cascade or null the FK. Out of scope for M2.
+
+Board-silent composition / sanctioned deviations:
+
+- **Ingredient form unified create + edit.** The board §06 frame is edit-only, but the Inventory
+  "Add ingredient" button and the e2e add→edit→delete flow need a create path, so one web form
+  serves both (`/pantry/new` create, `/pantry/$itemId` edit; "Remove" shows only when editing).
+- **Web enum fields use native `<select>` + notes uses `<textarea>`** (styled to match `Input`):
+  the board shows text inputs, but there is no Select primitive and enum values must be picked
+  reliably. Standard HTML elements, not invented primitives.
+- **Web Inventory `StatCard` composed from `Card` + tokens** (no StatCard primitive); stat deltas
+  derived from real data (distinct locations; warning/danger item names).
+- **Category filter uses the 7 contract categories** (Produce/Dairy/Pantry/Protein/Freezer/
+  Drinks/Treats), not the board's v2 sample pills (which showed a "Spice" pill with no enum).
+- **Inventory empty state** "Nothing here yet. Add your first ingredient." (board silent).
+- **Native `Pill` primitive added** (`packages/design-system/src/native/Pill`) mirroring the web
+  Pill tones — the native design system had none and the board uses status pills.
+- **Native `Button` gained an optional `testID` prop** (Maestro/e2e targeting), spread-when-defined
+  like the Icon/Input pattern.
+- **Icons added to the curated sets:** web — `Upload`, `ScanLine`, `Filter`; native — `Milk`,
+  `Wheat`, `Beef`, `Wine`, `Cookie`. Web ingredient back button uses `ChevronLeft` (no `ArrowLeft`
+  in the web union); field leftIcons from the board (milk/tag/hash/calendar) were omitted rather
+  than add icons unused elsewhere this milestone.
+- **Mobile pantry header gained a `Plus` "add" entry** (→ `/add-ingredient` modal). Board §07
+  shows only search + sliders; the add affordance is a usable entry point and a small, noted
+  divergence in the fidelity checklist.
+- **Picker sheets apply selection live** (`onSelect` fires on row tap); the footer "Use X" button
+  just confirms/closes, and "Cancel" closes without an explicit revert (parent owns state).
+- **Pure logic added to `@pantry/utils`:** `freshnessLabel` (board-style status text),
+  `monthGrid(year, monthIndex)` + `addDays` (best-by calendar), all unit-tested.
+- **`NotFoundError` added to the web `only-throw-error` lint allow-list** (alongside the existing
+  `Redirect`) for the `notFound()` route loader throw — not a suppression comment.
+
+Known mobile fidelity gaps (Input-primitive limits; polish deferred, not defects):
+
+- Add/Edit ingredient **name renders in Inter ~14px**, not the board's Newsreader display size —
+  the native `Input` exposes no text-style override.
+- Edit **notes is single-line** (`Input`), board shows a multi-line block.
+- Edit **freshness bar is a single accent fill**, board shows a green→amber gradient (not a token).
+
 ## 2026-06-13 — M1 close-out (Task 17)
 
 - **Auth scope:** board-faithful email/password plus Google and Apple OAuth, both
