@@ -6,6 +6,7 @@ export { Field, type FieldProps } from './Field/Field.js';
 export { fonts, type Fonts } from './fonts.js';
 export { Icon, type IconName, type IconProps } from './Icon/Icon.js';
 export { Input, type InputProps } from './Input/Input.js';
+export { Pill, type PillProps, type PillTone } from './Pill/Pill.js';
 export {
   MobileTabBar,
   type MobileTabBarItem,
