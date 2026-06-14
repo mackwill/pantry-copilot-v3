@@ -1,0 +1,28 @@
+# Local-only flow (CI execution deferred — see docs/checklists/m3-scan.md).
+# Precondition: api on :4000 + ai on :4001 (DEFAULT_AI_PROVIDER=mock, no keys needed),
+# maestro user created + signed in (run sign-in.yaml first, or reuse its session).
+# Uses the dev sample-image intake (the gallery button) — the simulator has no camera.
+# The mock provider returns 7 items (6 high-confidence + one low-confidence "Unknown jar"),
+# so the review screen reads "Found 6 things." The "See tonight's ideas" CTA is a stub until M4.
+appId: com.pantrycopilot.app
+---
+- launchApp
+# Open the full-screen scan flow from the tab bar
+- tapOn: 'Scan'
+- assertVisible: 'Point at your open fridge or cupboard'
+# No camera in the simulator — feed the bundled sample image
+- tapOn:
+    id: 'scan-use-sample'
+# Detecting beat (frozen via the mock provider)
+- assertVisible:
+    id: 'scan-detecting'
+# Review the extracted items
+- assertVisible: 'Review scan'
+- assertVisible:
+    text: 'Found .* things\.'
+- tapOn:
+    id: 'scan-confirm'
+# Added-to-pantry success screen
+- assertVisible:
+    id: 'scan-added'
+- assertVisible: 'Pantry updated'
