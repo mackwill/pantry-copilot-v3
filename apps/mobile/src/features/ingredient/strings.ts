@@ -28,3 +28,41 @@ export const sheetStrings = {
     hintTail: ' past purchase.',
   },
 } as const;
+
+/** Copy for the Add & Edit ingredient screens (board MobileAddIngredient / MobileIngredientForm). */
+export const formStrings = {
+  addTitle: 'Add to pantry',
+  editTitle: 'Edit item',
+  save: 'Save',
+  whatIsIt: 'What is it',
+  namePlaceholder: 'e.g. heavy cream',
+  manually: 'Manually',
+  quantity: 'Quantity',
+  unit: 'Unit',
+  category: 'Category',
+  location: 'Location',
+  bestBy: 'Best by',
+  details: 'Details',
+  freshness: 'Freshness',
+  notes: 'Notes',
+  useItIn: 'Use it in',
+  ingredient: 'Ingredient',
+  addToPantry: 'Add to pantry',
+  addAnother: 'Add and another',
+  remove: 'Remove from pantry',
+  autoDetected: 'from receipt scan',
+  autoLead: 'auto: best by',
+  noBestBy: 'no best-by set',
+  quickActions: [
+    { icon: 'ScanLine', label: 'Scan' },
+    { icon: 'Camera', label: 'Receipt' },
+    { icon: 'Mic', label: 'Speak' },
+  ],
+  nameSuggestions: ['Milk', 'Eggs', 'Butter', 'Yogurt', 'Cheese'],
+  unitPills: ['ea', 'g', 'lb', 'cup'],
+  useItInRecipes: [
+    'Milk-braised carrots',
+    'Burnt-butter milk ramen',
+    'Chili-crisp apple ice cream',
+  ],
+} as const;

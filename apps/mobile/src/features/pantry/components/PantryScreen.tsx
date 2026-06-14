@@ -1,6 +1,7 @@
 import { Icon, Eyebrow, fonts } from '@pantry/design-system/native';
 import { tokens } from '@pantry/design-system/tokens';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useRouter } from 'expo-router';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { pantryStrings } from '../strings';
 import { useCookSelection } from '../useCookSelection';
 import { usePantry } from '../usePantry';
@@ -12,6 +13,7 @@ const MAX_CHIPS = 3;
 export function PantryScreen() {
   const { needsUsing, fresh, expiringCount, items } = usePantry();
   const selection = useCookSelection();
+  const router = useRouter();
 
   const chipLabels = selection
     .selectedItems(items)
@@ -27,6 +29,15 @@ export function PantryScreen() {
             <View style={styles.icons}>
               <Icon name="Search" size={18} color={tokens.fgMuted} />
               <Icon name="SlidersHorizontal" size={18} color={tokens.fgMuted} />
+              <Pressable
+                testID="add-ingredient-button"
+                onPress={() => {
+                  router.push('/add-ingredient');
+                }}
+                hitSlop={8}
+              >
+                <Icon name="Plus" size={18} color={tokens.fgMuted} />
+              </Pressable>
             </View>
           </View>
           <Text style={styles.title}>{pantryStrings.title}</Text>
