@@ -2,12 +2,17 @@ import { randomUUID } from 'node:crypto';
 import helmet from '@fastify/helmet';
 import Fastify, { type FastifyInstance } from 'fastify';
 import type { Env } from './env.js';
+import { buildProvider } from './providers/index.js';
 import type { AIProvider } from './providers/types.js';
 import { registerScanRoutes } from './routes/scans.js';
 
 export interface AppDeps {
   env: Env;
   provider: AIProvider;
+}
+
+export function createDeps(env: Env): AppDeps {
+  return { env, provider: buildProvider(env) };
 }
 
 /** Base64 fridge photos are large; lift the 1MB default to ~20MB. */

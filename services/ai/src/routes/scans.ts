@@ -1,5 +1,6 @@
 import { type AIImageExtractionResponse, aiImageExtractionRequestSchema } from '@pantry/contracts';
 import type { FastifyInstance } from 'fastify';
+import { logExtractionCost } from '../lib/log.js';
 import { dedupeScanIngredients, normalizeScanIngredients } from '../pipelines/scan-normalize.js';
 import type { AppDeps } from '../server.js';
 
@@ -10,6 +11,7 @@ export function registerScanRoutes(app: FastifyInstance, deps: AppDeps): void {
       return reply.code(400).send({ message: 'Invalid extraction request', issues: parsed.error.issues });
     }
 
+    const startedAt = Date.now();
     try {
       const raw = await deps.provider.extractFromImage(parsed.data);
       const normalized = normalizeScanIngredients(raw.result.ingredients);
@@ -24,6 +26,13 @@ export function registerScanRoutes(app: FastifyInstance, deps: AppDeps): void {
           reviewNotes: raw.result.reviewNotes,
         },
       };
+      logExtractionCost(req.log, {
+        provider: response.provider,
+        model: response.model,
+        tokensIn: response.tokensUsed.input,
+        tokensOut: response.tokensUsed.output,
+        ms: Date.now() - startedAt,
+      });
       return response;
     } catch (err) {
       // Resilience: a provider failure must never 500 the caller. Return a valid
