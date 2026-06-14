@@ -1,0 +1,20 @@
+# Local-only flow (CI execution deferred — see docs/checklists/m2-pantry.md).
+# Precondition: api on :4000 with the maestro user created + signed in (run sign-in.yaml
+# first, or reuse its session). Tap-to-cook selection shows the Cook tray; the Cook
+# button itself is a stub until M4.
+appId: com.pantrycopilot.app
+---
+- launchApp
+# Land on the Pantry tab
+- tapOn: 'Pantry'
+- assertVisible: "What's in?"
+- assertVisible: 'Needs using'
+# Tap the first pantry row to select it → the Cook tray appears
+- tapOn:
+    id: 'pantry-row-.*'
+    index: 0
+- assertVisible:
+    id: 'cook-tray'
+- assertVisible: 'Cook with 1'
+- assertVisible:
+    id: 'cook-button'
