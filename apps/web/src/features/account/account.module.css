@@ -1,0 +1,197 @@
+/* Account settings screen (board §06) — layout, sub-nav, avatar, cards. Token vars only. */
+
+/* ── Top bar: back button row ── */
+.topBar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 28px;
+}
+
+/* ── Settings grid: 220px sub-nav | content column ── */
+.grid {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 36px;
+  max-width: 980px;
+}
+
+/* ── Settings sub-nav ── */
+.sidebarEyebrow {
+  margin-bottom: 8px;
+}
+
+.navRow {
+  all: unset;
+  display: block;
+  width: 100%;
+  padding: 9px 12px;
+  border-radius: var(--r-md);
+  font: 400 14px/1.4 var(--font-sans);
+  color: var(--fg-muted);
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.navRow:hover {
+  background: var(--bg-sunk);
+  color: var(--fg);
+}
+
+.navRowSelected {
+  background: var(--bg-sunk);
+  color: var(--fg);
+  font-weight: 500;
+}
+
+.navRowSignOut {
+  color: var(--danger);
+}
+
+.navRowSignOut:hover {
+  background: var(--danger-soft);
+  color: var(--danger-fg);
+}
+
+/* ── Page title ── */
+.pageTitle {
+  font: 400 40px/1.1 var(--font-display);
+  letter-spacing: -0.025em;
+  color: var(--fg);
+  margin: 0 0 20px;
+}
+
+/* ── Content column ── */
+.contentCol {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ── Profile card ── */
+.profileHeader {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--bg-inverse);
+  color: var(--fg-on-inverse);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 600 22px/1 var(--font-display);
+  flex-shrink: 0;
+}
+
+.profileMeta {
+  flex: 1;
+}
+
+.profileName {
+  font: 600 18px/1.3 var(--font-sans);
+  color: var(--fg);
+}
+
+.profileSub {
+  font: 400 14px/1.4 var(--font-sans);
+  color: var(--fg-muted);
+  margin-top: 2px;
+}
+
+.profileActions {
+  flex-shrink: 0;
+}
+
+/* 2-col field grid */
+.fieldGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+/* ── Cooking preferences card ── */
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.cardTitle {
+  font: 600 16px/1.3 var(--font-sans);
+  color: var(--fg);
+  margin: 0;
+}
+
+.editLink {
+  font: 400 14px/1.4 var(--font-sans);
+  color: var(--accent);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.editLink:hover {
+  color: var(--accent-hover);
+  text-decoration: underline;
+}
+
+.prefRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+  gap: 12px;
+}
+
+.prefRow:last-child {
+  border-bottom: none;
+}
+
+.prefLabel {
+  font: 400 14px/1.4 var(--font-sans);
+  color: var(--fg-muted);
+  flex-shrink: 0;
+}
+
+.prefValue {
+  font: 400 14px/1.4 var(--font-sans);
+  color: var(--fg);
+  text-align: right;
+}
+
+.prefValueWeirdness {
+  font: 400 italic 15px/1.4 var(--font-display);
+  color: var(--fg);
+  text-align: right;
+}
+
+/* ── Stats card ── */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.statItem {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.statValue {
+  font: 400 38px/1 var(--font-display);
+  letter-spacing: -0.025em;
+  color: var(--fg);
+}
+
+.statLabel {
+  font: 400 13px/1.4 var(--font-sans);
+  color: var(--fg-muted);
+}
