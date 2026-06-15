@@ -1,5 +1,7 @@
-import type { AIImageExtractionResponse, ExtractedIngredient } from '@pantry/contracts';
-import { type AIProvider, notImplementedUntilM4 } from './types.js';
+import type { AIGenerationRequest, AIImageExtractionResponse, ExtractedIngredient, GenerationEvent } from '@pantry/contracts';
+import { MOCK_RECIPE, mockTape } from './mock-tape.js';
+import { type RawProviderEvent, runRecipeStream } from './stream-orchestrator.js';
+import type { AIProvider, StructuredRecipeResult } from './types.js';
 
 const MODEL = 'mock-vision';
 
@@ -22,18 +24,23 @@ function cannedResponse(): AIImageExtractionResponse {
   return {
     provider: 'mock',
     model: MODEL,
-    result: {
-      ingredients: CANNED_INGREDIENTS.map((i) => ({ ...i })),
-      duplicatesMerged: [],
-      reviewNotes: null,
-    },
+    result: { ingredients: CANNED_INGREDIENTS.map((i) => ({ ...i })), duplicatesMerged: [], reviewNotes: null },
     tokensUsed: { input: 0, output: 0 },
+  };
+}
+
+function tapeRunner(): (req: AIGenerationRequest, signal: AbortSignal) => AsyncIterable<RawProviderEvent> {
+  return async function* () {
+    await Promise.resolve();
+    for (const event of mockTape()) yield event;
   };
 }
 
 export const mockProvider: AIProvider = {
   name: 'mock',
-  generateStructured: () => notImplementedUntilM4('generateStructured'),
-  streamStructured: () => notImplementedUntilM4('streamStructured'),
+  generateStructured: (): Promise<StructuredRecipeResult> =>
+    Promise.resolve({ recipe: MOCK_RECIPE, tokensUsed: { input: 0, output: 0 } }),
+  streamStructured: (req: AIGenerationRequest, signal: AbortSignal): AsyncIterable<GenerationEvent> =>
+    runRecipeStream(req, tapeRunner(), signal),
   extractFromImage: (): Promise<AIImageExtractionResponse> => Promise.resolve(cannedResponse()),
 };

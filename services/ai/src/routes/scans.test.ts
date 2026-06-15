@@ -3,7 +3,7 @@ import type { FastifyInstance } from 'fastify';
 import { afterEach, describe, expect, it } from 'vitest';
 import { readEnv } from '../env.js';
 import { mockProvider } from '../providers/mock.js';
-import { type AIProvider, notImplementedUntilM4 } from '../providers/types.js';
+import type { AIProvider } from '../providers/types.js';
 import { buildServer } from '../server.js';
 
 const TOKEN = 'test-service-token-0123456789abcdef';
@@ -15,8 +15,8 @@ function makeEnv() {
 
 const throwingProvider: AIProvider = {
   name: 'mock',
-  generateStructured: () => notImplementedUntilM4('generateStructured'),
-  streamStructured: () => notImplementedUntilM4('streamStructured'),
+  generateStructured: () => Promise.reject(new Error('not used')),
+  streamStructured: () => { throw new Error('not used'); },
   extractFromImage: (): Promise<AIImageExtractionResponse> => Promise.reject(new Error('provider exploded')),
 };
 

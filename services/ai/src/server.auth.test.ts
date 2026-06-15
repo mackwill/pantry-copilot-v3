@@ -4,14 +4,13 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { readEnv } from './env.js';
 import { buildServer } from './server.js';
 import type { AIProvider } from './providers/types.js';
-import { notImplementedUntilM4 } from './providers/types.js';
 
 const TEST_TOKEN = 'test-service-token-0123456789abcdef';
 
 const stubProvider: AIProvider = {
   name: 'mock',
-  generateStructured: () => notImplementedUntilM4('generateStructured'),
-  streamStructured: () => notImplementedUntilM4('streamStructured'),
+  generateStructured: () => Promise.reject(new Error('not used')),
+  streamStructured: () => { throw new Error('not used'); },
   extractFromImage: (): Promise<AIImageExtractionResponse> =>
     Promise.resolve({
       provider: 'mock',

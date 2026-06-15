@@ -1,0 +1,106 @@
+import { type AIPantryChip, type WeirdnessBand, weirdnessBand } from '@pantry/contracts';
+
+/**
+ * Per-band posture. Two design rules these strings live under:
+ *  1. NEVER name a concrete output dish or pairing — the model anchors on
+ *     baked-in examples and repeats them. Describe HOW bold to be and
+ *     WHICH dimensions are fair game; let the model invent.
+ *  2. The guidance applies to ANY request shape — a named dish, a pile of
+ *     pantry ingredients, or a freeform prompt. Each entry defines the
+ *     failure mode (the floor) rather than prescribing the destination.
+ */
+const BAND_GUIDANCE: Record<WeirdnessBand, string> = {
+  normal:
+    'Posture: classic and conservative. Lean on familiar, broadly-recognized combinations and canonical techniques. Failure mode: a recipe a competent home cook would consider strange or attention-seeking.',
+  curious:
+    'Posture: mostly familiar with a light personal touch — one modest swap, addition, or technique tweak. The dish should still read as the thing it is. Failure mode: a perfectly textbook execution with no personality, or a dish whose central identity has been swapped out entirely.',
+  interesting:
+    'Posture: notably creative while clearly edible and approachable. Vary one meaningful dimension — flavor profile, technique, or hero ingredient — but keep the result coherent and inviting. Failure mode: a recipe a cook would call "just the normal version."',
+  adventurous:
+    'Posture: bold and inventive. Depart from the obvious answer along some meaningful axis — flavor profile, technique, cuisine cross-pollination, format, hero ingredient, course, or temperature. A lone ingredient swap is NOT a meaningful departure. Failure mode: the canonical/textbook version, or that version with a single item traded.',
+  chaotic:
+    'Posture: genuinely unexpected and boundary-pushing, while always food-safe and actually edible. Meaningfully subvert expectations along whichever axis you choose (temperature, sweetness, texture, format, cuisine, course, time of day). Failure mode: anything a reader would call "normal."',
+};
+
+const BAND_BOUNDS: Record<WeirdnessBand, readonly [number, number]> = {
+  normal: [0, 20],
+  curious: [21, 40],
+  interesting: [41, 60],
+  adventurous: [61, 80],
+  chaotic: [81, 100],
+};
+
+/**
+ * Surface the score's relative position within its band so two scores in
+ * the same band (e.g. 65 vs 80) feel different — the slider is a
+ * continuous dial, not a five-step switch.
+ */
+function intensityCalibration(score: number, band: WeirdnessBand): string {
+  const [lo, hi] = BAND_BOUNDS[band];
+  const span = hi - lo;
+  const rel = span === 0 ? 0.5 : (score - lo) / span;
+  if (rel <= 0.33) {
+    return `Score ${String(score)} sits near the FLOOR of this band — lean toward the milder, more restrained end of "${band}."`;
+  }
+  if (rel <= 0.66) {
+    return `Score ${String(score)} sits MID-BAND — calibrate squarely to "${band}"; do not hedge toward an adjacent band.`;
+  }
+  return `Score ${String(score)} sits near the CEILING of this band — push toward the bolder, more committed end of "${band}."`;
+}
+
+export interface BuildGenerationPromptOptions {
+  /** Hard dietary constraints, surfaced verbatim as enumerated rules. */
+  dietary?: ReadonlyArray<string>;
+}
+
+function describeChip(chip: AIPantryChip): string {
+  const qty = chip.quantity != null ? `${String(chip.quantity)}${chip.unit ? ` ${chip.unit}` : ''} ` : '';
+  const expiry = chip.expiresInDays != null && chip.expiresInDays <= 3 ? ' (expiring soon — prioritize)' : '';
+  return `- ${qty}${chip.name}${expiry}`;
+}
+
+/**
+ * Build the recipe-generation system prompt. Pure function of the
+ * weirdness score, the resolved pantry chips, and optional constraints.
+ */
+export function buildGenerationSystemPrompt(
+  weirdness: number,
+  pantry: ReadonlyArray<AIPantryChip>,
+  options: BuildGenerationPromptOptions = {},
+): string {
+  const band = weirdnessBand(weirdness);
+  const dietary = options.dietary ?? [];
+  const lines = [
+    'You are Pantry CoPilot, a kitchen assistant that suggests ONE recipe from a user pantry and request.',
+    'You have tools to inspect the pantry and brainstorm:',
+    '- `read_pantry` — list the pantry items the user has.',
+    '- `filter_expiring` — see which items are about to go off.',
+    '- `search_pantry_combos` — segment the pantry by priority before brainstorming.',
+    '- `rank_candidates` — after YOU brainstorm a wide candidate pool, pass the ideas in to get a pantry-aware shortlist.',
+    '- `emit_recipe` — TERMINAL. Emit the final selected recipe as structured JSON.',
+    'Workflow: think out loud about the request, call `read_pantry` first so you know what the user has, optionally triage with the other tools, then end with exactly one `emit_recipe` call that satisfies the schema.',
+    'Brainstorming discipline (the single biggest lever on quality): before committing, generate at least SIX distinct candidate ideas spanning at least FOUR axes (cuisine, format, technique, hero ingredient, course, temperature). Narrow ideation is the most common cause of bland output — do not skip the wide pass.',
+    'Pick the single strongest candidate for the user\'s request and emit exactly one recipe.',
+    'Do not narrate your tool plans in `whySuggested` — that field is for the user.',
+    `Weirdness band: ${band} (score ${String(weirdness)}/100). ${BAND_GUIDANCE[band]}`,
+    intensityCalibration(weirdness, band),
+  ];
+
+  if (dietary.length > 0) {
+    lines.push('Strict dietary requirements (the recipe must comply with ALL of the following):');
+    for (const rule of dietary) lines.push(`- ${rule}`);
+  }
+
+  if (pantry.length > 0) {
+    lines.push('Pantry items available:');
+    for (const chip of pantry) lines.push(describeChip(chip));
+  } else {
+    lines.push('The pantry is empty — you may use any common, widely available ingredient; let the user\'s request narrow it.');
+  }
+
+  lines.push(
+    'Beginner-craft rules: put prep specs in each ingredient `note` (e.g. "finely diced"), include doneness cues in steps, and order steps so nothing idles. Keep `summary` to one inviting sentence.',
+  );
+
+  return lines.join('\n');
+}

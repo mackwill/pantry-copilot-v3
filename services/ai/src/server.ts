@@ -4,6 +4,7 @@ import Fastify, { type FastifyInstance } from 'fastify';
 import type { Env } from './env.js';
 import { buildProvider } from './providers/index.js';
 import type { AIProvider } from './providers/types.js';
+import { registerRecipeRoutes } from './routes/recipes.js';
 import { registerScanRoutes } from './routes/scans.js';
 
 export interface AppDeps {
@@ -38,7 +39,8 @@ export async function buildServer(deps: AppDeps): Promise<FastifyInstance> {
   const expectedAuth = `Bearer ${env.AI_SERVICE_TOKEN}`;
   app.addHook('onRequest', async (req, reply) => {
     reply.header('x-request-id', req.id);
-    if (req.url.startsWith('/scans') && req.headers.authorization !== expectedAuth) {
+    const guarded = req.url.startsWith('/scans') || req.url.startsWith('/recipes');
+    if (guarded && req.headers.authorization !== expectedAuth) {
       return reply.code(401).send({ message: 'Unauthorized' });
     }
   });
@@ -46,6 +48,7 @@ export async function buildServer(deps: AppDeps): Promise<FastifyInstance> {
   app.get('/health', () => ({ status: 'ok' }));
 
   registerScanRoutes(app, deps);
+  registerRecipeRoutes(app, deps);
 
   return app;
 }
