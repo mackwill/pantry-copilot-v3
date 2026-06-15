@@ -1,5 +1,5 @@
-import { PlaceholderScreen } from '../../features/shell/PlaceholderScreen';
+import { HomeScreen } from '../../features/generation/components/HomeScreen';
 
 export default function Screen() {
-  return <PlaceholderScreen />;
+  return <HomeScreen />;
 }
