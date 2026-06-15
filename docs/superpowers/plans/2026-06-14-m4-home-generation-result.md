@@ -181,7 +181,7 @@ The roadmap's mandated early spike. Prove the SSE pipeline streams **incremental
 
 ### Tasks
 - [x] **E1 — subscription link (TDD where possible).** Add `httpSubscriptionLink` + `splitLink` to `createApiClient`; preserve superjson transformer + the existing `exactOptionalPropertyTypes` fetch shim. Mobile: accept an injectable `EventSource` (ponyfill) so the same client works under Expo. Unit-test link selection.
-- [ ] **E2 — SSE spike.** Drive `recipes.generateStream` end-to-end through the running web app (Start/Nitro) against the **mock tape**; confirm frames arrive **one at a time with increasing timestamps** (not a single buffered flush at the end). If buffered, resolve at this layer (disable response compression/buffering on the streaming path; confirm `x-accel-buffering: no` survives the proxy; ensure no middleware reads the body). Record the outcome + any fix in `docs/decisions.md`. **This gate must pass before Slices F/G.** Commit `feat(api-client): subscription link + SSE transport spike`.
+- [x] **E2 — SSE spike.** Drive `recipes.generateStream` end-to-end through the running web app (Start/Nitro) against the **mock tape**; confirm frames arrive **one at a time with increasing timestamps** (not a single buffered flush at the end). If buffered, resolve at this layer (disable response compression/buffering on the streaming path; confirm `x-accel-buffering: no` survives the proxy; ensure no middleware reads the body). Record the outcome + any fix in `docs/decisions.md`. **This gate must pass before Slices F/G.** Commit `feat(api-client): subscription link + SSE transport spike`.
 
 ---
 

@@ -29,10 +29,26 @@ function cannedResponse(): AIImageExtractionResponse {
   };
 }
 
+/**
+ * Optional dev-only pacing between tape frames. Defaults to 0 — CI and the
+ * fidelity gate stay instant and deterministic. Set `MOCK_STREAM_DELAY_MS`
+ * (e.g. 120) for manual smoke so the streaming beats are observable and the
+ * SSE transport's incremental (non-buffered) delivery can be verified.
+ */
+function streamDelayMs(): number {
+  const raw = Number.parseInt(process.env['MOCK_STREAM_DELAY_MS'] ?? '', 10);
+  return Number.isFinite(raw) && raw > 0 ? raw : 0;
+}
+
 function tapeRunner(): (req: AIGenerationRequest, signal: AbortSignal) => AsyncIterable<RawProviderEvent> {
-  return async function* () {
+  const delay = streamDelayMs();
+  return async function* (_req, signal) {
     await Promise.resolve();
-    for (const event of mockTape()) yield event;
+    for (const event of mockTape()) {
+      if (signal.aborted) return;
+      if (delay > 0) await new Promise((resolve) => setTimeout(resolve, delay));
+      yield event;
+    }
   };
 }
 

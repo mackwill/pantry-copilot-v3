@@ -2,6 +2,39 @@
 
 Board-silent composition calls and scope deviations, newest first.
 
+## 2026-06-15 — M4 SSE transport spike outcome (Slice E2)
+
+The roadmap flagged Start/Nitro response buffering as the milestone's top risk and
+mandated an early spike before building the streaming UI. Outcome: **incremental,
+non-buffered delivery confirmed; no Start/Nitro mitigation was required**, because the
+architecture keeps Start/Nitro out of the streaming path entirely.
+
+- **Start/Nitro is not in the SSE path.** The web tRPC client (`@pantry/api-client`,
+  `httpSubscriptionLink`) runs in the browser and opens a native `EventSource` directly
+  to the API at `VITE_API_URL` (`http://localhost:4000/trpc`). The Vite/Start dev server
+  (port 3000) only serves SPA assets; it does not proxy `/trpc`. So the original buffering
+  risk — a Nitro server middleware reading/compressing the streamed body — cannot occur in
+  this design. (`apps/web/src/lib/api.ts`, `apps/web/src/lib/env.ts`.)
+- **Verified end-to-end against the real API.** Drove `recipes.generateStream` through the
+  running stack (mock provider) via a browser-equivalent SSE `GET`
+  (`Accept: text/event-stream`, superjson-wrapped `input`, real better-auth session cookie
+  — exactly the request `EventSource` issues). Frames arrived **one at a time, spaced
+  ~120 ms apart over ~2.25 s** (not a single end-of-stream flush), terminating in
+  `event: return`. The `done` frame carried a **real persisted `recipeId`** (uuid),
+  confirming single-write-on-done through the full chain. The AI-service hop
+  (`POST /recipes/generate/stream`) was independently confirmed to stream incrementally
+  with the same spacing.
+- **`MOCK_STREAM_DELAY_MS` (dev-only, default 0).** The committed mock tape emits frames
+  instantly, which is correct for deterministic CI/fidelity but makes incremental delivery
+  indistinguishable from a buffered flush. Added an env-gated per-frame delay
+  (`services/ai/src/providers/mock.ts`) — **default 0** so CI and the fidelity gate stay
+  instant and deterministic; set e.g. `120` for manual smoke. Frame order/content are
+  unchanged, so orchestrator/tape tests are unaffected (61 AI tests green).
+- **No throwaway spike route.** Because the transport was proven via the browser-equivalent
+  `GET` against the real API and Start/Nitro is out of the path, a disposable dev spike
+  page was unnecessary; the real consuming route lands in Slice F (`useGeneration` +
+  `cook.generate.tsx`).
+
 ## 2026-06-14 — M3 (AI service v1 + camera scan)
 
 Settled scope (agreed with user 2026-06-14):
