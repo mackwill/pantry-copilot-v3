@@ -27,16 +27,18 @@ describe('createApiClient', () => {
 
   it('routes subscriptions through the injected EventSource, not fetch', async () => {
     const constructed: string[] = [];
+    const inits: (EventSourceInit | undefined)[] = [];
     class FakeEventSource extends EventTarget {
       static readonly CONNECTING = 0;
       static readonly OPEN = 1;
       static readonly CLOSED = 2;
       readyState = 0;
       url: string;
-      constructor(url: string | URL) {
+      constructor(url: string | URL, init?: EventSourceInit) {
         super();
         this.url = String(url);
         constructed.push(this.url);
+        inits.push(init);
       }
       close(): void {
         this.readyState = 2;
@@ -57,5 +59,7 @@ describe('createApiClient', () => {
     expect(constructed.length).toBe(1);
     expect(constructed[0]).toContain('recipes.generateStream');
     expect(fetchSpy).not.toHaveBeenCalled();
+    // Cross-origin EventSource must carry the session cookie or every subscription 401s.
+    expect(inits[0]?.withCredentials).toBe(true);
   });
 });

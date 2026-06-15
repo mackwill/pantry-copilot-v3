@@ -38,6 +38,10 @@ export function createApiClient(opts: ApiClientOptions): TRPCClient<AppRouter> {
         true: httpSubscriptionLink({
           url: opts.url,
           transformer: superjson,
+          // The browser EventSource is cross-origin (web ↔ api); without
+          // withCredentials it omits the session cookie and every subscription
+          // 401s. The API's CORS allows credentials for the configured origins.
+          eventSourceOptions: { withCredentials: true },
           ...(opts.EventSource === undefined ? {} : { EventSource: opts.EventSource }),
         }),
         false: httpBatchLink({
