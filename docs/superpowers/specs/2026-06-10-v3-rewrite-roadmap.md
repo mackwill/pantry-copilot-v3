@@ -15,7 +15,7 @@
 | M1 — Auth + app shells                           | done            | `docs/superpowers/plans/2026-06-11-m1-auth-app-shells.md` — completed 2026-06-13; both §00 login frames approved (`docs/checklists/m1-auth.md`) |
 | M2 — Pantry core (manual entry)                  | impl complete · fidelity review pending | `docs/superpowers/plans/2026-06-13-m2-pantry-core.md` — all automated gates + web e2e green; references captured, screenshot approval pending (`docs/checklists/m2-pantry.md`) |
 | M3 — AI service v1 + camera scan                 | impl complete · fidelity review pending | `docs/superpowers/plans/2026-06-14-m3-ai-service-camera-scan.md` — all automated gates green; AI service (mock/anthropic/openai + withFallback), scan extract/confirm, mobile §08 flow; references captured, screenshot approval pending (`docs/checklists/m3-scan.md`) |
-| M4 — Home + generation + result                  | not started     | —                                                                |
+| M4 — Home + generation + result                  | in progress     | `docs/superpowers/plans/2026-06-14-m4-home-generation-result.md` |
 | M5 — Recipe library + detail                     | not started     | —                                                                |
 | M6 — Cook sessions + consume flow                | not started     | —                                                                |
 | M7 — Chat against a recipe                       | not started     | —                                                                |
