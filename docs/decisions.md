@@ -2,6 +2,45 @@
 
 Board-silent composition calls and scope deviations, newest first.
 
+## 2026-06-15 — M4 scope decisions + web divergences
+
+Settled with user (2026-06-14), recorded here as they shipped:
+
+- **(a) tRPC-subscription client transport + raw SSE server-to-server.** Clients
+  consume generation via the `recipes.generateStream` tRPC subscription over
+  `httpSubscriptionLink` (browser `EventSource`); the API→AI hop is a separate raw
+  SSE reader authenticated with the service token. One typed client, end-to-end.
+- **(b) Recipes persisted in M4.** `recipes` + `recipe_generation_jobs` tables
+  added now; on the stream's `done` event the API writes the recipe once
+  (single-write guard) and re-emits `done` with the real persisted `recipeId`.
+  M5 (library/favorites) reads these rows rather than introducing persistence.
+- **(c) One recipe per request → Drafting diverges from the board.** The §04
+  Drafting frame renders a single streaming recipe **without** the board's
+  "Recipe 1 of 3" eyebrow / queued-recipe cards. Approved against the
+  single-recipe variant in `docs/checklists/m4-generation.md`.
+- **(d) Streaming states frozen via the scripted mock tape.** `mock.ts`
+  `streamStructured` replays a committed deterministic event tape; CI orchestrator
+  tests and the §04 fidelity captures run off it (no live AI in CI). A dev-only
+  `MOCK_STREAM_DELAY_MS` (default 0) paces frames for manual smoke + freezing
+  mid-stream fidelity snapshots without affecting determinism.
+- **(e) Branch re-prompts are pure input transforms.** The four §02 tiles
+  (Weirder / Faster / Vegetarian / Different angle) build a new `GenerationRequest`
+  from the previous one via `buildBranchInput` (idempotent suffix append +
+  weirdness bump) and re-run the same generate path — no new server endpoint.
+- **(g) Result/Start actions stubbed until M5/M6.** "Start cooking" and "Save" on
+  the §02 OneRecipeCard are no-op stubs (precedent set by M2/M3); cook sessions
+  (M6) and library/favorites (M5) wire them later. Branch tiles are live.
+- **Subscription cookie fix (`withCredentials`).** Driving the real web app
+  surfaced that the browser `EventSource` is cross-origin (web :3000 ↔ api :4000)
+  and omits the session cookie without `withCredentials`, so every subscription
+  401'd. Fixed in `@pantry/api-client` (`eventSourceOptions.withCredentials`); the
+  API's CORS already allows credentials for the configured origins. The curl-based
+  E2 spike masked this by setting the `Cookie` header manually.
+- **Web fidelity divergences** (intentional / scoped, in `m4-generation.md`):
+  WebShell topbar chrome + sidebar LISTS + Home stats bar are out of M4's
+  §01/§04/§02 content scope; "Recently saved" populates with M5; Drafting is the
+  single-recipe variant per (c).
+
 ## 2026-06-15 — M4 SSE transport spike outcome (Slice E2)
 
 The roadmap flagged Start/Nitro response buffering as the milestone's top risk and
