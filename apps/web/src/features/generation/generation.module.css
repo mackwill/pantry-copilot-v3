@@ -1,0 +1,572 @@
+/* §01 Home → §04 generating → §02 Result. Token vars only. */
+
+/* ─── shared animations ─── */
+@keyframes genCaret {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+@keyframes genPulse {
+  0% {
+    transform: scale(0.7);
+    opacity: 0.9;
+  }
+  70% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.caret {
+  display: inline-block;
+  width: 2px;
+  height: 0.9em;
+  margin-left: 3px;
+  background: var(--accent);
+  vertical-align: text-bottom;
+  animation: genCaret 1s steps(2) infinite;
+}
+
+/* ─── Home (§01) ─── */
+.homeWrap {
+  max-width: 880px;
+  margin: 0 auto;
+}
+.metaRow {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.metaCount {
+  font: 400 12px var(--font-mono);
+  color: var(--fg-subtle);
+}
+.greeting {
+  font: 400 64px/1 var(--font-display);
+  letter-spacing: -0.025em;
+  color: var(--fg);
+  margin: 0 0 30px;
+  text-wrap: balance;
+}
+.greetingAccent {
+  color: var(--accent);
+  font-style: italic;
+}
+
+/* HeroPrompt */
+.hero {
+  background: var(--bg-raised);
+  border: 1.5px solid var(--accent);
+  border-radius: var(--r-xl);
+  padding: 4px;
+  box-shadow:
+    0 0 0 4px var(--accent-soft),
+    0 18px 40px -16px rgba(14, 18, 14, 0.14);
+  transition: all 200ms;
+}
+.heroTop {
+  padding: 22px 24px 14px;
+}
+.heroEyebrowRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.heroTextarea {
+  display: block;
+  width: 100%;
+  border: none;
+  outline: none;
+  resize: none;
+  background: transparent;
+  font: 400 32px/1.35 var(--font-display);
+  letter-spacing: -0.02em;
+  color: var(--fg);
+}
+.heroTextarea::placeholder {
+  color: var(--fg-subtle);
+}
+.heroFooter {
+  border-top: 1px solid var(--line);
+  background: var(--bg);
+  border-radius: var(--r-lg);
+}
+.heroWeird {
+  padding: 12px 22px;
+  border-bottom: 1px solid var(--line);
+}
+.heroChipsRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px 12px 22px;
+}
+.heroChips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  flex: 1;
+}
+.chip {
+  all: unset;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  font: 400 12px var(--font-sans);
+  color: var(--fg-muted);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-pill);
+}
+.chip:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.chipActive {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.heroMic {
+  all: unset;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line);
+  background: var(--bg-raised);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--fg-muted);
+}
+
+/* context cards */
+.contextGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 36px;
+}
+.ctxHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 14px;
+}
+.ctxLink {
+  font: 500 12px var(--font-sans);
+  color: var(--accent);
+  cursor: pointer;
+}
+.ctxRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--line);
+  gap: 12px;
+}
+.ctxRow:last-of-type {
+  border-bottom: none;
+}
+.ctxName {
+  font: 500 14px var(--font-sans);
+  color: var(--fg);
+}
+.ctxNameDisplay {
+  font: 400 16px/1.2 var(--font-display);
+  letter-spacing: -0.01em;
+  color: var(--fg);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ctxSub {
+  font: 400 11px var(--font-mono);
+  color: var(--fg-subtle);
+  margin-top: 2px;
+}
+.ctxTry {
+  margin-top: 14px;
+  padding: 10px 12px;
+  background: var(--accent-soft);
+  border-radius: var(--r-md);
+  font: 400 12px/1.4 var(--font-sans);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ctxTryQuote {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-style: italic;
+}
+
+/* ─── generating + result shared shell ─── */
+.genWrap {
+  max-width: 740px;
+}
+.resultWrap {
+  max-width: 880px;
+  margin: 0 auto;
+}
+.crumbRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+.crumbCook {
+  font: 400 13px var(--font-sans);
+  color: var(--fg-subtle);
+}
+.crumbStatus {
+  margin-left: auto;
+  font: 400 11px var(--font-mono);
+  color: var(--fg-subtle);
+}
+.yourAskValue {
+  font: 400 26px/1.3 var(--font-display);
+  letter-spacing: -0.015em;
+  color: var(--accent);
+  font-style: italic;
+  margin: 10px 0 36px;
+}
+
+/* ─── Thinking (§04) ─── */
+.thinkingHeader {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.thinkingHeaderLabel {
+  display: flex;
+  align-items: center;
+  color: var(--accent);
+}
+.thinkDot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: var(--r-pill);
+  background: var(--accent);
+  margin-right: 8px;
+  animation: genPulse 1.4s ease-out infinite;
+}
+.thinkingHeaderMeta {
+  font: 400 11px var(--font-mono);
+  color: var(--fg-subtle);
+}
+.prose {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.thinkLine {
+  font: 400 16px/1.55 var(--font-display);
+  letter-spacing: -0.005em;
+  color: var(--fg);
+  margin: 0;
+  font-style: italic;
+}
+.toolRow {
+  font: 400 12px/1.7 var(--font-mono);
+  color: var(--fg-subtle);
+  letter-spacing: 0.005em;
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+}
+.toolBullet {
+  color: var(--accent);
+  opacity: 0.85;
+}
+.toolName {
+  color: var(--fg-muted);
+}
+.toolArrow {
+  color: var(--fg-subtle);
+  padding: 0 8px;
+}
+.toolResult {
+  color: var(--fg);
+}
+.footRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 36px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+.footNote {
+  font: 400 11px var(--font-mono);
+  color: var(--fg-subtle);
+  margin-left: auto;
+}
+
+/* ─── Drafting (§04) ─── */
+.collapsed {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--bg-sunk);
+  border-radius: var(--r-md);
+  font: 400 13px var(--font-sans);
+  color: var(--fg-muted);
+}
+.collapsedStrong {
+  color: var(--fg);
+}
+.collapsedDot {
+  color: var(--fg-subtle);
+}
+.collapsedMeta {
+  font: 400 12px var(--font-mono);
+  color: var(--fg-subtle);
+}
+.collapsedShow {
+  margin-left: auto;
+  font: 500 12px var(--font-sans);
+  color: var(--fg-muted);
+  cursor: pointer;
+}
+.draftCard {
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 24px 26px;
+  margin-top: 22px;
+}
+.draftHead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.draftMetaMono {
+  font: 400 11px var(--font-mono);
+  color: var(--fg-subtle);
+}
+.draftTitle {
+  font: 400 32px/1.1 var(--font-display);
+  letter-spacing: -0.02em;
+  color: var(--fg);
+  margin: 0 0 6px;
+}
+.draftSubMeta {
+  font: 400 13px var(--font-mono);
+  color: var(--fg-muted);
+  margin-bottom: 22px;
+}
+.draftIngredients {
+  font: 400 15px/1.7 var(--font-sans);
+  color: var(--fg);
+  letter-spacing: -0.005em;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 22px;
+}
+.draftMethodWaiting {
+  font: 400 13px var(--font-mono);
+  color: var(--fg-subtle);
+  padding: 10px 0;
+}
+.dimEyebrow {
+  opacity: 0.5;
+}
+
+/* ─── Result (§02) ─── */
+.collapsedResult {
+  margin-bottom: 22px;
+}
+.recipeCard {
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 18px 40px -20px rgba(14, 18, 14, 0.12);
+}
+.recipeHeadBlock {
+  padding: 24px 28px 18px;
+  border-bottom: 1px solid var(--line);
+}
+.recipeHeadRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 10px;
+  gap: 12px;
+}
+.recipePills {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.recipeTitle {
+  font: 400 44px/1.05 var(--font-display);
+  letter-spacing: -0.025em;
+  color: var(--fg);
+  margin: 0 0 12px;
+}
+.recipeSummary {
+  font: 400 16px/1.55 var(--font-sans);
+  color: var(--fg-muted);
+  letter-spacing: -0.005em;
+  margin: 0;
+  max-width: 580px;
+}
+.recipeCols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.recipeIngCol {
+  padding: 20px 24px;
+  border-right: 1px solid var(--line);
+}
+.recipeMethodCol {
+  padding: 20px 24px;
+}
+.ingList {
+  font: 400 14px/1.85 var(--font-sans);
+  color: var(--fg);
+  letter-spacing: -0.005em;
+}
+.ingTagPantry {
+  color: var(--accent);
+  font-size: 11px;
+  margin-left: 6px;
+}
+.ingTagUsing {
+  color: var(--warning);
+  font-size: 11px;
+  margin-left: 6px;
+}
+.ingTagOptional {
+  color: var(--fg-subtle);
+  font-size: 11px;
+  margin-left: 6px;
+}
+.steps {
+  font: 400 14px/1.55 var(--font-sans);
+  color: var(--fg);
+  letter-spacing: -0.005em;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.stepRow {
+  display: flex;
+  gap: 10px;
+}
+.stepNum {
+  font: 500 11px var(--font-mono);
+  color: var(--fg-subtle);
+  width: 16px;
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+.recipeActions {
+  display: flex;
+  gap: 10px;
+  padding: 16px 24px;
+  border-top: 1px solid var(--line);
+  background: var(--bg);
+  align-items: center;
+}
+.recipeActionsMeta {
+  margin-left: auto;
+  font: 400 11px var(--font-mono);
+  color: var(--fg-subtle);
+}
+
+/* BranchRow */
+.branchSpacer {
+  height: 14px;
+}
+.branchHead {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.branchHint {
+  font: 400 11px var(--font-mono);
+  color: var(--fg-subtle);
+}
+.branchGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+.branchTile {
+  all: unset;
+  cursor: pointer;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px;
+  background: var(--bg-raised);
+  transition: all 150ms;
+}
+.branchTile:hover {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-sm);
+}
+.branchTileHead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.branchLabel {
+  font: 600 13px var(--font-sans);
+  color: var(--fg);
+  letter-spacing: -0.005em;
+}
+.branchSub {
+  font: 400 12px/1.4 var(--font-sans);
+  color: var(--fg-subtle);
+  letter-spacing: -0.005em;
+}
+
+/* error state */
+.errorWrap {
+  max-width: 560px;
+  margin: 60px auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+.errorTitle {
+  font: 400 28px/1.2 var(--font-display);
+  letter-spacing: -0.02em;
+  color: var(--fg);
+  margin: 0;
+}
+.errorMessage {
+  font: 400 14px/1.5 var(--font-sans);
+  color: var(--fg-muted);
+  margin: 0;
+}
+.errorActions {
+  display: flex;
+  gap: 10px;
+}
