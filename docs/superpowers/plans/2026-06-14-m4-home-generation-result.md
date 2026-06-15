@@ -150,8 +150,8 @@ Fill the M3 stubs and build the streaming pipeline. This is the milestone's net-
 - Generated: `services/api/drizzle/0003_*.sql` + meta
 
 ### Tasks
-- [ ] **C1 — schema.** `recipeDifficulty` = `pgEnum('recipe_difficulty', RECIPE_DIFFICULTIES)` (from `@pantry/contracts`). `recipes` table: `id uuid pk`, `userId → users.id (cascade)`, `prompt text notNull`, `weirdness integer notNull`, `title text notNull`, `summary text`, `data jsonb $type<AIRecipe>()` (the full recipe body), `provider text`, `model text`, `tokensUsed integer`, `createdAt`/`updatedAt`. `recipe_generation_jobs` table: `id uuid pk`, `userId → users.id (cascade)`, `request jsonb $type<GenerationRequest>()`, `status` (`pgEnum`: `streaming`/`succeeded`/`failed`/`aborted`), `recipeId → recipes.id (set null)` nullable, `error text` nullable, `createdAt`/`updatedAt`. Add both to the barrel.
-- [ ] **C2 — generate + apply + typecheck.** `pnpm --filter @pantry/api db:generate` → `0003_*`; `podman compose up -d && pnpm --filter @pantry/api db:migrate && pnpm typecheck`. Commit `feat(api): recipes + recipe_generation_jobs schema + migration`.
+- [x] **C1 — schema.** `recipeDifficulty` = `pgEnum('recipe_difficulty', RECIPE_DIFFICULTIES)` (from `@pantry/contracts`). `recipes` table: `id uuid pk`, `userId → users.id (cascade)`, `prompt text notNull`, `weirdness integer notNull`, `title text notNull`, `summary text`, `data jsonb $type<AIRecipe>()` (the full recipe body), `provider text`, `model text`, `tokensUsed integer`, `createdAt`/`updatedAt`. `recipe_generation_jobs` table: `id uuid pk`, `userId → users.id (cascade)`, `request jsonb $type<GenerationRequest>()`, `status` (`pgEnum`: `streaming`/`succeeded`/`failed`/`aborted`), `recipeId → recipes.id (set null)` nullable, `error text` nullable, `createdAt`/`updatedAt`. Add both to the barrel.
+- [x] **C2 — generate + apply + typecheck.** `pnpm --filter @pantry/api db:generate` → `0003_*`; `podman compose up -d && pnpm --filter @pantry/api db:migrate && pnpm typecheck`. Commit `feat(api): recipes + recipe_generation_jobs schema + migration`.
 
 ---
 

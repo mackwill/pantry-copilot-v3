@@ -22,6 +22,13 @@
       "when": 1781463342773,
       "tag": "0002_misty_genesis",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1781528046127,
+      "tag": "0003_perfect_zaran",
+      "breakpoints": true
     }
   ]
 }
