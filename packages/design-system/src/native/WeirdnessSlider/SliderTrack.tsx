@@ -1,5 +1,5 @@
-import { useId, useRef } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { useEffect, useId, useRef, useState } from 'react';
+import { Animated, StyleSheet, View } from 'react-native';
 import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 import { tokens } from '../../tokens/native.js';
 import { parseGradientStops, valueFromTouch } from './weirdness.js';
@@ -35,9 +35,33 @@ export function SliderTrack({
   const gradientId = useId();
   const trackWidthRef = useRef(0);
 
+  // The thumb glides off this Animated.Value, set imperatively from the touch
+  // — its paint never waits on the controlled `value` prop round-tripping back
+  // through parent state, so fast drags stay smooth regardless of re-renders.
+  // Lazy `useState` (not a ref) keeps the instance stable while staying
+  // readable during render for the interpolation below.
+  const [thumbAnim] = useState(() => new Animated.Value(value));
+  const draggingRef = useRef(false);
+
+  // Mirror external `value` changes (a11y step, programmatic set) onto the
+  // thumb — but never mid-drag, where a stale round-tripped prop would fight
+  // the imperative updates and stutter.
+  useEffect(() => {
+    if (!draggingRef.current) {
+      thumbAnim.setValue(value);
+    }
+  }, [value, thumbAnim]);
+
   const handleTouch = (x: number) => {
-    onChange?.(valueFromTouch(x, trackWidthRef.current));
+    const next = valueFromTouch(x, trackWidthRef.current);
+    thumbAnim.setValue(next);
+    onChange?.(next);
   };
+
+  const thumbLeft = thumbAnim.interpolate({
+    inputRange: [0, 100],
+    outputRange: ['0%', '100%'],
+  });
 
   return (
     <View
@@ -57,10 +81,17 @@ export function SliderTrack({
       onStartShouldSetResponder={() => true}
       onMoveShouldSetResponder={() => true}
       onResponderGrant={(event) => {
+        draggingRef.current = true;
         handleTouch(event.nativeEvent.locationX);
       }}
       onResponderMove={(event) => {
         handleTouch(event.nativeEvent.locationX);
+      }}
+      onResponderRelease={() => {
+        draggingRef.current = false;
+      }}
+      onResponderTerminate={() => {
+        draggingRef.current = false;
       }}
       style={{ paddingVertical: verticalPadding }}
     >
@@ -79,13 +110,13 @@ export function SliderTrack({
           fill={`url(#${gradientId})`}
         />
       </Svg>
-      <View
+      <Animated.View
         style={[
           styles.thumb,
           {
             width: thumbSize,
             height: thumbSize,
-            left: percent(value),
+            left: thumbLeft,
             marginLeft: -thumbSize / 2,
             marginTop: -thumbSize / 2,
             boxShadow: thumbShadow,
