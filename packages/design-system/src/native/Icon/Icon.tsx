@@ -1,9 +1,11 @@
 import {
   Apple,
   Archive,
+  ArrowDownUp,
   ArrowRight,
   AtSign,
   Beef,
+  Bookmark,
   Camera,
   Check,
   ChefHat,
@@ -26,12 +28,15 @@ import {
   Plus,
   RefreshCw,
   Refrigerator,
+  Repeat,
   ScanLine,
   Search,
   Settings,
+  Share2,
   SlidersHorizontal,
   Snowflake,
   Sparkles,
+  Timer,
   Trash2,
   User,
   Wheat,
@@ -48,9 +53,11 @@ import { Chrome } from './Chrome.js';
 export type IconName =
   | 'Apple'
   | 'Archive'
+  | 'ArrowDownUp'
   | 'ArrowRight'
   | 'AtSign'
   | 'Beef'
+  | 'Bookmark'
   | 'Camera'
   | 'Check'
   | 'ChefHat'
@@ -74,12 +81,15 @@ export type IconName =
   | 'Plus'
   | 'RefreshCw'
   | 'Refrigerator'
+  | 'Repeat'
   | 'ScanLine'
   | 'Search'
   | 'Settings'
+  | 'Share2'
   | 'SlidersHorizontal'
   | 'Snowflake'
   | 'Sparkles'
+  | 'Timer'
   | 'Trash2'
   | 'User'
   | 'Wheat'
@@ -97,9 +107,11 @@ interface RenderedIconProps {
 const iconMap: Record<IconName, ComponentType<RenderedIconProps>> = {
   Apple,
   Archive,
+  ArrowDownUp,
   ArrowRight,
   AtSign,
   Beef,
+  Bookmark,
   Camera,
   Check,
   ChefHat,
@@ -123,12 +135,15 @@ const iconMap: Record<IconName, ComponentType<RenderedIconProps>> = {
   Plus,
   RefreshCw,
   Refrigerator,
+  Repeat,
   ScanLine,
   Search,
   Settings,
+  Share2,
   SlidersHorizontal,
   Snowflake,
   Sparkles,
+  Timer,
   Trash2,
   User,
   Wheat,

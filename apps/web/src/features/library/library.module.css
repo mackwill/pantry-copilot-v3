@@ -1,0 +1,160 @@
+.wrap {
+  max-width: 720px;
+  margin: 40px auto 0;
+}
+
+/* Empty / hero */
+.headline {
+  font: 400 56px/1 var(--font-display);
+  letter-spacing: -0.025em;
+  color: var(--fg);
+  margin: 12px 0 14px;
+}
+.headlineAccent {
+  color: var(--accent);
+}
+.subhead {
+  font: 400 16px/1.6 var(--font-sans);
+  color: var(--fg-muted);
+  margin: 0 0 28px;
+  max-width: 540px;
+  letter-spacing: -0.005em;
+}
+.subheadStrong {
+  color: var(--fg);
+  font-weight: 500;
+}
+
+.cardGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.contextCard {
+  cursor: pointer;
+  text-align: left;
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 18px 20px;
+  font: inherit;
+}
+.contextCardAccent {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.contextHead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+.contextTitle {
+  font: 400 22px/1.2 var(--font-display);
+  color: var(--fg);
+  letter-spacing: -0.015em;
+  margin-bottom: 4px;
+}
+.contextTitleItalic {
+  font-style: italic;
+}
+.contextSub {
+  font: 400 12px var(--font-sans);
+  color: var(--fg-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Filters */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+.filterPill {
+  font: 500 13px var(--font-sans);
+  padding: 7px 14px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line);
+  background: var(--bg-raised);
+  color: var(--fg-muted);
+  cursor: pointer;
+}
+.filterPillActive {
+  background: var(--fg);
+  color: var(--fg-on-inverse);
+  border-color: var(--fg);
+}
+.filterPillDisabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* Lists */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.row {
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 13px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+  color: inherit;
+}
+.rowMain {
+  flex: 1;
+  min-width: 0;
+}
+.rowTitle {
+  font: 400 18px/1.2 var(--font-display);
+  color: var(--fg);
+  letter-spacing: -0.015em;
+}
+.rowTitleItalic {
+  font-style: italic;
+}
+.rowSummary {
+  font: 400 13px/1.45 var(--font-sans);
+  color: var(--fg-muted);
+  margin-top: 3px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.rowMeta {
+  font: 400 11px var(--font-mono);
+  color: var(--fg-subtle);
+  margin-top: 3px;
+}
+.rowRight {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.recentList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.recentRow {
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 13px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+  color: inherit;
+}

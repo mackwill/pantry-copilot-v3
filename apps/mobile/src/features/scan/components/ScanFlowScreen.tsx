@@ -11,6 +11,7 @@ export function ScanFlowScreen() {
   const router = useRouter();
   const close = () => { router.back(); };
   const goPantry = () => { router.replace('/pantry'); };
+  const goCook = () => { router.replace('/cook'); };
 
   switch (flow.step) {
     case 'viewfinder':
@@ -25,7 +26,7 @@ export function ScanFlowScreen() {
       ) : (
         <AddedStep
           summary={flow.summary}
-          onSeeIdeas={() => { /* Generation lands in M4; no-op stub. */ }}
+          onSeeIdeas={goCook}
           onViewPantry={goPantry}
           onClose={close}
         />

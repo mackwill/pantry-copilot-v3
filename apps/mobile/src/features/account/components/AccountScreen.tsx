@@ -49,6 +49,7 @@ export function AccountScreen({ user }: AccountScreenProps) {
       ))}
 
       <Button
+        testID="account-sign-out"
         kind="danger"
         full
         style={styles.signOutButton}

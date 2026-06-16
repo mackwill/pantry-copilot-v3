@@ -1,5 +1,7 @@
-import { PlaceholderScreen } from '../../features/shell/PlaceholderScreen';
+import { RecipeLibraryScreen } from '../../features/library/components/RecipeLibraryScreen';
+import { useLibrary } from '../../features/library/useLibrary';
 
 export default function Screen() {
-  return <PlaceholderScreen />;
+  const { items } = useLibrary();
+  return <RecipeLibraryScreen items={items} />;
 }

@@ -21,26 +21,25 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    # Secrets + provider config come from the root .env (override with ENV_FILE).
+    env_file:
+      - ${ENV_FILE:-../../.env}
+    # Container-network overrides take precedence over env_file values.
     environment:
       DATABASE_URL: postgres://pantry:pantry@postgres:5432/pantry
-      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:?set in .env}
       BETTER_AUTH_URL: http://localhost:4000
       WEB_ORIGIN: http://localhost:3000
       AI_SERVICE_URL: http://ai:4001
-      AI_SERVICE_TOKEN: ${AI_SERVICE_TOKEN:?set in .env}
     ports:
       - "4000:4000"
   ai:
     build:
       context: ../..
       dockerfile: services/ai/Containerfile
+    env_file:
+      - ${ENV_FILE:-../../.env}
     environment:
       PORT: 4001
-      AI_SERVICE_TOKEN: ${AI_SERVICE_TOKEN:?set in .env}
-      DEFAULT_AI_PROVIDER: ${DEFAULT_AI_PROVIDER:-mock}
-      DEFAULT_AI_MODEL: ${DEFAULT_AI_MODEL:-claude-sonnet-4-6}
-      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
-      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
     ports:
       - "4001:4001"
 volumes:

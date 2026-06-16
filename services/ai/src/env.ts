@@ -16,6 +16,8 @@ const schema = z.object({
   OPENAI_MODEL: z.string().default('gpt-4o'),
   ANTHROPIC_API_KEY: z.string().optional(),
   OPENAI_API_KEY: z.string().optional(),
+  /** Hard ceiling on a single generation stream before it is aborted with a timeout error. */
+  AI_PROVIDER_TIMEOUT_MS: z.coerce.number().int().positive().default(60_000),
 });
 
 export type Env = z.infer<typeof schema>;

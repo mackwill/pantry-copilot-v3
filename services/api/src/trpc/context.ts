@@ -7,7 +7,7 @@ export function createContextFactory(deps: AppDeps) {
     const session = await deps.auth.api.getSession({
       headers: toWebHeaders(req.headers),
     });
-    return { db: deps.db, session, aiClient: deps.aiClient, requestId: req.id };
+    return { db: deps.db, session, aiClient: deps.aiClient, aiStream: deps.aiStream, requestId: req.id };
   };
 }
 

@@ -13,6 +13,7 @@ import { registerAuthRoutes } from './auth/routes.js';
 import { createDb, type Db } from './db/client.js';
 import { webOrigins, type Env } from './env.js';
 import { type AiClient, createHttpAiClient } from './lib/ai-client.js';
+import { type AiStreamClient, createHttpAiStreamClient } from './lib/ai-stream-client.js';
 import { createContextFactory } from './trpc/context.js';
 import { appRouter } from './trpc/router.js';
 
@@ -23,14 +24,16 @@ export interface AppDeps {
   auth: Auth;
   outbox: MagicLinkOutbox;
   aiClient: AiClient;
+  aiStream: AiStreamClient;
 }
 
-export function createDeps(env: Env, overrides: Partial<Pick<AppDeps, 'aiClient'>> = {}): AppDeps {
+export function createDeps(env: Env, overrides: Partial<Pick<AppDeps, 'aiClient' | 'aiStream'>> = {}): AppDeps {
   const { db, pool } = createDb(env.DATABASE_URL);
   const outbox = new MagicLinkOutbox();
   const auth = createAuth({ env, db, outbox });
   const aiClient = overrides.aiClient ?? createHttpAiClient({ baseUrl: env.AI_SERVICE_URL, token: env.AI_SERVICE_TOKEN });
-  return { env, db, pool, auth, outbox, aiClient };
+  const aiStream = overrides.aiStream ?? createHttpAiStreamClient({ baseUrl: env.AI_SERVICE_URL, token: env.AI_SERVICE_TOKEN });
+  return { env, db, pool, auth, outbox, aiClient, aiStream };
 }
 
 export async function buildServer(deps: AppDeps): Promise<FastifyInstance> {

@@ -12,7 +12,16 @@
     "typecheck": "pnpm -r --parallel typecheck",
     "test": "pnpm -r --parallel test",
     "build": "pnpm -r build",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "db:up": "podman compose -f infra/podman/compose.yaml up -d postgres",
+    "db:down": "podman compose -f infra/podman/compose.yaml stop postgres",
+    "up": "podman compose -f infra/podman/compose.yaml up -d --build",
+    "down": "podman compose -f infra/podman/compose.yaml down",
+    "logs": "podman compose -f infra/podman/compose.yaml logs -f",
+    "dev:api": "pnpm --filter @pantry/api dev",
+    "dev:ai": "pnpm --filter @pantry/ai dev",
+    "dev:web": "pnpm --filter @pantry/web dev",
+    "dev:mobile": "pnpm --filter @pantry/mobile start"
   },
   "devDependencies": {
     "@eslint-community/eslint-plugin-eslint-comments": "4.7.2",

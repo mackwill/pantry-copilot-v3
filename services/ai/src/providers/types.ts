@@ -1,43 +1,33 @@
-import type { AIImageExtractionRequest, AIImageExtractionResponse, AIProviderName } from '@pantry/contracts';
-import type { z } from 'zod';
+import type {
+  AIGenerationRequest,
+  AIImageExtractionRequest,
+  AIImageExtractionResponse,
+  AIProviderName,
+  AIRecipe,
+  GenerationEvent,
+} from '@pantry/contracts';
 
 export interface TokenUsage {
   readonly input: number;
   readonly output: number;
 }
 
-/** Structured-generation request — body lands in M4. */
-export interface StructuredRequest<T> {
-  readonly system: string;
-  readonly prompt: string;
-  readonly schema: z.ZodType<T>;
-}
-
-export interface StructuredResult<T> {
-  readonly value: T;
+/** One-shot structured generation result. */
+export interface StructuredRecipeResult {
+  readonly recipe: AIRecipe;
   readonly tokensUsed: TokenUsage;
 }
 
-/** Streaming event — the full union lands in M4. */
-export type StreamEvent = { readonly type: 'delta'; readonly text: string } | { readonly type: 'done' };
-
 /**
- * The single seam the whole AI stack hangs off. Only `extractFromImage` is
- * implemented in M3; `generateStructured` / `streamStructured` are typed stubs
- * (bodies in M4) so the interface is stable now without `any`.
+ * The single seam the whole AI stack hangs off. `extractFromImage` lands
+ * in M3; `generateStructured` / `streamStructured` (recipe generation)
+ * land in M4. `streamStructured` is the streaming path the SSE route
+ * consumes; `generateStructured` is the non-streaming convenience used by
+ * smoke tests and future one-shot callers.
  */
 export interface AIProvider {
   readonly name: AIProviderName;
-  generateStructured<T>(req: StructuredRequest<T>): Promise<StructuredResult<T>>;
-  streamStructured<T>(req: StructuredRequest<T>): AsyncIterable<StreamEvent>;
+  generateStructured(req: AIGenerationRequest): Promise<StructuredRecipeResult>;
+  streamStructured(req: AIGenerationRequest, signal: AbortSignal): AsyncIterable<GenerationEvent>;
   extractFromImage(req: AIImageExtractionRequest): Promise<AIImageExtractionResponse>;
-}
-
-/**
- * Shared stub for the M4 methods. Returns `never`, which is assignable to any
- * provider return type, so each provider can delegate without unused-param
- * noise or `any`.
- */
-export function notImplementedUntilM4(method: string): never {
-  throw new Error(`${method} is not implemented until M4`);
 }

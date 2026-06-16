@@ -2,6 +2,156 @@
 
 Board-silent composition calls and scope deviations, newest first.
 
+## 2026-06-16 — M5 scope decisions + divergences
+
+Settled in code per the M5 plan (`docs/superpowers/plans/2026-06-15-m5-recipe-library-detail.md`):
+
+- **(A) Cook becomes the library; the generation prompt relocates.** The board
+  (home-cook-v2 comment) makes the Cook tab the recipes library and keeps the new-ask
+  prompt on Home. Per platform:
+  - **Web:** generation Home stays at `/cook` (activeId `cook`, unchanged from M4). The
+    **library** is hosted under the existing **Recipes** sidebar item — `/recipes`
+    (list/empty) + `/recipes/$recipeId` (detail). The board's "Web · Cook · empty" frame
+    is matched at the `/recipes` empty state. **Divergence:** the board highlights the
+    *Cook* nav item on this frame; v3 highlights *Recipes*, because v3's sidebar carries a
+    dedicated Recipes item the mobile tab-bar lacks. Logged; noted in the fidelity checklist.
+  - **Mobile:** the tab-bar has no Recipes slot, so the library lives on the **Cook tab**
+    (`(tabs)/cook.tsx`) and the generation Home **moves to the Home tab** (`(tabs)/index.tsx`,
+    previously a placeholder). The prompt stays reachable from Cook via the **`NewAskSheet`**
+    ("New" button / "Cook something new" row → the unchanged M4 `/generate` flow). The M4
+    "Mobile · Home" composition is unchanged — only its host tab changed; `e2e/mobile/generation.yaml`
+    now taps **Home** instead of Cook.
+- **(B) Favorites are a join table, not a recipe column.** `recipe_favorites (user_id,
+  recipe_id)` (composite PK, cascading FKs) makes (un)favorite idempotent and per-user.
+  `recipes.list`/`byId` left-join it into a `favorited` boolean. The M4 `recipeSchema`
+  (persisted DTO, also used by the `done` re-emit) is **left untouched**; detail adds a
+  separate `recipeDetailSchema = recipeSchema.extend({ favorited })`.
+- **(C) Recent / "recently cooked" / counts are session-derived → deferred to M6.** The
+  board's Cook frames show session statuses ("finished · saved", "cooked 7×", "stopped at
+  step 2") with no M5 data source. For M5 these render from the persisted recipe rows as a
+  **"Recently generated"** list (title + relative time + difficulty/weirdness), and the
+  mobile counts line shows only **`{N} saved`** (cooked / want-to-try deferred). The board's
+  Tonight/Cooked/Want-to-try filter pills render **disabled** until their M6 data exists.
+  The `cook-tab-library--mobile-cook-with-resume` resume-banner frame is **out of M5 scope**
+  (needs an active cook session; the `MobileCookTabEmpty` `resume` prop stays unset).
+- **(D) "Start cooking" / "Share" / "Print" stay stubs; "Save"/bookmark is now live.** Per
+  the M4 precedent (decision (g)), Start cooking navigates nowhere yet (wired in M6) and
+  Share/Print are no-ops. The bookmark toggles a real favorite via `useFavorite`
+  (optimistic flip + revert on error) — the one M4 stub M5 fulfils. The M4 Result card's
+  Save + title now also drive favorites / link into the library (the recipe is already
+  persisted with a real `recipeId`).
+- **(E) Library list fields derive from the `data` jsonb; some detail meta are board
+  placeholders.** `timeMinutes`/`difficulty`/`pantryItemsUsed` come from the stored
+  `AIRecipe` body; `title`/`summary`/`weirdness`/`createdAt` from the row columns (no
+  `recipes` schema change). The detail meta strip's **serves / cost / cal-per-serve** cells
+  have no per-recipe data in M5 and render **board-fixture placeholders** (`2`, `$3.40`,
+  `420`); only time and difficulty/effort are real. Noted in the fidelity checklist.
+- **Icons added for board parity:** web `Printer` (detail Print stub); native `Bookmark`,
+  `Share2`, `Timer`, `ArrowDownUp`, `Repeat` (the native set lacked them). Consistent with
+  the M4 "add board icons as sections need them" pattern.
+
+## 2026-06-15 — M4 scope decisions + web divergences
+
+Settled with user (2026-06-14), recorded here as they shipped:
+
+- **(a) tRPC-subscription client transport + raw SSE server-to-server.** Clients
+  consume generation via the `recipes.generateStream` tRPC subscription over
+  `httpSubscriptionLink` (browser `EventSource`); the API→AI hop is a separate raw
+  SSE reader authenticated with the service token. One typed client, end-to-end.
+- **(b) Recipes persisted in M4.** `recipes` + `recipe_generation_jobs` tables
+  added now; on the stream's `done` event the API writes the recipe once
+  (single-write guard) and re-emits `done` with the real persisted `recipeId`.
+  M5 (library/favorites) reads these rows rather than introducing persistence.
+- **(c) One recipe per request → Drafting diverges from the board.** The §04
+  Drafting frame renders a single streaming recipe **without** the board's
+  "Recipe 1 of 3" eyebrow / queued-recipe cards. Approved against the
+  single-recipe variant in `docs/checklists/m4-generation.md`.
+- **(d) Streaming states frozen via the scripted mock tape.** `mock.ts`
+  `streamStructured` replays a committed deterministic event tape; CI orchestrator
+  tests and the §04 fidelity captures run off it (no live AI in CI). A dev-only
+  `MOCK_STREAM_DELAY_MS` (default 0) paces frames for manual smoke + freezing
+  mid-stream fidelity snapshots without affecting determinism.
+- **(e) Branch re-prompts are pure input transforms.** The four §02 tiles
+  (Weirder / Faster / Vegetarian / Different angle) build a new `GenerationRequest`
+  from the previous one via `buildBranchInput` (idempotent suffix append +
+  weirdness bump) and re-run the same generate path — no new server endpoint.
+- **(g) Result/Start actions stubbed until M5/M6.** "Start cooking" and "Save" on
+  the §02 OneRecipeCard are no-op stubs (precedent set by M2/M3); cook sessions
+  (M6) and library/favorites (M5) wire them later. Branch tiles are live.
+- **Subscription cookie fix (`withCredentials`).** Driving the real web app
+  surfaced that the browser `EventSource` is cross-origin (web :3000 ↔ api :4000)
+  and omits the session cookie without `withCredentials`, so every subscription
+  401'd. Fixed in `@pantry/api-client` (`eventSourceOptions.withCredentials`); the
+  API's CORS already allows credentials for the configured origins. The curl-based
+  E2 spike masked this by setting the `Cookie` header manually.
+- **Web fidelity divergences** (intentional / scoped, in `m4-generation.md`):
+  WebShell topbar chrome + sidebar LISTS + Home stats bar are out of M4's
+  §01/§04/§02 content scope; "Recently saved" populates with M5; Drafting is the
+  single-recipe variant per (c).
+
+## 2026-06-15 — M4 mobile (Slice G/H) divergences
+
+- **(h) RN SSE transport via `react-native-sse` + a typed adapter.** React
+  Native's `fetch` can't stream, so the api-client subscription link (Slice E1)
+  needs an injected `EventSource`. `apps/mobile/src/lib/rn-event-source.ts` adapts
+  `react-native-sse` to tRPC's `EventSourceLike` contract
+  (`CONNECTING/OPEN/CLOSED/readyState` + `addEventListener`/`close`). Two
+  RN-specific concerns are handled there: the better-auth **session cookie is
+  injected as a request header** (RN has no cookie jar; the browser relies on
+  `withCredentials`), and the library's polling reconnect is **disabled**
+  (`pollingInterval: 0`) so tRPC owns reconnection like the web link. Validated
+  live on-device (Thinking → Drafting → Result streamed incrementally).
+- **(i) Mobile generate route = a `(generate)` modal group mirroring `(scan)`.**
+  `app/(generate)/generate.tsx` (a `fullScreenModal` Stack) hosts `GenerateScreen`,
+  pushed from the cook Home with `{prompt, weirdness, items}` params. The M3 scan
+  "See tonight's ideas" CTA now routes to the cook Home (where a prompt is entered).
+- **(j) Native icon substitutions on §02.** The native icon set lacks the board's
+  `timer`/`shuffle`/`utensils`/`bookmark` glyphs, so the 2×2 `BranchGrid` uses
+  `Clock` (Faster) and `RefreshCw` (New angle), and `OneRecipeCardMobile` uses
+  `ChefHat` (Start cooking) and `Heart` (Save). Labels/behaviour match the board.
+- **Mobile fidelity method.** All 6 §01/§04/§02 frames were captured live from the
+  **dev build** (`com.pantrycopilot.app`) on the pinned iPhone 15 / iOS 18.5
+  simulator, driven by Maestro (openjdk) against the dev api/ai with the mock tape
+  paced by `MOCK_STREAM_DELAY_MS`. Pixelmatch % is not the gate (390×800 board
+  frame vs 1179×2556 device); the gate is human side-by-side. Approved in
+  `m4-generation.md`. The Drafting frame is the single-recipe variant per (c).
+- **Maestro e2e** `e2e/mobile/generation.yaml` (Home → prompt → Thinking → Drafting
+  → Result → branch re-run) verified locally against the dev build; CI execution
+  deferred (M1–M3 precedent — Maestro needs a simulator + JDK).
+
+## 2026-06-15 — M4 SSE transport spike outcome (Slice E2)
+
+The roadmap flagged Start/Nitro response buffering as the milestone's top risk and
+mandated an early spike before building the streaming UI. Outcome: **incremental,
+non-buffered delivery confirmed; no Start/Nitro mitigation was required**, because the
+architecture keeps Start/Nitro out of the streaming path entirely.
+
+- **Start/Nitro is not in the SSE path.** The web tRPC client (`@pantry/api-client`,
+  `httpSubscriptionLink`) runs in the browser and opens a native `EventSource` directly
+  to the API at `VITE_API_URL` (`http://localhost:4000/trpc`). The Vite/Start dev server
+  (port 3000) only serves SPA assets; it does not proxy `/trpc`. So the original buffering
+  risk — a Nitro server middleware reading/compressing the streamed body — cannot occur in
+  this design. (`apps/web/src/lib/api.ts`, `apps/web/src/lib/env.ts`.)
+- **Verified end-to-end against the real API.** Drove `recipes.generateStream` through the
+  running stack (mock provider) via a browser-equivalent SSE `GET`
+  (`Accept: text/event-stream`, superjson-wrapped `input`, real better-auth session cookie
+  — exactly the request `EventSource` issues). Frames arrived **one at a time, spaced
+  ~120 ms apart over ~2.25 s** (not a single end-of-stream flush), terminating in
+  `event: return`. The `done` frame carried a **real persisted `recipeId`** (uuid),
+  confirming single-write-on-done through the full chain. The AI-service hop
+  (`POST /recipes/generate/stream`) was independently confirmed to stream incrementally
+  with the same spacing.
+- **`MOCK_STREAM_DELAY_MS` (dev-only, default 0).** The committed mock tape emits frames
+  instantly, which is correct for deterministic CI/fidelity but makes incremental delivery
+  indistinguishable from a buffered flush. Added an env-gated per-frame delay
+  (`services/ai/src/providers/mock.ts`) — **default 0** so CI and the fidelity gate stay
+  instant and deterministic; set e.g. `120` for manual smoke. Frame order/content are
+  unchanged, so orchestrator/tape tests are unaffected (61 AI tests green).
+- **No throwaway spike route.** Because the transport was proven via the browser-equivalent
+  `GET` against the real API and Start/Nitro is out of the path, a disposable dev spike
+  page was unnecessary; the real consuming route lands in Slice F (`useGeneration` +
+  `cook.generate.tsx`).
+
 ## 2026-06-14 — M3 (AI service v1 + camera scan)
 
 Settled scope (agreed with user 2026-06-14):
