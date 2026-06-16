@@ -38,19 +38,44 @@ not layout drift.
   read higher than the board's because `MOCK_STREAM_DELAY_MS` paces frames at 1 s
   to freeze a mid-stream snapshot; with the default (0) the readouts are small.
 
-## Mobile frames (§01/§04/§02) — deferred to Slice G
+## Mobile frames (§01/§04/§02) — captured + compared (Slice G/H)
 
-References captured and committed; visual approval pending Slice G (mobile UI),
-which is not part of this work:
+Captured live from the **dev build** (`com.pantrycopilot.app`) on the pinned
+iPhone 15 / iOS 18.5 simulator, driven by Maestro (`/tmp/*.yaml`, derived from
+`e2e/mobile/generation.yaml`) against the api/ai dev servers on :4000/:4001 with
+the **mock event tape** paced by `MOCK_STREAM_DELAY_MS=700` to freeze the
+streaming beats. Pantry seeded via the in-app scan sample. Screenshots via
+Maestro `takeScreenshot` / `xcrun simctl io booted screenshot` to
+`output/app/`, compared with `src/compare.ts`.
+
+**Pixelmatch % is not the gate here** (same as M1): the board references are
+390×800 frames and the device captures are 1179×2556 (iPhone 15 @3×), so the
+~60% figure is dominated by scale, not layout drift. The gate is **human
+side-by-side**; each frame below was reviewed against the board and matches.
 
 | # | Frame | Reference | Status |
 | - | ----- | --------- | ------ |
-| 5 | Mobile · Home §01 | `home--mobile-home.png` | references captured · pending Slice G |
-| 6 | Mobile · Home · selecting §01 | `home--mobile-home-selecting.png` | references captured · pending Slice G |
-| 7 | Mobile · Home · browse pantry §01 | `home--mobile-home-browse-pantry.png` | references captured · pending Slice G |
-| 8 | Mobile · 1. Thinking §04 | `generating-state--mobile-1-thinking.png` | references captured · pending Slice G |
-| 9 | Mobile · 2. Drafting §04 | `generating-state--mobile-2-drafting.png` | references captured · pending Slice G |
-| 10 | Mobile · Result §02 | `result-after-generation--mobile-result.png` | references captured · pending Slice G |
+| 5 | Mobile · Home §01 | `home--mobile-home.png` | **approved** 2026-06-15 — eyebrow + 32px display heading, hero prompt (placeholder, suggestion chips, gradient weirdness + "curious", "Cook this"), "Tap to add · expiring" list (Apples/Whole milk/Scallions + freshness pills), "Browse pantry · 13", "Recently saved" header. |
+| 6 | Mobile · Home · selecting §01 | `home--mobile-home-selecting.png` | **approved** 2026-06-15 — `PromptWithChips`: "Cooking with" eyebrow + removable chip, "add a note…" placeholder, weirdness, "N from pantry · ready" + "Cook this"; tapped row highlighted below. |
+| 7 | Mobile · Home · browse pantry §01 | `home--mobile-home-browse-pantry.png` | **approved** 2026-06-15 — `PantryPickSheet` on the canonical `BottomSheet`: "Cook with / Pick from everything", search + "13 items", filter pills (All/Expiring/Fridge/Pantry/Produce/Dairy), grouped multiselect (Needs using / Fridge), "0 selected · Add to prompt" footer. |
+| 8 | Mobile · 1. Thinking §04 | `generating-state--mobile-1-thinking.png` | **approved** 2026-06-15 — X + "stream · Ns", "Your ask" + italic prompt, pulsing "Thinking · N tools" header, interleaved prose, "Stop". (Captured early in the beat; tool rows interleave as the tape streams.) |
+| 9 | Mobile · 2. Drafting §04 | `generating-state--mobile-2-drafting.png` | **approved against the single-recipe variant** 2026-06-15 — collapsed "Thought for · N tools" + streaming recipe card (THE PICK · drafting, title + caret, ingredients streaming, "waiting for ingredients…"), "Stop". **Deliberate divergence:** no "Recipe 1 of 3" / queued cards (one recipe per request — see decisions.md). |
+| 10 | Mobile · Result §02 | `result-after-generation--mobile-result.png` | **approved** 2026-06-15 — collapsed reasoning + `OneRecipeCardMobile` (THE PICK + "uses N expiring", title, "N min · easy", summary, "Ingredients · N" with using-up/optional tags, "Start cooking"/"Save"), 2×2 `BranchGrid` (Weirder / Faster (< 15) / Vegetarian / New angle). |
+
+### Mobile fidelity divergences (intentional / scoped)
+
+- **Drafting single-recipe variant** — board's "Recipe 1 of 3" + queued cards
+  intentionally dropped (one recipe per request); see `docs/decisions.md`.
+- **Branch tile icons** — native icon set lacks the board's `timer`/`shuffle`
+  glyphs, so Faster → `Clock` and New angle → `RefreshCw`; the §02 result actions
+  use `ChefHat`/`Heart` for Start cooking/Save (no `utensils`/`bookmark` native
+  glyph). Logged in `docs/decisions.md`.
+- **Status bar / device size** — captured on the dev build at the device's native
+  1179×2556 (not the 390×800 board frame) with the live clock (9:41 override not
+  applied on the dev build); a regression tripwire only, not the gate.
+- **Recipe / pantry content is illustrative** — the recipe is the mock tape's
+  "Charred Scallion & Carrot Fried Rice" (board shows "Milk-braised carrots") and
+  the seeded pantry is the scan sample; data divergence, not layout drift.
 
 ## Functional verification (done, green)
 

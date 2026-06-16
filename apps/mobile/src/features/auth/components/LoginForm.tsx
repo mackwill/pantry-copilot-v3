@@ -43,6 +43,7 @@ export function LoginForm() {
           </Field>
           <Text style={styles.forgot}>{s.forgotPassword}</Text>
           <Button
+            testID="login-submit"
             kind="primary"
             size="lg"
             full

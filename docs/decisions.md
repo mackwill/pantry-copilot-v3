@@ -41,6 +41,36 @@ Settled with user (2026-06-14), recorded here as they shipped:
   §01/§04/§02 content scope; "Recently saved" populates with M5; Drafting is the
   single-recipe variant per (c).
 
+## 2026-06-15 — M4 mobile (Slice G/H) divergences
+
+- **(h) RN SSE transport via `react-native-sse` + a typed adapter.** React
+  Native's `fetch` can't stream, so the api-client subscription link (Slice E1)
+  needs an injected `EventSource`. `apps/mobile/src/lib/rn-event-source.ts` adapts
+  `react-native-sse` to tRPC's `EventSourceLike` contract
+  (`CONNECTING/OPEN/CLOSED/readyState` + `addEventListener`/`close`). Two
+  RN-specific concerns are handled there: the better-auth **session cookie is
+  injected as a request header** (RN has no cookie jar; the browser relies on
+  `withCredentials`), and the library's polling reconnect is **disabled**
+  (`pollingInterval: 0`) so tRPC owns reconnection like the web link. Validated
+  live on-device (Thinking → Drafting → Result streamed incrementally).
+- **(i) Mobile generate route = a `(generate)` modal group mirroring `(scan)`.**
+  `app/(generate)/generate.tsx` (a `fullScreenModal` Stack) hosts `GenerateScreen`,
+  pushed from the cook Home with `{prompt, weirdness, items}` params. The M3 scan
+  "See tonight's ideas" CTA now routes to the cook Home (where a prompt is entered).
+- **(j) Native icon substitutions on §02.** The native icon set lacks the board's
+  `timer`/`shuffle`/`utensils`/`bookmark` glyphs, so the 2×2 `BranchGrid` uses
+  `Clock` (Faster) and `RefreshCw` (New angle), and `OneRecipeCardMobile` uses
+  `ChefHat` (Start cooking) and `Heart` (Save). Labels/behaviour match the board.
+- **Mobile fidelity method.** All 6 §01/§04/§02 frames were captured live from the
+  **dev build** (`com.pantrycopilot.app`) on the pinned iPhone 15 / iOS 18.5
+  simulator, driven by Maestro (openjdk) against the dev api/ai with the mock tape
+  paced by `MOCK_STREAM_DELAY_MS`. Pixelmatch % is not the gate (390×800 board
+  frame vs 1179×2556 device); the gate is human side-by-side. Approved in
+  `m4-generation.md`. The Drafting frame is the single-recipe variant per (c).
+- **Maestro e2e** `e2e/mobile/generation.yaml` (Home → prompt → Thinking → Drafting
+  → Result → branch re-run) verified locally against the dev build; CI execution
+  deferred (M1–M3 precedent — Maestro needs a simulator + JDK).
+
 ## 2026-06-15 — M4 SSE transport spike outcome (Slice E2)
 
 The roadmap flagged Start/Nitro response buffering as the milestone's top risk and

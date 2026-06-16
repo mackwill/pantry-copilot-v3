@@ -1,0 +1,42 @@
+# Local-only flow (CI execution deferred — see docs/checklists/m4-generation.md).
+# Precondition: api on :4000 + ai on :4001 (DEFAULT_AI_PROVIDER=mock, no keys needed),
+# maestro user created + signed in (run sign-in.yaml first, or reuse its session).
+# Drives the §01 Home → §04 generating (Thinking → Drafting) → §02 Result vertical
+# slice against the frozen mock event tape, then a branch re-prompt.
+appId: com.pantrycopilot.app
+---
+- launchApp
+# Land on the §01 Home (the Cook tab hosts the generation home).
+- tapOn: 'Cook'
+- assertVisible:
+    id: 'hero-prompt-input'
+# Type a prompt and generate.
+- tapOn:
+    id: 'hero-prompt-input'
+- inputText: 'Cozy with milk and carrots'
+- hideKeyboard
+- tapOn:
+    id: 'cook-this'
+# §04 Thinking beat (interleaved prose + tool events, frozen by the mock tape).
+- assertVisible: 'Thinking'
+- assertVisible:
+    id: 'tool-events'
+# §04 Drafting beat — a single recipe streams top→bottom (no queued cards).
+- assertVisible:
+    id: 'streaming-recipe'
+# §02 Result — the committed pick + the 2×2 branch grid. The mock tape streams
+# ~40 frames, so wait generously for the final `done` to land.
+- extendedWaitUntil:
+    visible:
+      id: 'recipe-card-mobile'
+    timeout: 25000
+- assertVisible: 'Start cooking'
+- assertVisible: 'Weirder'
+# Branch re-prompt re-runs generation.
+- tapOn:
+    id: 'branch-weirder'
+- assertVisible: 'Thinking'
+- extendedWaitUntil:
+    visible:
+      id: 'recipe-card-mobile'
+    timeout: 25000
