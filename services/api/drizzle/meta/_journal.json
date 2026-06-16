@@ -29,6 +29,13 @@
       "when": 1781528046127,
       "tag": "0003_perfect_zaran",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1781569955057,
+      "tag": "0004_kind_northstar",
+      "breakpoints": true
     }
   ]
 }
