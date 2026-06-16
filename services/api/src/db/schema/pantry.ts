@@ -27,7 +27,9 @@ export const pantryItems = pgTable('pantry_items', {
 
 export const inventoryEvents = pgTable('inventory_events', {
   id: uuid('id').primaryKey().defaultRandom(),
-  itemId: uuid('item_id').notNull().references(() => pantryItems.id, { onDelete: 'cascade' }),
+  // Nullable + set-null so the audit row survives when a fully-consumed item is
+  // removed from the pantry (the `consumed` event must outlive the item).
+  itemId: uuid('item_id').references(() => pantryItems.id, { onDelete: 'set null' }),
   userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
   kind: inventoryEventKind('kind').notNull(),
   quantityDelta: numeric('quantity_delta', { precision: 10, scale: 2 }).notNull().default('0'),

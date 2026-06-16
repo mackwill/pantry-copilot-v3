@@ -43,6 +43,13 @@
       "when": 1781618005594,
       "tag": "0005_eager_greymalkin",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1781618336918,
+      "tag": "0006_aromatic_warbird",
+      "breakpoints": true
     }
   ]
 }

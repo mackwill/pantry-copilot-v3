@@ -372,6 +372,9 @@ importers:
       '@pantry/contracts':
         specifier: workspace:*
         version: link:../../packages/contracts
+      '@pantry/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
       '@trpc/server':
         specifier: 11.17.0
         version: 11.17.0(typescript@6.0.3)
