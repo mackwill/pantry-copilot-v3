@@ -15,6 +15,7 @@ export const tokens = {
   accentPress: "#2F4219",
   accentSoft: "#E9EFDC",
   accentFg: "#FFFFFF",
+  accentStrong: "#A4C46B",
   success: "#3F6B2E",
   warning: "#A67614",
   warningSoft: "#FBEEC8",
@@ -37,6 +38,20 @@ export const tokens = {
   rLg: 14,
   rXl: 20,
   rPill: 999,
+  stove: {
+    bg: "#0E120E",
+    bgRaised: "rgba(250,250,247,0.06)",
+    bgSunk: "rgba(250,250,247,0.10)",
+    line: "rgba(250,250,247,0.12)",
+    lineStrong: "rgba(250,250,247,0.22)",
+    fg: "#FAFAF7",
+    fgMuted: "rgba(250,250,247,0.70)",
+    fgSubtle: "rgba(250,250,247,0.55)",
+    accent: "#A4C46B",
+    accentStrong: "#A4C46B",
+    accentSoft: "rgba(164,196,107,0.16)",
+    accentFg: "#0E120E",
+  },
 } as const;
 
 export type Tokens = typeof tokens;

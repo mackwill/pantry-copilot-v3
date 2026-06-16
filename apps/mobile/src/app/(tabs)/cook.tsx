@@ -2,6 +2,6 @@ import { RecipeLibraryScreen } from '../../features/library/components/RecipeLib
 import { useLibrary } from '../../features/library/useLibrary';
 
 export default function Screen() {
-  const { items } = useLibrary();
-  return <RecipeLibraryScreen items={items} />;
+  const { items, activeSession } = useLibrary();
+  return <RecipeLibraryScreen items={items} activeSession={activeSession} />;
 }

@@ -51,6 +51,11 @@ export default function Screen() {
       onBack={() => {
         router.back();
       }}
+      onStartCooking={() => {
+        void api.cook.start.mutate({ recipeId }).then(() => {
+          router.push('/session');
+        });
+      }}
     />
   );
 }

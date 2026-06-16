@@ -10,10 +10,11 @@ import { RecipeMethod } from './RecipeMethod';
 export interface RecipeDetailScreenProps {
   recipe: RecipeDetail;
   onBack: () => void;
+  onStartCooking?: (() => void) | undefined;
 }
 
 /** Board §05/§07 mobile recipe detail — meta + inline pantry block + method. */
-export function RecipeDetailScreen({ recipe, onBack }: RecipeDetailScreenProps) {
+export function RecipeDetailScreen({ recipe, onBack, onStartCooking }: RecipeDetailScreenProps) {
   const { favorited, toggle } = useFavorite(recipe.id, recipe.favorited);
 
   const meta: readonly [string, string][] = [
@@ -55,7 +56,14 @@ export function RecipeDetailScreen({ recipe, onBack }: RecipeDetailScreenProps) 
         <IngredientBlock ingredients={recipe.ingredients} pantryItemsUsed={recipe.pantryItemsUsed} />
         <RecipeMethod steps={recipe.steps} />
 
-        <Button kind="primary" full size="lg" leftIcon={<Icon name="Timer" size={16} color={tokens.accentFg} />}>
+        <Button
+          kind="primary"
+          full
+          size="lg"
+          testID="start-cooking"
+          leftIcon={<Icon name="Timer" size={16} color={tokens.accentFg} />}
+          {...(onStartCooking === undefined ? {} : { onPress: onStartCooking })}
+        >
           {s.startCooking}
         </Button>
       </ScrollView>

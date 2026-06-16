@@ -2,6 +2,7 @@ import {
   Apple,
   Archive,
   ArrowDownUp,
+  ArrowLeft,
   ArrowRight,
   AtSign,
   Beef,
@@ -18,12 +19,14 @@ import {
   Heart,
   House,
   Image as ImageIcon,
+  Info,
   Leaf,
   Lock,
   MessageSquare,
   Mic,
   Milk,
   Minus,
+  PackageMinus,
   Pencil,
   Plus,
   RefreshCw,
@@ -33,11 +36,13 @@ import {
   Search,
   Settings,
   Share2,
+  ShoppingCart,
   SlidersHorizontal,
   Snowflake,
   Sparkles,
   Timer,
   Trash2,
+  TriangleAlert,
   User,
   Wheat,
   Wine,
@@ -54,6 +59,7 @@ export type IconName =
   | 'Apple'
   | 'Archive'
   | 'ArrowDownUp'
+  | 'ArrowLeft'
   | 'ArrowRight'
   | 'AtSign'
   | 'Beef'
@@ -71,12 +77,14 @@ export type IconName =
   | 'Heart'
   | 'House'
   | 'Image'
+  | 'Info'
   | 'Leaf'
   | 'Lock'
   | 'MessageSquare'
   | 'Mic'
   | 'Milk'
   | 'Minus'
+  | 'PackageMinus'
   | 'Pencil'
   | 'Plus'
   | 'RefreshCw'
@@ -86,11 +94,13 @@ export type IconName =
   | 'Search'
   | 'Settings'
   | 'Share2'
+  | 'ShoppingCart'
   | 'SlidersHorizontal'
   | 'Snowflake'
   | 'Sparkles'
   | 'Timer'
   | 'Trash2'
+  | 'TriangleAlert'
   | 'User'
   | 'Wheat'
   | 'Wine'
@@ -108,6 +118,7 @@ const iconMap: Record<IconName, ComponentType<RenderedIconProps>> = {
   Apple,
   Archive,
   ArrowDownUp,
+  ArrowLeft,
   ArrowRight,
   AtSign,
   Beef,
@@ -125,12 +136,14 @@ const iconMap: Record<IconName, ComponentType<RenderedIconProps>> = {
   Heart,
   House,
   Image: ImageIcon,
+  Info,
   Leaf,
   Lock,
   MessageSquare,
   Mic,
   Milk,
   Minus,
+  PackageMinus,
   Pencil,
   Plus,
   RefreshCw,
@@ -140,11 +153,13 @@ const iconMap: Record<IconName, ComponentType<RenderedIconProps>> = {
   Search,
   Settings,
   Share2,
+  ShoppingCart,
   SlidersHorizontal,
   Snowflake,
   Sparkles,
   Timer,
   Trash2,
+  TriangleAlert,
   User,
   Wheat,
   Wine,

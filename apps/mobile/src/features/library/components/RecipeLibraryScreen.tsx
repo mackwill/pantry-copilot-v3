@@ -1,8 +1,10 @@
-import type { RecipeLibraryFilter, RecipeListItem } from '@pantry/contracts';
+import type { CookSession, RecipeLibraryFilter, RecipeListItem } from '@pantry/contracts';
 import { tokens } from '@pantry/design-system/tokens';
 import { useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
+import { ResumeBanner } from '../../cook/components/ResumeBanner';
+import { cookStrings } from '../../cook/strings';
 import { NewAskSheet } from '../sheets/NewAskSheet';
 import { CookNewButton } from './CookNewButton';
 import { LibraryFilters } from './LibraryFilters';
@@ -14,10 +16,11 @@ const RECENT_LIMIT = 3;
 
 export interface RecipeLibraryScreenProps {
   items: readonly RecipeListItem[];
+  activeSession?: CookSession | null;
 }
 
 /** Board §03 mobile Cook tab — the recipe library (decision A). */
-export function RecipeLibraryScreen({ items }: RecipeLibraryScreenProps) {
+export function RecipeLibraryScreen({ items, activeSession = null }: RecipeLibraryScreenProps) {
   const router = useRouter();
   const [filter, setFilter] = useState<RecipeLibraryFilter>('all');
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -36,6 +39,15 @@ export function RecipeLibraryScreen({ items }: RecipeLibraryScreenProps) {
   return (
     <View testID="library-screen" style={styles.screen}>
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+        {activeSession !== null && (
+          <ResumeBanner
+            recipeTitle={activeSession.recipeTitle}
+            meta={cookStrings.resumeStepMeta(activeSession.currentStepIndex + 1, activeSession.totalSteps)}
+            onResume={() => {
+              router.push('/session');
+            }}
+          />
+        )}
         <LibraryHeader
           savedCount={savedCount}
           onNew={() => {

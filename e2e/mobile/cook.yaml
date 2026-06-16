@@ -1,0 +1,59 @@
+# Local-only flow (CI execution deferred — see docs/checklists/m6-cook-sessions.md).
+# Precondition: api on :4000 + ai on :4001 (DEFAULT_AI_PROVIDER=mock, no keys needed),
+# maestro user signed in (run sign-in.yaml first) with at least one generated recipe
+# in the library (run generation.yaml first, or seed one).
+# Drives §05/§07 detail → §03.5 stove in-session → §03 resume → §★ end-of-cook → consume.
+appId: com.pantrycopilot.app
+---
+- launchApp
+- tapOn: 'Cook'
+- assertVisible:
+    id: 'library-screen'
+
+# Open the first recipe and start cooking.
+- tapOn:
+    id: 'recipe-card'
+- assertVisible:
+    id: 'recipe-detail'
+- tapOn:
+    id: 'start-cooking'
+- assertVisible:
+    id: 'cook-session'
+
+# Advance a step, then exit — the session stays resumable.
+- tapOn:
+    id: 'cook-next'
+- tapOn:
+    id: 'cook-exit'
+- assertVisible:
+    id: 'library-screen'
+- assertVisible:
+    id: 'resume-cooking'
+
+# Resume from the library banner and step through to the finish.
+- tapOn:
+    id: 'resume-cooking'
+- assertVisible:
+    id: 'cook-session'
+- repeat:
+    times: 6
+    commands:
+      - runFlow:
+          when:
+            visible:
+              id: 'cook-next'
+          commands:
+            - tapOn:
+                id: 'cook-next'
+- tapOn:
+    id: 'cook-finish'
+
+# End-of-cook ask → adjust → deduct from pantry → back to the library.
+- assertVisible:
+    id: 'end-of-cook'
+- tapOn:
+    id: 'adjust-used'
+- tapOn:
+    id: 'deduct-pantry'
+- assertVisible:
+    id: 'library-screen'
