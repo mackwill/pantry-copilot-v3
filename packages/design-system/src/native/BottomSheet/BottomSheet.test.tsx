@@ -1,5 +1,5 @@
-import { fireEvent, render, screen } from '@testing-library/react';
-import { Text } from 'react-native';
+import { act, fireEvent, render, screen } from '@testing-library/react';
+import { Animated, Text } from 'react-native';
 import { describe, expect, it, vi } from 'vitest';
 import { BottomSheet } from './BottomSheet.js';
 
@@ -64,5 +64,47 @@ describe('BottomSheet (native)', () => {
       </BottomSheet>,
     );
     expect(screen.getByText('Save · May 10')).toBeTruthy();
+  });
+
+  it('applies an animated translateY transform to the sheet panel', () => {
+    render(
+      <BottomSheet open onClose={vi.fn()} title="Pick a spot">
+        <Text>Fridge</Text>
+      </BottomSheet>,
+    );
+    // The sheet slides in via an Animated transform rather than popping in.
+    expect(screen.getByTestId('bottom-sheet-panel').style.transform).toContain('translateY');
+  });
+
+  it('unmounts only once the slide-out animation completes, not on the open flip', () => {
+    // jsdom resolves Animated synchronously, so intercept the parallel
+    // animation's completion callback to prove the contract: the sheet stays
+    // mounted after `open` flips false and unmounts only when the slide-out
+    // reports finished.
+    let endCallback: ((result: { finished: boolean }) => void) | undefined;
+    const parallelSpy = vi.spyOn(Animated, 'parallel').mockReturnValue({
+      start: (cb?: (result: { finished: boolean }) => void) => {
+        endCallback = cb;
+      },
+      stop: () => {},
+      reset: () => {},
+    });
+
+    const { rerender } = render(
+      <BottomSheet open onClose={vi.fn()} title="Pick a spot">
+        <Text>Fridge</Text>
+      </BottomSheet>,
+    );
+    rerender(
+      <BottomSheet open={false} onClose={vi.fn()} title="Pick a spot">
+        <Text>Fridge</Text>
+      </BottomSheet>,
+    );
+    expect(screen.queryByText('Fridge')).not.toBeNull();
+
+    act(() => endCallback?.({ finished: true }));
+    expect(screen.queryByText('Fridge')).toBeNull();
+
+    parallelSpy.mockRestore();
   });
 });

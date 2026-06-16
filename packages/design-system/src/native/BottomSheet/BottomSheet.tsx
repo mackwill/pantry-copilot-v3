@@ -1,5 +1,15 @@
-import type { ReactNode } from 'react';
-import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { type ReactNode, useEffect, useState } from 'react';
+import {
+  Animated,
+  Dimensions,
+  Easing,
+  Modal,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { tokens } from '../../tokens/native.js';
 import { fonts } from '../fonts.js';
 import { Icon } from '../Icon/Icon.js';
@@ -28,17 +38,77 @@ export function BottomSheet({
   height = 'auto',
   dim = 0.5,
 }: BottomSheetProps) {
+  // We own the open/close animation (Modal stays `animationType="none"`): the
+  // backdrop fades while the sheet slides up/down, both driven separately so
+  // the scrim "appears" rather than being dragged up with the sheet. `mounted`
+  // is decoupled from `open` so the exit animation can finish before unmount.
+  const screenH = Dimensions.get('window').height || 800;
+  const [scrimOpacity] = useState(() => new Animated.Value(open ? 1 : 0));
+  const [sheetTranslate] = useState(() => new Animated.Value(open ? 0 : screenH));
+  const [mounted, setMounted] = useState(open);
+  // Mount synchronously when opening so the slide-in plays from off-screen;
+  // unmounting is deferred to the slide-out completion below.
+  if (open && !mounted) setMounted(true);
+
+  useEffect(() => {
+    if (open) {
+      Animated.parallel([
+        Animated.timing(scrimOpacity, {
+          toValue: 1,
+          duration: 180,
+          easing: Easing.out(Easing.quad),
+          useNativeDriver: true,
+        }),
+        Animated.timing(sheetTranslate, {
+          toValue: 0,
+          duration: 260,
+          easing: Easing.out(Easing.cubic),
+          useNativeDriver: true,
+        }),
+      ]).start();
+    } else if (mounted) {
+      Animated.parallel([
+        Animated.timing(scrimOpacity, {
+          toValue: 0,
+          duration: 160,
+          easing: Easing.in(Easing.quad),
+          useNativeDriver: true,
+        }),
+        Animated.timing(sheetTranslate, {
+          toValue: screenH,
+          duration: 220,
+          easing: Easing.in(Easing.cubic),
+          useNativeDriver: true,
+        }),
+      ]).start(({ finished }) => {
+        if (finished) setMounted(false);
+      });
+    }
+  }, [open, mounted, scrimOpacity, sheetTranslate, screenH]);
+
   return (
-    <Modal visible={open} transparent animationType="none" onRequestClose={onClose}>
+    <Modal visible={mounted} transparent animationType="none" onRequestClose={onClose}>
       <View style={styles.container}>
-        <Pressable
-          testID="bottom-sheet-scrim"
-          aria-label="Dismiss"
-          onPress={onClose}
-          style={[styles.scrim, { backgroundColor: `rgba(14,18,14,${String(dim)})` }]}
-        />
+        <Animated.View
+          pointerEvents={open ? 'auto' : 'none'}
+          style={[styles.scrim, { opacity: scrimOpacity }]}
+        >
+          <Pressable
+            testID="bottom-sheet-scrim"
+            aria-label="Dismiss"
+            onPress={onClose}
+            style={[StyleSheet.absoluteFill, { backgroundColor: `rgba(14,18,14,${String(dim)})` }]}
+          />
+        </Animated.View>
         {/* Modal itself carries the dialog/aria-modal semantics. */}
-        <View style={[styles.sheet, height === 'auto' ? null : { height }]}>
+        <Animated.View
+          testID="bottom-sheet-panel"
+          style={[
+            styles.sheet,
+            height === 'auto' ? null : { height },
+            { transform: [{ translateY: sheetTranslate }] },
+          ]}
+        >
           <View style={styles.grabberRow}>
             <View style={styles.grabber} />
           </View>
@@ -57,7 +127,7 @@ export function BottomSheet({
             {children}
           </ScrollView>
           {footer !== undefined && <View style={styles.footer}>{footer}</View>}
-        </View>
+        </Animated.View>
       </View>
     </Modal>
   );
