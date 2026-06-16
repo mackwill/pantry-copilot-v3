@@ -1,0 +1,30 @@
+# Local-only flow (CI execution deferred — see docs/checklists/m5-library.md).
+# Precondition: api on :4000 + ai on :4001 (DEFAULT_AI_PROVIDER=mock, no keys needed),
+# maestro user signed in (run sign-in.yaml first) with at least one generated
+# recipe in the library (run generation.yaml first, or seed one).
+# Drives the §03 Cook library → §05/§07 Recipe detail → favorite → NewAskSheet.
+appId: com.pantrycopilot.app
+---
+- launchApp
+# The Cook tab is now the recipe library (decision A).
+- tapOn: 'Cook'
+- assertVisible:
+    id: 'library-screen'
+# Open the first recipe card → detail.
+- tapOn:
+    id: 'recipe-card'
+- assertVisible:
+    id: 'recipe-detail'
+- assertVisible: 'Start cooking'
+# Toggle the bookmark (live favorite), then go back to the library.
+- tapOn:
+    id: 'favorite-button'
+- tapOn:
+    id: 'recipe-back'
+- assertVisible:
+    id: 'library-screen'
+# The "New" button opens the NewAskSheet prompt over the library.
+- tapOn:
+    id: 'cook-new-button'
+- assertVisible:
+    id: 'new-ask-sheet'

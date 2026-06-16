@@ -6,8 +6,9 @@
 appId: com.pantrycopilot.app
 ---
 - launchApp
-# Land on the §01 Home (the Cook tab hosts the generation home).
-- tapOn: 'Cook'
+# Land on the §01 Home. M5 relocated the generation prompt from the Cook tab to
+# the Home tab (decision A); the Cook tab is now the recipe library.
+- tapOn: 'Home'
 - assertVisible:
     id: 'hero-prompt-input'
 # Type a prompt and generate.

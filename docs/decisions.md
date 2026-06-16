@@ -2,6 +2,54 @@
 
 Board-silent composition calls and scope deviations, newest first.
 
+## 2026-06-16 — M5 scope decisions + divergences
+
+Settled in code per the M5 plan (`docs/superpowers/plans/2026-06-15-m5-recipe-library-detail.md`):
+
+- **(A) Cook becomes the library; the generation prompt relocates.** The board
+  (home-cook-v2 comment) makes the Cook tab the recipes library and keeps the new-ask
+  prompt on Home. Per platform:
+  - **Web:** generation Home stays at `/cook` (activeId `cook`, unchanged from M4). The
+    **library** is hosted under the existing **Recipes** sidebar item — `/recipes`
+    (list/empty) + `/recipes/$recipeId` (detail). The board's "Web · Cook · empty" frame
+    is matched at the `/recipes` empty state. **Divergence:** the board highlights the
+    *Cook* nav item on this frame; v3 highlights *Recipes*, because v3's sidebar carries a
+    dedicated Recipes item the mobile tab-bar lacks. Logged; noted in the fidelity checklist.
+  - **Mobile:** the tab-bar has no Recipes slot, so the library lives on the **Cook tab**
+    (`(tabs)/cook.tsx`) and the generation Home **moves to the Home tab** (`(tabs)/index.tsx`,
+    previously a placeholder). The prompt stays reachable from Cook via the **`NewAskSheet`**
+    ("New" button / "Cook something new" row → the unchanged M4 `/generate` flow). The M4
+    "Mobile · Home" composition is unchanged — only its host tab changed; `e2e/mobile/generation.yaml`
+    now taps **Home** instead of Cook.
+- **(B) Favorites are a join table, not a recipe column.** `recipe_favorites (user_id,
+  recipe_id)` (composite PK, cascading FKs) makes (un)favorite idempotent and per-user.
+  `recipes.list`/`byId` left-join it into a `favorited` boolean. The M4 `recipeSchema`
+  (persisted DTO, also used by the `done` re-emit) is **left untouched**; detail adds a
+  separate `recipeDetailSchema = recipeSchema.extend({ favorited })`.
+- **(C) Recent / "recently cooked" / counts are session-derived → deferred to M6.** The
+  board's Cook frames show session statuses ("finished · saved", "cooked 7×", "stopped at
+  step 2") with no M5 data source. For M5 these render from the persisted recipe rows as a
+  **"Recently generated"** list (title + relative time + difficulty/weirdness), and the
+  mobile counts line shows only **`{N} saved`** (cooked / want-to-try deferred). The board's
+  Tonight/Cooked/Want-to-try filter pills render **disabled** until their M6 data exists.
+  The `cook-tab-library--mobile-cook-with-resume` resume-banner frame is **out of M5 scope**
+  (needs an active cook session; the `MobileCookTabEmpty` `resume` prop stays unset).
+- **(D) "Start cooking" / "Share" / "Print" stay stubs; "Save"/bookmark is now live.** Per
+  the M4 precedent (decision (g)), Start cooking navigates nowhere yet (wired in M6) and
+  Share/Print are no-ops. The bookmark toggles a real favorite via `useFavorite`
+  (optimistic flip + revert on error) — the one M4 stub M5 fulfils. The M4 Result card's
+  Save + title now also drive favorites / link into the library (the recipe is already
+  persisted with a real `recipeId`).
+- **(E) Library list fields derive from the `data` jsonb; some detail meta are board
+  placeholders.** `timeMinutes`/`difficulty`/`pantryItemsUsed` come from the stored
+  `AIRecipe` body; `title`/`summary`/`weirdness`/`createdAt` from the row columns (no
+  `recipes` schema change). The detail meta strip's **serves / cost / cal-per-serve** cells
+  have no per-recipe data in M5 and render **board-fixture placeholders** (`2`, `$3.40`,
+  `420`); only time and difficulty/effort are real. Noted in the fidelity checklist.
+- **Icons added for board parity:** web `Printer` (detail Print stub); native `Bookmark`,
+  `Share2`, `Timer`, `ArrowDownUp`, `Repeat` (the native set lacked them). Consistent with
+  the M4 "add board icons as sections need them" pattern.
+
 ## 2026-06-15 — M4 scope decisions + web divergences
 
 Settled with user (2026-06-14), recorded here as they shipped:
