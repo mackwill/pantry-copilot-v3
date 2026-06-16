@@ -2,6 +2,61 @@
 
 Board-silent composition calls and scope deviations, newest first.
 
+## 2026-06-16 — M6 cook sessions + consume flow
+
+Settled in code per the M6 plan (`docs/superpowers/plans/2026-06-16-m6-cook-sessions-consume-flow.md`).
+Design doc: `docs/design/cook-sessions.md`.
+
+- **(A) Structured recipe steps replace plain strings.** `AIRecipe.steps` is now
+  `RecipeStep[]` (`{ text, label?, durationMinutes? }`). The read path tolerates legacy
+  `string[]` (coerced to `{ text }` via a `z.union(...).pipe(...)`) so already-persisted M4
+  recipes still parse — no data backfill. The AI prompt + `emit_recipe` tool schema instruct
+  the model to emit a short verb `label` and a `durationMinutes` timer for active-wait steps.
+- **(B) One active session per user.** `cook.start` abandons any existing `active` session
+  before creating the new one; resume reads the user's `active` session (`cook.getActive`).
+- **(C) Timers are client-side, never persisted.** Only `currentStepIndex` + `startedAt`
+  persist; the countdown ring is seeded from the step's `durationMinutes` and runs in
+  `useCookSession`. Avoids per-second DB writes; a killed app resumes to the right step.
+- **(D) Consume is one transaction** (`cook.consume`): per item deduct via `quantity.deduct`,
+  write an `inventory_events` row (new kind `'consumed'`), reduce stock or remove used-up
+  items, and mark the session `completed` — atomically.
+- **(E) Context pills are UI affordances.** "as recipe / used more / used less / Used it all"
+  set the numeric `quantityUsed` (+ a `finished` flag); the contract carries only the resolved
+  numbers.
+- **(F) Dark stove theme via token overrides — but only mobile is dark.** Per the board, the
+  §03.5 **mobile** in-session is the dark "stove" surface; the **web** in-session is light with
+  an inverse "Cooking now" banner ("dark theme for the stove" is the mobile frame note; the web
+  frame is "large step + simmer timer"). So: a canonical `.theme-stove` scope in `tokens.css`
+  is the single source the RN `tokens.stove` group is **generated** from (generator extended to
+  parse the scope); web composes the banner from existing inverse tokens + a new
+  `--accent-strong` (#A4C46B). No ad-hoc hex in components.
+- **(G) BottomSheet slide-in fix** ports v2's `Animated.parallel` pattern (scrim fade + sheet
+  `translateY`) with a `mounted` lifecycle so the slide-out completes before unmount.
+
+Smaller calls logged for completeness:
+
+- **`quantity.deduct(have, used)` drops the plan's speculative `unit` param.** Pantry quantity
+  is `numeric(10,2)` and an item carries a single unit, so the deduction is unit-agnostic at a
+  fixed 2-decimal precision; an unused param would only trip `no-unused-vars`.
+- **`inventory_events.item_id` made nullable + `ON DELETE SET NULL` (migration 0006).** A
+  `consumed` event must outlive a fully-used item that's removed; the prior `cascade` would have
+  erased the audit row. Existing `added`/`edited` events always set `item_id`, so unaffected.
+- **Consume contract reuses `pantryUnitSchema`**, not a separate `unitSchema`.
+- **Web "Finish" completes the session with no deductions** (`cook.consume` with empty items);
+  the editable consume flow is mobile-only per the board (§★ frames are all mobile).
+- **Mobile in-session "exit" (X) leaves the session active** (resumable) rather than abandoning;
+  "Not now" on the end-of-cook ask abandons it. Resume is the headline mobile affordance.
+- **"Using in this step" shows the full recipe ingredient list** — the board's per-step
+  ingredient subset has no backing data (steps don't map to ingredients); composed from the
+  flat ingredient list. The warning chip surfaces the recipe's first `caveat` when present.
+- **Consume↔pantry matching is by name** (case-insensitive contains); unmatched recipe
+  ingredients render in the "missing" box. Stepper increments: 1 for count units, 0.25 for
+  measured units.
+- **e2e race fix (not M6-specific):** the shared `generateRecipe` web helper now waits for the
+  result actions (recipe persisted) before navigating — leaving `/cook/generate` mid-stream
+  unsubscribes the tRPC subscription and aborts the job. The larger structured-step payload
+  exposed this latent race.
+
 ## 2026-06-16 — M5 scope decisions + divergences
 
 Settled in code per the M5 plan (`docs/superpowers/plans/2026-06-15-m5-recipe-library-detail.md`):
