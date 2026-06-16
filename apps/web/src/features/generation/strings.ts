@@ -55,6 +55,7 @@ export const generationStrings = {
     timePill: (min: number): string => `${min.toString()} min`,
     startCooking: 'Start cooking',
     save: 'Save',
+    saved: 'Saved',
     share: 'Share',
     usingUp: '· using up',
     fromPantry: '· pantry',

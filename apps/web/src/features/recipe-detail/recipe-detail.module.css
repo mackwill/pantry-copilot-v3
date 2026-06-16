@@ -1,0 +1,158 @@
+.topRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+.topMeta {
+  color: var(--fg-subtle);
+  font: 400 13px var(--font-sans);
+}
+.topActions {
+  margin-left: auto;
+  display: flex;
+  gap: 6px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 36px;
+}
+.rightCol {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.title {
+  font: 400 64px/1 var(--font-display);
+  letter-spacing: -0.025em;
+  color: var(--fg);
+  margin: 12px 0 16px;
+}
+.summary {
+  font: 400 17px/1.6 var(--font-sans);
+  color: var(--fg-muted);
+  margin: 0 0 24px;
+  max-width: 540px;
+  letter-spacing: -0.005em;
+}
+
+.metaStrip {
+  display: flex;
+  gap: 22px;
+  padding: 14px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 28px;
+}
+.metaKey {
+  font: 600 10px var(--font-sans);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg-subtle);
+}
+.metaVal {
+  font: 400 18px var(--font-display);
+  color: var(--fg);
+  margin-top: 4px;
+  letter-spacing: -0.01em;
+}
+
+/* Method */
+.step {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+.stepNum {
+  font: italic 400 28px var(--font-display);
+  color: var(--accent);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.stepText {
+  font: 400 16px/1.6 var(--font-sans);
+  color: var(--fg);
+  letter-spacing: -0.005em;
+}
+
+/* Copilot note */
+.copilot {
+  margin-top: 28px;
+  background: var(--accent-soft);
+  border-radius: var(--r-lg);
+  padding: 20px;
+}
+.copilotRow {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.copilotTitle {
+  font: 600 13px var(--font-sans);
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+.copilotBody {
+  font: 400 14px/1.55 var(--font-sans);
+  color: var(--fg);
+  letter-spacing: -0.005em;
+}
+
+/* Ingredient checklist */
+.ingHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+.ingRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+.ingRowLast {
+  border-bottom: none;
+}
+.ingLeft {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.ingDisc {
+  width: 18px;
+  height: 18px;
+  border-radius: var(--r-pill);
+  background: transparent;
+  border: 1px dashed var(--line-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.ingDiscHave {
+  background: var(--accent-soft);
+  border: none;
+}
+.ingName {
+  font: 500 14px var(--font-sans);
+  color: var(--fg);
+}
+.ingQty {
+  font: 400 13px var(--font-mono);
+  color: var(--fg-muted);
+}
+
+.subs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}

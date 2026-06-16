@@ -7,6 +7,10 @@ import type { GenerationSubscribe } from './useGeneration';
 const navigate = vi.fn();
 vi.mock('@tanstack/react-router', () => ({
   useNavigate: () => navigate,
+  Link: ({ children, params }: { children: unknown; params?: { recipeId?: string } }) => {
+    const href = params?.recipeId !== undefined ? `/recipes/${params.recipeId}` : '#';
+    return <a href={href}>{children as never}</a>;
+  },
 }));
 
 const user = { name: 'Mara Quinn', email: 'mara@example.com' };

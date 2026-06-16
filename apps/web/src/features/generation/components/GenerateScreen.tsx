@@ -2,6 +2,7 @@ import { Button, Eyebrow, Icon, WebShell } from '@pantry/design-system/web';
 import { useNavigate } from '@tanstack/react-router';
 import { useEffect, useRef, useState } from 'react';
 import { appNavItems, webShellUser } from '../../pantry-shared/nav';
+import { useFavorite } from '../../recipe-detail/useFavorite';
 import { type GenerationSubscribe, useGeneration } from '../useGeneration';
 import { generationStrings } from '../strings';
 import styles from '../generation.module.css';
@@ -51,6 +52,7 @@ export function GenerateScreen({ prompt, weirdness, user, subscribe }: GenerateS
   const gen = useGeneration(subscribe === undefined ? undefined : { subscribe });
   const { start } = gen;
   const elapsedMs = useElapsedMs(gen.isStreaming);
+  const favorite = useFavorite(gen.recipeId ?? '', false);
 
   useEffect(() => {
     start({ prompt, pantryItemIds: [], weirdness });
@@ -103,7 +105,12 @@ export function GenerateScreen({ prompt, weirdness, user, subscribe }: GenerateS
         {gen.status === 'result' && gen.recipe !== null && (
           <>
             <CollapsedReasoning elapsed={thoughtFor} toolCount={gen.tools.length} className={styles['collapsedResult']} />
-            <OneRecipeCard recipe={gen.recipe} />
+            <OneRecipeCard
+              recipe={gen.recipe}
+              {...(gen.recipeId !== null
+                ? { recipeId: gen.recipeId, saved: favorite.favorited, onSave: favorite.toggle }
+                : {})}
+            />
             <div className={styles['branchSpacer']} />
             <BranchRow onBranch={gen.branch} />
           </>

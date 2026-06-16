@@ -1,5 +1,6 @@
 import type { AIRecipePartial } from '@pantry/contracts';
 import { Button, Eyebrow, Icon, Pill } from '@pantry/design-system/web';
+import { Link } from '@tanstack/react-router';
 import { formatIngredient, ingredientTag } from '../recipeFormat';
 import { generationStrings } from '../strings';
 import styles from '../generation.module.css';
@@ -11,12 +12,15 @@ const TAG_TEXT = { pantry: s.fromPantry, using: s.usingUp, optional: s.optional 
 
 export interface OneRecipeCardProps {
   recipe: AIRecipePartial;
+  /** When the recipe is persisted, its id — turns the title into a link to detail. */
+  recipeId?: string | undefined;
+  saved?: boolean | undefined;
   onStartCooking?: (() => void) | undefined;
   onSave?: (() => void) | undefined;
 }
 
 /** Board §02 committed pick — pills, two-column ingredients/method, actions. */
-export function OneRecipeCard({ recipe, onStartCooking, onSave }: OneRecipeCardProps) {
+export function OneRecipeCard({ recipe, recipeId, saved = false, onStartCooking, onSave }: OneRecipeCardProps) {
   const ingredients = recipe.ingredients ?? [];
   const steps = recipe.steps ?? [];
   const pantryUsed = recipe.pantryItemsUsed ?? [];
@@ -33,7 +37,15 @@ export function OneRecipeCard({ recipe, onStartCooking, onSave }: OneRecipeCardP
             {recipe.timeMinutes !== undefined && <Pill>{s.timePill(recipe.timeMinutes)}</Pill>}
           </div>
         </div>
-        <h2 className={styles['recipeTitle']}>{recipe.title ?? ''}</h2>
+        <h2 className={styles['recipeTitle']}>
+          {recipeId !== undefined ? (
+            <Link to="/recipes/$recipeId" params={{ recipeId }} className={styles['recipeTitleLink']}>
+              {recipe.title ?? ''}
+            </Link>
+          ) : (
+            (recipe.title ?? '')
+          )}
+        </h2>
         {recipe.summary !== undefined && recipe.summary.length > 0 && <p className={styles['recipeSummary']}>{recipe.summary}</p>}
       </div>
 
@@ -74,7 +86,7 @@ export function OneRecipeCard({ recipe, onStartCooking, onSave }: OneRecipeCardP
           {s.startCooking}
         </Button>
         <Button kind="secondary" leftIcon={<Icon name="Bookmark" size={15} />} {...(onSave === undefined ? {} : { onClick: onSave })}>
-          {s.save}
+          {saved ? s.saved : s.save}
         </Button>
         <Button kind="ghost" leftIcon={<Icon name="Share2" size={15} />}>
           {s.share}
