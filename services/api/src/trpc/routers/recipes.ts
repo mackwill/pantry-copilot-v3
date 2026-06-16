@@ -1,8 +1,45 @@
-import { type AIGenerationRequest, type AIPantryChip, generationRequestSchema } from '@pantry/contracts';
+import {
+  type AIGenerationRequest,
+  type AIPantryChip,
+  type RecipeDetail,
+  type RecipeListItem,
+  generationRequestSchema,
+  recipeByIdInputSchema,
+  recipeListQuerySchema,
+  setFavoriteInputSchema,
+} from '@pantry/contracts';
 import { TRPCError } from '@trpc/server';
-import { and, eq, inArray } from 'drizzle-orm';
-import { pantryItems, recipeGenerationJobs, recipes } from '../../db/schema/index.js';
+import { and, desc, eq, inArray } from 'drizzle-orm';
+import { pantryItems, recipeFavorites, recipeGenerationJobs, recipes } from '../../db/schema/index.js';
 import { protectedProcedure, router } from '../init.js';
+
+type RecipeRow = typeof recipes.$inferSelect;
+
+function toListItem(row: RecipeRow, favorited: boolean): RecipeListItem {
+  return {
+    id: row.id,
+    title: row.title,
+    summary: row.summary,
+    timeMinutes: row.data.timeMinutes,
+    difficulty: row.data.difficulty,
+    weirdness: row.weirdness,
+    pantryItemsUsed: row.data.pantryItemsUsed,
+    favorited,
+    createdAt: row.createdAt.toISOString(),
+  };
+}
+
+function toDetail(row: RecipeRow, favorited: boolean): RecipeDetail {
+  return {
+    ...row.data,
+    id: row.id,
+    userId: row.userId,
+    prompt: row.prompt,
+    weirdness: row.weirdness,
+    createdAt: row.createdAt.toISOString(),
+    favorited,
+  };
+}
 
 function expiresInDays(bestBy: string | null): number | null {
   if (bestBy === null) return null;
@@ -77,4 +114,61 @@ export const recipesRouter = router({
         .where(eq(recipeGenerationJobs.id, job.id));
     }
   }),
+
+  /**
+   * The caller's recipe library, newest first. `favorites` filters to this
+   * user's favorited rows; `recent` behaves identically to `all` in M5 (the
+   * default order is already newest-first) — it exists so the UI's "Recent"
+   * pill is data-backed without a behavior change until M6 sessions land.
+   */
+  list: protectedProcedure.input(recipeListQuerySchema).query(async ({ ctx, input }): Promise<RecipeListItem[]> => {
+    const userId = ctx.session.user.id;
+    const favRows = await ctx.db
+      .select({ recipeId: recipeFavorites.recipeId })
+      .from(recipeFavorites)
+      .where(eq(recipeFavorites.userId, userId));
+    const favIds = new Set(favRows.map((f) => f.recipeId));
+
+    const rows = await ctx.db
+      .select()
+      .from(recipes)
+      .where(eq(recipes.userId, userId))
+      .orderBy(desc(recipes.createdAt))
+      .limit(input.limit);
+    const filtered = input.filter === 'favorites' ? rows.filter((r) => favIds.has(r.id)) : rows;
+    return filtered.map((r) => toListItem(r, favIds.has(r.id)));
+  }),
+
+  byId: protectedProcedure.input(recipeByIdInputSchema).query(async ({ ctx, input }): Promise<RecipeDetail> => {
+    const userId = ctx.session.user.id;
+    const [row] = await ctx.db
+      .select()
+      .from(recipes)
+      .where(and(eq(recipes.id, input.recipeId), eq(recipes.userId, userId)));
+    if (row === undefined) throw new TRPCError({ code: 'NOT_FOUND' });
+    const [fav] = await ctx.db
+      .select()
+      .from(recipeFavorites)
+      .where(and(eq(recipeFavorites.userId, userId), eq(recipeFavorites.recipeId, row.id)));
+    return toDetail(row, fav !== undefined);
+  }),
+
+  setFavorite: protectedProcedure
+    .input(setFavoriteInputSchema)
+    .mutation(async ({ ctx, input }): Promise<{ favorited: boolean }> => {
+      const userId = ctx.session.user.id;
+      const [owned] = await ctx.db
+        .select({ id: recipes.id })
+        .from(recipes)
+        .where(and(eq(recipes.id, input.recipeId), eq(recipes.userId, userId)));
+      if (owned === undefined) throw new TRPCError({ code: 'NOT_FOUND' });
+      if (input.favorited) {
+        await ctx.db.insert(recipeFavorites).values({ userId, recipeId: input.recipeId }).onConflictDoNothing();
+      } else {
+        await ctx.db
+          .delete(recipeFavorites)
+          .where(and(eq(recipeFavorites.userId, userId), eq(recipeFavorites.recipeId, input.recipeId)));
+      }
+      return { favorited: input.favorited };
+    }),
 });
