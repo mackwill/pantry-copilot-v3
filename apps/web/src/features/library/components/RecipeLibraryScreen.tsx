@@ -1,7 +1,9 @@
-import type { RecipeLibraryFilter, RecipeListItem } from '@pantry/contracts';
+import type { CookSession, RecipeLibraryFilter, RecipeListItem } from '@pantry/contracts';
 import { Eyebrow, WebShell } from '@pantry/design-system/web';
 import { useNavigate } from '@tanstack/react-router';
 import { useMemo, useState } from 'react';
+import { CookingNowBanner } from '../../cook/components/CookingNowBanner';
+import { cookStrings } from '../../cook/strings';
 import { appNavItems, webShellUser } from '../../pantry-shared/nav';
 import { libraryStrings as s } from '../strings';
 import styles from '../library.module.css';
@@ -24,10 +26,11 @@ export interface RecipeLibraryScreenUser {
 export interface RecipeLibraryScreenProps {
   user: RecipeLibraryScreenUser;
   items: readonly RecipeListItem[];
+  activeSession?: CookSession | null;
 }
 
 /** Board §03 web library, hosted under the Recipes nav (decision A). */
-export function RecipeLibraryScreen({ user, items }: RecipeLibraryScreenProps) {
+export function RecipeLibraryScreen({ user, items, activeSession = null }: RecipeLibraryScreenProps) {
   const navigate = useNavigate();
   const [filter, setFilter] = useState<RecipeLibraryFilter>('all');
 
@@ -51,6 +54,14 @@ export function RecipeLibraryScreen({ user, items }: RecipeLibraryScreenProps) {
       }}
     >
       <div className={styles['wrap']}>
+        {activeSession !== null && (
+          <CookingNowBanner
+            recipeTitle={activeSession.recipeTitle}
+            startedAt={activeSession.startedAt}
+            actionLabel={cookStrings.resume}
+            onAction={() => void navigate({ to: '/cook/session' })}
+          />
+        )}
         {items.length === 0 ? (
           <RecipeLibraryEmpty savedCount={0} recent={[]} onCookNew={goCookNew} />
         ) : (

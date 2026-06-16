@@ -9,11 +9,12 @@ export const Route = createFileRoute('/_authed/recipes/')({
   loader: async () => ({
     user: await api.user.me.query(),
     items: await api.recipes.list.query({}),
+    activeSession: await api.cook.getActive.query(),
   }),
   component: RecipeLibraryRoute,
 });
 
 function RecipeLibraryRoute() {
-  const { user, items } = Route.useLoaderData();
-  return <RecipeLibraryScreen user={user} items={items} />;
+  const { user, items, activeSession } = Route.useLoaderData();
+  return <RecipeLibraryScreen user={user} items={items} activeSession={activeSession} />;
 }

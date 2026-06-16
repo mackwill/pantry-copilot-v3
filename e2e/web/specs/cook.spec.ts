@@ -37,32 +37,40 @@ async function generateRecipe(page: Page): Promise<void> {
   await expect(page.getByRole('button', { name: 'Save' })).toBeVisible({ timeout: 20_000 });
 }
 
-test('generate → library → detail → favorite persists', async ({ page }) => {
+test('start cooking → step → finish, with a resume banner mid-session', async ({ page }) => {
   await signUp(page);
   await generateRecipe(page);
 
-  // The recipe is persisted — it shows up in the library.
+  // Open the recipe and start a cook session.
   await page.goto('/recipes');
   await waitHydrated(page);
-  const card = page.getByRole('link', { name: new RegExp(RECIPE_TITLE) });
-  await expect(card).toBeVisible();
-
-  // Open the detail page.
-  await card.first().click();
+  await page.getByRole('link', { name: new RegExp(RECIPE_TITLE) }).first().click();
   await expect(page).toHaveURL(/\/recipes\/[0-9a-f-]{36}/);
-  await expect(page.getByRole('heading', { name: RECIPE_TITLE })).toBeVisible();
-  await expect(page.getByText(/in pantry/)).toBeVisible();
+  await page.getByRole('button', { name: 'Start cooking' }).click();
 
-  // Favorite it, then reload — the Save button reflects the persisted state.
-  await page.getByRole('button', { name: /Save/ }).click();
-  await expect(page.getByRole('button', { name: /Saved/ })).toBeVisible();
-  await page.reload();
-  await waitHydrated(page);
-  await expect(page.getByRole('button', { name: /Saved/ })).toBeVisible();
+  // In session: the inverse banner + the first step heading.
+  await expect(page).toHaveURL(/\/cook\/session/);
+  await expect(page.getByText('Cooking now')).toBeVisible();
+  await expect(page.getByRole('heading', { name: /Melt the butter/ })).toBeVisible();
 
-  // It surfaces under the Favorites filter back in the library.
+  // The library shows a resume banner while the session is active.
   await page.goto('/recipes');
   await waitHydrated(page);
-  await page.getByRole('button', { name: 'Favorites' }).click();
-  await expect(page.getByRole('link', { name: new RegExp(RECIPE_TITLE) })).toBeVisible();
+  await expect(page.getByText('Cooking now')).toBeVisible();
+  await page.getByRole('button', { name: 'Resume' }).click();
+  await expect(page).toHaveURL(/\/cook\/session/);
+
+  // Step through to the end and finish.
+  await waitHydrated(page);
+  for (let i = 0; i < 10; i += 1) {
+    const finish = page.getByRole('button', { name: 'Finish cooking' });
+    if (await finish.isVisible().catch(() => false)) break;
+    await page.getByRole('button', { name: /^Next$/ }).click();
+  }
+  await page.getByRole('button', { name: 'Finish cooking' }).click();
+  await expect(page).toHaveURL(/\/recipes/);
+
+  // Session is complete — no resume banner remains.
+  await waitHydrated(page);
+  await expect(page.getByText('Cooking now')).toHaveCount(0);
 });

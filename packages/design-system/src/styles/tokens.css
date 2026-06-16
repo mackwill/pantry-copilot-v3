@@ -23,6 +23,7 @@
   --accent-press: #2F4219;
   --accent-soft: #E9EFDC;
   --accent-fg: #FFFFFF;
+  --accent-strong: #A4C46B;
   --success: #3F6B2E;
   --warning: #A67614;
   --warning-soft: #FBEEC8;
@@ -41,6 +42,24 @@
   --shadow-lg: 0 18px 40px rgba(14,18,14,0.10), 0 2px 0 rgba(14,18,14,0.03);
   --ring: 0 0 0 3px rgba(79,107,46,0.22);
   --r-sm: 6px; --r-md: 10px; --r-lg: 14px; --r-xl: 20px; --r-pill: 999px;
+}
+
+/* Dark "stove" surface (board §03.5 mobile in-session). Token overrides only —
+   the canonical source the RN `tokens.stove` group is generated from; on web the
+   only inverse surface (the Cooking-now banner) uses the inverse tokens above. */
+.theme-stove {
+  --bg: #0E120E;
+  --bg-raised: rgba(250,250,247,0.06);
+  --bg-sunk: rgba(250,250,247,0.10);
+  --line: rgba(250,250,247,0.12);
+  --line-strong: rgba(250,250,247,0.22);
+  --fg: #FAFAF7;
+  --fg-muted: rgba(250,250,247,0.70);
+  --fg-subtle: rgba(250,250,247,0.55);
+  --accent: #A4C46B;
+  --accent-strong: #A4C46B;
+  --accent-soft: rgba(164,196,107,0.16);
+  --accent-fg: #0E120E;
 }
 
 * { box-sizing: border-box; }

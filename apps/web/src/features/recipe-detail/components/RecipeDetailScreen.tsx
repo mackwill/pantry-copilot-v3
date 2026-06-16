@@ -1,6 +1,7 @@
 import type { RecipeDetail } from '@pantry/contracts';
 import { Button, Card, Eyebrow, Icon, Pill, WebShell } from '@pantry/design-system/web';
 import { useNavigate } from '@tanstack/react-router';
+import { api } from '../../../lib/api';
 import { appNavItems, webShellUser } from '../../pantry-shared/nav';
 import { recipeDetailStrings as s } from '../strings';
 import { useFavorite } from '../useFavorite';
@@ -24,6 +25,13 @@ export function RecipeDetailScreen({ user, recipe }: RecipeDetailScreenProps) {
   const navigate = useNavigate();
   const { favorited, toggle } = useFavorite(recipe.id, recipe.favorited);
   const note = recipe.observation ?? recipe.whySuggested;
+
+  const startCooking = (): void => {
+    void api.cook.start
+      .mutate({ recipeId: recipe.id })
+      .then(() => navigate({ to: '/cook/session' }))
+      .catch(() => undefined);
+  };
 
   const meta: readonly [string, string][] = [
     [s.metaTime, s.timeValue(recipe.timeMinutes)],
@@ -86,6 +94,7 @@ export function RecipeDetailScreen({ user, recipe }: RecipeDetailScreenProps) {
             ingredients={recipe.ingredients}
             pantryItemsUsed={recipe.pantryItemsUsed}
             servings={s.servesPlaceholder}
+            onStartCooking={startCooking}
           />
           {recipe.substitutions.length > 0 && (
             <Card>
