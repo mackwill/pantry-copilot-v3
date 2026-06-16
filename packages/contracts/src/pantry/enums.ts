@@ -9,7 +9,7 @@ export const PANTRY_UNITS = [
   'gallon', 'stick', 'pack', 'jar', 'tin', 'bottle', 'bunch', 'head', 'bag',
 ] as const;
 export const FRESHNESS_TONES = ['success', 'warning', 'danger'] as const;
-export const INVENTORY_EVENT_KINDS = ['added', 'edited', 'removed', 'adjusted'] as const;
+export const INVENTORY_EVENT_KINDS = ['added', 'edited', 'removed', 'adjusted', 'consumed'] as const;
 
 export const pantryCategorySchema = z.enum(PANTRY_CATEGORIES);
 export const pantryLocationSchema = z.enum(PANTRY_LOCATIONS);

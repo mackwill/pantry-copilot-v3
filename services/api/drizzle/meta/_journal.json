@@ -36,6 +36,13 @@
       "when": 1781569955057,
       "tag": "0004_kind_northstar",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1781618005594,
+      "tag": "0005_eager_greymalkin",
+      "breakpoints": true
     }
   ]
 }

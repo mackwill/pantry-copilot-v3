@@ -10,3 +10,5 @@ export * from './recipes/recipe';
 export * from './recipes/generation';
 export * from './recipes/events';
 export * from './recipes/library';
+export * from './cook/session';
+export * from './cook/consume';
