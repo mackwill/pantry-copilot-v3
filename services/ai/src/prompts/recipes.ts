@@ -99,7 +99,8 @@ export function buildGenerationSystemPrompt(
   }
 
   lines.push(
-    'Beginner-craft rules: put prep specs in each ingredient `note` (e.g. "finely diced"), include doneness cues in steps, and order steps so nothing idles. Keep `summary` to one inviting sentence.',
+    'Beginner-craft rules: put prep specs in each ingredient `note` (e.g. "finely diced"), include doneness cues in each step `text`, and order steps so nothing idles. Keep `summary` to one inviting sentence.',
+    'Each step is an object: `text` is the full instruction; add a short verb `label` (e.g. "simmer", "sear") the in-session view shows above the step; and when a step is an active wait, set `durationMinutes` (a whole number) so the cook screen can run a countdown. Omit `durationMinutes` for instant prep steps.',
   );
 
   return lines.join('\n');

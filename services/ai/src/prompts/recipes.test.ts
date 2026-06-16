@@ -29,4 +29,9 @@ describe('buildGenerationSystemPrompt', () => {
   it('produces a single recipe instruction (not a batch)', () => {
     expect(buildGenerationSystemPrompt(40, [])).toMatch(/one recipe|a single recipe|exactly one/i);
   });
+  it('instructs structured steps with a label and an optional duration timer', () => {
+    const prompt = buildGenerationSystemPrompt(40, []);
+    expect(prompt).toContain('label');
+    expect(prompt).toContain('durationMinutes');
+  });
 });

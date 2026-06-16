@@ -46,4 +46,20 @@ describe('RecipeEmitter', () => {
   it('flush returns null when nothing parseable was fed', () => {
     expect(new RecipeEmitter().flush()).toBeNull();
   });
+  it('streams structured steps (label + duration) through to the snapshot', () => {
+    const e = new RecipeEmitter(0);
+    const json = JSON.stringify({
+      title: 'Rice',
+      summary: 's',
+      weirdnessScore: 20,
+      ingredients: [{ name: 'Rice' }],
+      steps: [{ text: 'Simmer the rice.', label: 'simmer', durationMinutes: 12 }],
+      timeMinutes: 15,
+      difficulty: 'easy',
+      whySuggested: 'w',
+    });
+    const snap = e.feed(json, 0);
+    expect(snap?.complete).toBe(true);
+    expect(snap?.recipe.steps).toEqual([{ text: 'Simmer the rice.', label: 'simmer', durationMinutes: 12 }]);
+  });
 });

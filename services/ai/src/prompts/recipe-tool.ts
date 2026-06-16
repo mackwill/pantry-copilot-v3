@@ -31,7 +31,18 @@ export const RECIPE_EMIT_TOOL_SCHEMA: JsonObjectSchema = {
         required: ['name'],
       },
     },
-    steps: { type: 'array', items: { type: 'string' } },
+    steps: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          text: { type: 'string' },
+          label: { type: 'string' },
+          durationMinutes: { type: 'integer', minimum: 1 },
+        },
+        required: ['text'],
+      },
+    },
     timeMinutes: { type: 'integer', minimum: 1 },
     difficulty: { type: 'string', enum: ['easy', 'medium', 'hard'] },
     substitutions: {
