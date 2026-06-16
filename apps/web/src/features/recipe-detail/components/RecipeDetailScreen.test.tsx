@@ -29,7 +29,7 @@ function makeRecipe(overrides: Partial<RecipeDetail> = {}): RecipeDetail {
       { name: 'Soba noodles', quantity: 200, unit: 'g', optional: false, note: null },
       { name: 'Lime', quantity: null, unit: null, optional: true, note: null },
     ],
-    steps: ['Boil water.', 'Fry the scallion whites.'],
+    steps: [{ text: 'Boil water.' }, { text: 'Fry the scallion whites.' }],
     timeMinutes: 12,
     difficulty: 'easy',
     substitutions: [{ ingredient: 'Lime', suggestion: 'Rice vinegar', reason: null }],

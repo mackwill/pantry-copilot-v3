@@ -17,7 +17,7 @@ const RECIPE: AIRecipe = {
   summary: 'Fast wilt of greens.',
   weirdnessScore: 40,
   ingredients: [{ name: 'Spinach', quantity: 2, unit: 'cup', optional: false, note: null }],
-  steps: ['Wilt the spinach.'],
+  steps: [{ text: 'Wilt the spinach.' }],
   timeMinutes: 10,
   difficulty: 'easy',
   substitutions: [],

@@ -17,7 +17,7 @@ function recipeBody(overrides: Partial<AIRecipe> = {}): AIRecipe {
     summary: 'Fast skillet rice.',
     weirdnessScore: 40,
     ingredients: [{ name: 'Rice', quantity: 2, unit: 'cup', optional: false, note: null }],
-    steps: ['Fry the rice.'],
+    steps: [{ text: 'Fry the rice.' }],
     timeMinutes: 15,
     difficulty: 'easy',
     substitutions: [],
@@ -125,7 +125,7 @@ describe('recipes library', () => {
     expect(detail.title).toBe('Detailable');
     expect(detail.id).toBe(id);
     expect(detail.favorited).toBe(false);
-    expect(detail.steps).toEqual(['Fry the rice.']);
+    expect(detail.steps).toEqual([{ text: 'Fry the rice.' }]);
 
     await caller.recipes.setFavorite({ recipeId: id, favorited: true });
     expect((await caller.recipes.byId({ recipeId: id })).favorited).toBe(true);

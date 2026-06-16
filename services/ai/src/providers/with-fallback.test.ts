@@ -76,7 +76,7 @@ describe('withFallback', () => {
         summary: 's',
         weirdnessScore: 10,
         ingredients: [{ name: 'Water', quantity: null, unit: null, optional: false, note: null }],
-        steps: ['Boil'],
+        steps: [{ text: 'Boil' }],
         timeMinutes: 5,
         difficulty: 'easy',
         substitutions: [],

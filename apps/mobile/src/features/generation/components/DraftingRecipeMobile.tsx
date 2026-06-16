@@ -45,7 +45,7 @@ export function DraftingRecipeMobile({ recipe }: { recipe: AIRecipePartial }) {
           {steps.map((step, index) => (
             <View key={`${String(index)}-step`} style={styles.stepRow}>
               <Text style={styles.stepNum}>{`${String(index + 1)}.`}</Text>
-              <Text style={styles.stepText}>{step}</Text>
+              <Text style={styles.stepText}>{step.text}</Text>
             </View>
           ))}
         </View>

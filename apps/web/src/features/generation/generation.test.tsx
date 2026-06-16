@@ -23,7 +23,7 @@ const fullRecipe = {
     { name: 'Cooked rice', quantity: 3, unit: 'cup', optional: false, note: 'day-old' },
     { name: 'Scallions', quantity: 1, unit: 'bunch', optional: false, note: null },
   ],
-  steps: ['Melt the butter.', 'Add the rice and toss.'],
+  steps: [{ text: 'Melt the butter.' }, { text: 'Add the rice and toss.' }],
   timeMinutes: 20,
   difficulty: 'easy' as const,
   substitutions: [],

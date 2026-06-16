@@ -5,6 +5,7 @@ import {
   generationRequestSchema,
   recipeIngredientSchema,
   recipeSchema,
+  recipeStepSchema,
 } from '../index';
 
 const FULL_RECIPE = {
@@ -25,6 +26,46 @@ describe('recipeIngredientSchema', () => {
   });
   it('rejects an ingredient with no name', () => {
     expect(recipeIngredientSchema.safeParse({ name: '' }).success).toBe(false);
+  });
+});
+
+describe('recipeStepSchema', () => {
+  it('parses a structured step with an optional label and timer', () => {
+    const parsed = recipeStepSchema.parse({ text: 'Simmer gently.', label: 'simmer', durationMinutes: 8 });
+    expect(parsed).toEqual({ text: 'Simmer gently.', label: 'simmer', durationMinutes: 8 });
+  });
+  it('parses a bare step with just text (label/timer omitted)', () => {
+    const parsed = recipeStepSchema.parse({ text: 'Plate and serve.' });
+    expect(parsed).toEqual({ text: 'Plate and serve.' });
+  });
+  it('rejects empty text and a non-positive / non-integer duration', () => {
+    expect(recipeStepSchema.safeParse({ text: '' }).success).toBe(false);
+    expect(recipeStepSchema.safeParse({ text: 'x', durationMinutes: 0 }).success).toBe(false);
+    expect(recipeStepSchema.safeParse({ text: 'x', durationMinutes: 1.5 }).success).toBe(false);
+  });
+});
+
+describe('aiRecipeSchema steps (structured + legacy-tolerant)', () => {
+  it('coerces legacy plain-string steps into structured { text } objects', () => {
+    const parsed = aiRecipeSchema.parse(FULL_RECIPE);
+    expect(parsed.steps).toEqual([{ text: 'Wilt the spinach.' }]);
+  });
+  it('accepts structured step objects with timers', () => {
+    const parsed = aiRecipeSchema.parse({
+      ...FULL_RECIPE,
+      steps: [{ text: 'Bring to a boil.', label: 'boil', durationMinutes: 5 }],
+    });
+    expect(parsed.steps[0]).toEqual({ text: 'Bring to a boil.', label: 'boil', durationMinutes: 5 });
+  });
+  it('accepts a mix of legacy strings and structured objects', () => {
+    const parsed = aiRecipeSchema.parse({
+      ...FULL_RECIPE,
+      steps: ['Chop everything.', { text: 'Sear hard.', label: 'sear', durationMinutes: 3 }],
+    });
+    expect(parsed.steps).toEqual([
+      { text: 'Chop everything.' },
+      { text: 'Sear hard.', label: 'sear', durationMinutes: 3 },
+    ]);
   });
 });
 

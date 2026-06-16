@@ -70,7 +70,7 @@ export function OneRecipeCard({ recipe, recipeId, saved = false, onStartCooking,
             {steps.map((step, index) => (
               <div key={`${index.toString()}-step`} className={styles['stepRow']}>
                 <span className={styles['stepNum']}>{`0${(index + 1).toString()}`}</span>
-                <span>{step}</span>
+                <span>{step.text}</span>
               </div>
             ))}
           </div>

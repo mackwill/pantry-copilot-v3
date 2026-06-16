@@ -16,7 +16,7 @@ const RECIPE: AIRecipe = {
   summary: 'Fast skillet rice.',
   weirdnessScore: 40,
   ingredients: [{ name: 'Rice', quantity: 2, unit: 'cup', optional: false, note: null }],
-  steps: ['Fry the rice.'],
+  steps: [{ text: 'Fry the rice.' }],
   timeMinutes: 15,
   difficulty: 'easy',
   substitutions: [],

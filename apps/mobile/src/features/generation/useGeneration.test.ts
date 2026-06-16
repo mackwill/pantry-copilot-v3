@@ -48,7 +48,7 @@ const ev = {
       summary: 's',
       weirdnessScore: 40,
       ingredients: [{ name: 'Rice', quantity: 3, unit: 'cup', optional: false, note: null }],
-      steps: ['Cook it'],
+      steps: [{ text: 'Cook it' }],
       timeMinutes: 20,
       difficulty: 'easy',
       substitutions: [],

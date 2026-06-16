@@ -21,13 +21,35 @@ export const recipeSubstitutionSchema = z.object({
 });
 export type RecipeSubstitution = z.infer<typeof recipeSubstitutionSchema>;
 
+/**
+ * One cooking step. `label` is a short verb the in-session UI shows above the
+ * heading (e.g. "simmer"); `durationMinutes` seeds the client-side countdown
+ * ring. Both optional — an untimed prep step carries only `text`.
+ */
+export const recipeStepSchema = z.object({
+  text: z.string().min(1).max(1200),
+  label: z.string().min(1).max(40).optional(),
+  durationMinutes: z.number().int().min(1).max(24 * 60).optional(),
+});
+export type RecipeStep = z.infer<typeof recipeStepSchema>;
+
+/**
+ * Read path tolerant of M4's legacy plain-string steps: a bare string is
+ * coerced to `{ text }`, a structured object validates as-is. The trailing
+ * `.pipe` re-validates each coerced step so the inferred output is `RecipeStep`.
+ */
+const recipeStepInputSchema = z.union([
+  z.string().min(1).max(1200).transform((text) => ({ text })),
+  recipeStepSchema,
+]);
+
 /** The recipe the model produces. Source of truth for the generation payload. */
 export const aiRecipeSchema = z.object({
   title: z.string().min(1).max(160),
   summary: z.string().max(400),
   weirdnessScore: z.number().int().min(0).max(100),
   ingredients: z.array(recipeIngredientSchema).min(1),
-  steps: z.array(z.string().min(1).max(1200)).min(1),
+  steps: z.array(recipeStepInputSchema).min(1).pipe(z.array(recipeStepSchema)),
   timeMinutes: z
     .number()
     .int()

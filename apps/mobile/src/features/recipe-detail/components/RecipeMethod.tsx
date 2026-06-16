@@ -1,10 +1,11 @@
+import type { RecipeStep } from '@pantry/contracts';
 import { Eyebrow, fonts } from '@pantry/design-system/native';
 import { tokens } from '@pantry/design-system/tokens';
 import { StyleSheet, Text, View } from 'react-native';
 import { recipeDetailStrings as s } from '../strings';
 
 export interface RecipeMethodProps {
-  steps: readonly string[];
+  steps: readonly RecipeStep[];
 }
 
 /** Numbered italic-accent method steps (board §05 mobile). */
@@ -15,7 +16,7 @@ export function RecipeMethod({ steps }: RecipeMethodProps) {
       {steps.map((step, index) => (
         <View key={`${String(index)}-step`} style={styles.step}>
           <Text style={styles.num}>{`${String(index + 1)}.`}</Text>
-          <Text style={styles.text}>{step}</Text>
+          <Text style={styles.text}>{step.text}</Text>
         </View>
       ))}
     </View>
