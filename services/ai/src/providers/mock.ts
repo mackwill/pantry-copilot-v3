@@ -1,6 +1,14 @@
-import type { AIGenerationRequest, AIImageExtractionResponse, ExtractedIngredient, GenerationEvent } from '@pantry/contracts';
-import { MOCK_RECIPE, mockTape } from './mock-tape.js';
+import type {
+  AIGenerationRequest,
+  AIImageExtractionResponse,
+  AITweakRequest,
+  ExtractedIngredient,
+  GenerationEvent,
+  RecipeTweakEvent,
+} from '@pantry/contracts';
+import { MOCK_RECIPE, mockTape, mockTweakTape } from './mock-tape.js';
 import { type RawProviderEvent, runRecipeStream } from './stream-orchestrator.js';
+import { type RawTweakEvent, runTweakStream } from './tweak-orchestrator.js';
 import type { AIProvider, StructuredRecipeResult } from './types.js';
 
 const MODEL = 'mock-vision';
@@ -52,11 +60,25 @@ function tapeRunner(): (req: AIGenerationRequest, signal: AbortSignal) => AsyncI
   };
 }
 
+function tweakTapeRunner(): (req: AITweakRequest, signal: AbortSignal) => AsyncIterable<RawTweakEvent> {
+  const delay = streamDelayMs();
+  return async function* (_req, signal) {
+    await Promise.resolve();
+    for (const event of mockTweakTape()) {
+      if (signal.aborted) return;
+      if (delay > 0) await new Promise((resolve) => setTimeout(resolve, delay));
+      yield event;
+    }
+  };
+}
+
 export const mockProvider: AIProvider = {
   name: 'mock',
   generateStructured: (): Promise<StructuredRecipeResult> =>
     Promise.resolve({ recipe: MOCK_RECIPE, tokensUsed: { input: 0, output: 0 } }),
   streamStructured: (req: AIGenerationRequest, signal: AbortSignal): AsyncIterable<GenerationEvent> =>
     runRecipeStream(req, tapeRunner(), signal),
+  streamTweak: (req: AITweakRequest, signal: AbortSignal): AsyncIterable<RecipeTweakEvent> =>
+    runTweakStream(req, tweakTapeRunner(), signal),
   extractFromImage: (): Promise<AIImageExtractionResponse> => Promise.resolve(cannedResponse()),
 };

@@ -1,5 +1,6 @@
-import type { AIRecipe } from '@pantry/contracts';
+import type { AIRecipe, RecipeTweakResponse } from '@pantry/contracts';
 import type { RawProviderEvent } from './stream-orchestrator.js';
+import type { RawTweakEvent } from './tweak-orchestrator.js';
 
 /**
  * The canned recipe the mock streams and finishes on. Deterministic so it
@@ -79,4 +80,51 @@ export function mockTape(): RawProviderEvent[] {
     ...recipeFragments(),
     { type: 'completed', recipe: MOCK_RECIPE, tokensUsed: { input: 0, output: 0 } },
   ];
+}
+
+/**
+ * The canned tweak the mock streams: a "lighter, more greens" pass over
+ * MOCK_RECIPE — halved butter (edited) + a handful of spinach (added).
+ * Deterministic so it backs the §✦ chat fidelity captures and the e2e tape.
+ */
+export const MOCK_TWEAK_RESPONSE: RecipeTweakResponse = {
+  summary: 'Lighter on the butter, with a handful of greens stirred through at the end.',
+  changes: [
+    { tag: 'change', text: 'Halved the butter to 1 tsp' },
+    { tag: 'add', text: 'Added a big handful of spinach' },
+    { tag: 'note', text: 'Greens go in last so they keep their color' },
+  ],
+  updatedRecipe: {
+    ...MOCK_RECIPE,
+    title: 'Charred Scallion & Carrot Fried Rice with Greens',
+    ingredients: [
+      ...MOCK_RECIPE.ingredients.map((i) =>
+        i.name === 'Butter' ? { ...i, quantity: 1, unit: 'tsp', edited: true } : i,
+      ),
+      { name: 'Baby spinach', quantity: 2, unit: 'cup', optional: false, note: 'roughly chopped', added: true },
+    ],
+    steps: [
+      ...MOCK_RECIPE.steps.slice(0, -1),
+      {
+        text: 'Stir through the soy sauce, scallion greens, and spinach; toss just until the spinach wilts, then serve.',
+        label: 'finish',
+      },
+    ],
+  },
+};
+
+/** Split the tweak JSON so the summary, then the recipe, stream realistically. */
+function tweakFragments(chunks = 8): RawTweakEvent[] {
+  const json = JSON.stringify(MOCK_TWEAK_RESPONSE);
+  const size = Math.ceil(json.length / chunks);
+  const out: RawTweakEvent[] = [];
+  for (let i = 0; i < json.length; i += size) {
+    out.push({ type: 'tweak_fragment', fragment: json.slice(i, i + size) });
+  }
+  return out;
+}
+
+/** The committed scripted tweak tape: emit_tweak fragments → completed. */
+export function mockTweakTape(): RawTweakEvent[] {
+  return [...tweakFragments(), { type: 'completed', response: MOCK_TWEAK_RESPONSE, tokensUsed: { input: 0, output: 0 } }];
 }

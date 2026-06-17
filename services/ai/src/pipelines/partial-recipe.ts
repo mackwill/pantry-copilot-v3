@@ -11,18 +11,26 @@ import { type AIRecipePartial, aiRecipePartialSchema } from '@pantry/contracts';
  * treat it as "no snapshot yet". Hand-rolled rather than pulling a
  * dependency for the gnarliest part of the streaming pipeline.
  */
-export function parsePartialRecipe(input: string): AIRecipePartial | null {
+/**
+ * Repair + parse arbitrary partial JSON streamed token-by-token (the tool-call
+ * arguments). Returns the parsed value, or `null` on empty/irrecoverable
+ * input. Shared by the recipe and tweak emitters; never throws.
+ */
+export function parsePartialJson(input: string): unknown {
   if (!input || input.trim().length === 0) return null;
 
   const repaired = repairPartialJson(input);
   if (repaired === null) return null;
 
-  let parsed: unknown;
   try {
-    parsed = JSON.parse(repaired);
+    return JSON.parse(repaired);
   } catch {
     return null;
   }
+}
+
+export function parsePartialRecipe(input: string): AIRecipePartial | null {
+  const parsed = parsePartialJson(input);
   if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) return null;
 
   const result = aiRecipePartialSchema.safeParse(parsed);

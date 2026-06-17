@@ -11,6 +11,7 @@ const stubProvider: AIProvider = {
   name: 'mock',
   generateStructured: () => Promise.reject(new Error('not used')),
   streamStructured: () => { throw new Error('not used'); },
+  streamTweak: () => { throw new Error('not used'); },
   extractFromImage: (): Promise<AIImageExtractionResponse> =>
     Promise.resolve({
       provider: 'mock',

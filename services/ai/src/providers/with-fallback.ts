@@ -1,4 +1,11 @@
-import type { AIGenerationRequest, AIImageExtractionRequest, AIImageExtractionResponse, GenerationEvent } from '@pantry/contracts';
+import type {
+  AIGenerationRequest,
+  AIImageExtractionRequest,
+  AIImageExtractionResponse,
+  AITweakRequest,
+  GenerationEvent,
+  RecipeTweakEvent,
+} from '@pantry/contracts';
 import type { AIProvider, StructuredRecipeResult } from './types.js';
 
 export type FallbackErrorHandler = (failedProvider: string, err: unknown) => void;
@@ -49,6 +56,20 @@ export function withFallback(primary: AIProvider, fallback: AIProvider, onError?
         if (started) throw primaryErr; // cannot safely restart a stream already in flight
       }
       yield* fallback.streamStructured(req, signal);
+    },
+    async *streamTweak(req: AITweakRequest, signal: AbortSignal): AsyncIterable<RecipeTweakEvent> {
+      let started = false;
+      try {
+        for await (const ev of primary.streamTweak(req, signal)) {
+          started = true;
+          yield ev;
+        }
+        return;
+      } catch (primaryErr) {
+        onError?.(primary.name, primaryErr);
+        if (started) throw primaryErr; // cannot safely restart a stream already in flight
+      }
+      yield* fallback.streamTweak(req, signal);
     },
     async extractFromImage(req: AIImageExtractionRequest): Promise<AIImageExtractionResponse> {
       try {

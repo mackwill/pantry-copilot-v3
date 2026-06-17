@@ -1,7 +1,7 @@
-import type { AIGenerationRequest, GenerationEvent } from '@pantry/contracts';
+import type { AIGenerationRequest, AITweakRequest, GenerationEvent, RecipeTweakEvent } from '@pantry/contracts';
 import { describe, expect, it } from 'vitest';
 import { mockProvider } from './mock.js';
-import { MOCK_RECIPE } from './mock-tape.js';
+import { MOCK_RECIPE, MOCK_TWEAK_RESPONSE } from './mock-tape.js';
 
 const request = { imageBase64: 'aGVsbG8=', mediaType: 'image/jpeg' } as const;
 
@@ -12,8 +12,20 @@ const genRequest: AIGenerationRequest = {
   mustInclude: [],
 };
 
+const tweakRequest: AITweakRequest = {
+  recipe: MOCK_RECIPE,
+  prompt: 'lighter on the oil, more greens',
+  priorTurns: [],
+};
+
 async function collect(it: AsyncIterable<GenerationEvent>): Promise<GenerationEvent[]> {
   const out: GenerationEvent[] = [];
+  for await (const e of it) out.push(e);
+  return out;
+}
+
+async function collectTweak(it: AsyncIterable<RecipeTweakEvent>): Promise<RecipeTweakEvent[]> {
+  const out: RecipeTweakEvent[] = [];
   for await (const e of it) out.push(e);
   return out;
 }
@@ -80,5 +92,43 @@ describe('mockProvider.generateStructured', () => {
   it('returns the canned recipe directly', async () => {
     const res = await mockProvider.generateStructured(genRequest);
     expect(res.recipe.title).toBe(MOCK_RECIPE.title);
+  });
+});
+
+describe('mockProvider.streamTweak (tape replay)', () => {
+  it('streams summary deltas → recipe partials → tweak_done', async () => {
+    const events = await collectTweak(mockProvider.streamTweak(tweakRequest, new AbortController().signal));
+    const types = events.map((e) => e.type);
+    expect(types).toContain('tweak_summary');
+    expect(types).toContain('tweak_recipe_partial');
+    expect(types.at(-1)).toBe('tweak_done');
+  });
+
+  it('concatenated summary deltas reproduce the canned summary', async () => {
+    const events = await collectTweak(mockProvider.streamTweak(tweakRequest, new AbortController().signal));
+    const summary = events
+      .filter((e): e is Extract<RecipeTweakEvent, { type: 'tweak_summary' }> => e.type === 'tweak_summary')
+      .map((e) => e.text)
+      .join('');
+    expect(summary).toBe(MOCK_TWEAK_RESPONSE.summary);
+  });
+
+  it('ends on the canned tweak with edited + added ingredient flags', async () => {
+    const events = await collectTweak(mockProvider.streamTweak(tweakRequest, new AbortController().signal));
+    const done = events.at(-1);
+    expect(done?.type === 'tweak_done' && done.response.updatedRecipe.title).toBe(MOCK_TWEAK_RESPONSE.updatedRecipe.title);
+    if (done?.type === 'tweak_done') {
+      const ingredients = done.response.updatedRecipe.ingredients;
+      expect(ingredients.some((i) => i.edited)).toBe(true);
+      expect(ingredients.some((i) => i.added)).toBe(true);
+    }
+  });
+
+  it('stops when the signal is aborted', async () => {
+    const controller = new AbortController();
+    controller.abort();
+    const events = await collectTweak(mockProvider.streamTweak(tweakRequest, controller.signal));
+    expect(events).toHaveLength(1);
+    expect(events[0]?.type).toBe('aborted');
   });
 });
