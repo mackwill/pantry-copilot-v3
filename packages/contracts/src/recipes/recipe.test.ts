@@ -27,6 +27,11 @@ describe('recipeIngredientSchema', () => {
   it('rejects an ingredient with no name', () => {
     expect(recipeIngredientSchema.safeParse({ name: '' }).success).toBe(false);
   });
+  it('carries the optional tweak provenance flags when present', () => {
+    const parsed = recipeIngredientSchema.parse({ name: 'Spinach', added: true });
+    expect(parsed.added).toBe(true);
+    expect(parsed.edited).toBeUndefined();
+  });
 });
 
 describe('recipeStepSchema', () => {

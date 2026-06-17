@@ -9,6 +9,8 @@ export * from './recipes/weirdness';
 export * from './recipes/recipe';
 export * from './recipes/generation';
 export * from './recipes/events';
+export * from './recipes/tweak';
+export * from './recipes/tweak-events';
 export * from './recipes/library';
 export * from './cook/session';
 export * from './cook/consume';

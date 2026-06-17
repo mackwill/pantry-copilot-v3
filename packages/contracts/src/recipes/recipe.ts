@@ -11,6 +11,14 @@ export const recipeIngredientSchema = z.object({
   unit: z.string().max(40).nullable().default(null),
   optional: z.boolean().default(false),
   note: z.string().max(200).nullable().default(null),
+  /**
+   * Tweak provenance (M7): the recipe co-pilot flags ingredients it changed
+   * or introduced so the doc can render the accent dot + "· edited" /
+   * "· added by tweak" labels. Optional + absent on untweaked recipes, so
+   * older persisted recipes parse unchanged.
+   */
+  edited: z.boolean().optional(),
+  added: z.boolean().optional(),
 });
 export type RecipeIngredient = z.infer<typeof recipeIngredientSchema>;
 
