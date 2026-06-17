@@ -3,6 +3,8 @@ import { Button, Card, Eyebrow, Icon, Pill, WebShell } from '@pantry/design-syst
 import { useNavigate } from '@tanstack/react-router';
 import { api } from '../../../lib/api';
 import { appNavItems, webShellUser } from '../../pantry-shared/nav';
+import { RecipeChatEntry } from '../../recipe-chat/components/RecipeChatEntry';
+import { recipeChatStrings } from '../../recipe-chat/strings';
 import { recipeDetailStrings as s } from '../strings';
 import { useFavorite } from '../useFavorite';
 import styles from '../recipe-detail.module.css';
@@ -18,10 +20,12 @@ export interface RecipeDetailScreenUser {
 export interface RecipeDetailScreenProps {
   user: RecipeDetailScreenUser;
   recipe: RecipeDetail;
+  /** Open the recipe co-pilot; `prompt` pre-fills the composer (entry chip). */
+  onTweak?: ((prompt?: string) => void) | undefined;
 }
 
-/** Board §05/§07 web recipe detail — method + sticky ingredients card + copilot note. */
-export function RecipeDetailScreen({ user, recipe }: RecipeDetailScreenProps) {
+/** Board §05/§07/§✦ web recipe detail — method + sticky ingredients card + copilot note + tweak entry. */
+export function RecipeDetailScreen({ user, recipe, onTweak }: RecipeDetailScreenProps) {
   const navigate = useNavigate();
   const { favorited, toggle } = useFavorite(recipe.id, recipe.favorited);
   const note = recipe.observation ?? recipe.whySuggested;
@@ -67,6 +71,18 @@ export function RecipeDetailScreen({ user, recipe }: RecipeDetailScreenProps) {
           <Button kind="secondary" size="sm" leftIcon={<Icon name="Printer" size={14} />}>
             {s.print}
           </Button>
+          {onTweak !== undefined && (
+            <Button
+              kind="inverse"
+              size="sm"
+              leftIcon={<Icon name="Sparkles" size={14} color="var(--accent-fg)" />}
+              onClick={() => {
+                onTweak();
+              }}
+            >
+              {recipeChatStrings.tweakButton}
+            </Button>
+          )}
         </div>
       </div>
 
@@ -75,6 +91,8 @@ export function RecipeDetailScreen({ user, recipe }: RecipeDetailScreenProps) {
           <Eyebrow>{s.metaEyebrow(recipe.difficulty, recipe.timeMinutes)}</Eyebrow>
           <h1 className={styles['title']}>{recipe.title}</h1>
           <p className={styles['summary']}>{recipe.summary}</p>
+
+          {onTweak !== undefined && <RecipeChatEntry onOpen={onTweak} />}
 
           <div className={styles['metaStrip']}>
             {meta.map(([key, value]) => (
