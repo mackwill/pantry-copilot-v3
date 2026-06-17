@@ -4,6 +4,7 @@ import {
   ArrowDownUp,
   ArrowLeft,
   ArrowRight,
+  ArrowUp,
   AtSign,
   Beef,
   Bookmark,
@@ -32,6 +33,8 @@ import {
   RefreshCw,
   Refrigerator,
   Repeat,
+  Replace,
+  RotateCcw,
   ScanLine,
   Search,
   Settings,
@@ -44,6 +47,7 @@ import {
   Trash2,
   TriangleAlert,
   User,
+  Users,
   Wheat,
   Wine,
   X,
@@ -61,6 +65,7 @@ export type IconName =
   | 'ArrowDownUp'
   | 'ArrowLeft'
   | 'ArrowRight'
+  | 'ArrowUp'
   | 'AtSign'
   | 'Beef'
   | 'Bookmark'
@@ -90,6 +95,8 @@ export type IconName =
   | 'RefreshCw'
   | 'Refrigerator'
   | 'Repeat'
+  | 'Replace'
+  | 'RotateCcw'
   | 'ScanLine'
   | 'Search'
   | 'Settings'
@@ -102,6 +109,7 @@ export type IconName =
   | 'Trash2'
   | 'TriangleAlert'
   | 'User'
+  | 'Users'
   | 'Wheat'
   | 'Wine'
   | 'X'
@@ -120,6 +128,7 @@ const iconMap: Record<IconName, ComponentType<RenderedIconProps>> = {
   ArrowDownUp,
   ArrowLeft,
   ArrowRight,
+  ArrowUp,
   AtSign,
   Beef,
   Bookmark,
@@ -149,6 +158,8 @@ const iconMap: Record<IconName, ComponentType<RenderedIconProps>> = {
   RefreshCw,
   Refrigerator,
   Repeat,
+  Replace,
+  RotateCcw,
   ScanLine,
   Search,
   Settings,
@@ -161,6 +172,7 @@ const iconMap: Record<IconName, ComponentType<RenderedIconProps>> = {
   Trash2,
   TriangleAlert,
   User,
+  Users,
   Wheat,
   Wine,
   X,

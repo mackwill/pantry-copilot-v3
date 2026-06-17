@@ -1,10 +1,11 @@
 import type { RecipeDetail } from '@pantry/contracts';
 import { fonts } from '@pantry/design-system/native';
 import { tokens } from '@pantry/design-system/tokens';
+import type { TweakThreadTurn } from '@pantry/utils';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { RecipeDetailScreen } from '../../features/recipe-detail/components/RecipeDetailScreen';
+import { RecipeChatContainer } from '../../features/recipe-chat/RecipeChatContainer';
 import { recipeDetailStrings } from '../../features/recipe-detail/strings';
 import { api } from '../../lib/api';
 
@@ -17,15 +18,19 @@ export default function Screen() {
   const params = useLocalSearchParams<{ recipeId?: string }>();
   const recipeId = firstParam(params.recipeId);
   const [recipe, setRecipe] = useState<RecipeDetail | undefined>(undefined);
+  const [turns, setTurns] = useState<TweakThreadTurn[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let active = true;
-    api.recipes.byId
-      .query({ recipeId })
-      .then((row) => {
+    Promise.all([
+      api.recipes.byId.query({ recipeId }),
+      api.recipes.tweaks.query({ recipeId }).catch(() => []),
+    ])
+      .then(([row, thread]) => {
         if (!active) return;
         setRecipe(row);
+        setTurns(thread.map((t) => ({ turn: t.turn, userMessage: t.userMessage, summary: t.summary, changes: t.changes })));
         setLoading(false);
       })
       .catch(() => {
@@ -46,8 +51,9 @@ export default function Screen() {
     );
   }
   return (
-    <RecipeDetailScreen
+    <RecipeChatContainer
       recipe={recipe}
+      turns={turns}
       onBack={() => {
         router.back();
       }}

@@ -2,6 +2,7 @@ import type { RecipeDetail } from '@pantry/contracts';
 import { Button, Eyebrow, Icon, fonts } from '@pantry/design-system/native';
 import { tokens } from '@pantry/design-system/tokens';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { RecipeChatEntry } from '../../recipe-chat/components/RecipeChatEntry';
 import { recipeDetailStrings as s } from '../strings';
 import { useFavorite } from '../useFavorite';
 import { IngredientBlock } from './IngredientBlock';
@@ -11,10 +12,12 @@ export interface RecipeDetailScreenProps {
   recipe: RecipeDetail;
   onBack: () => void;
   onStartCooking?: (() => void) | undefined;
+  /** Open the recipe co-pilot; `prompt` pre-fills the composer (entry chip). */
+  onTweak?: ((prompt?: string) => void) | undefined;
 }
 
-/** Board §05/§07 mobile recipe detail — meta + inline pantry block + method. */
-export function RecipeDetailScreen({ recipe, onBack, onStartCooking }: RecipeDetailScreenProps) {
+/** Board §05/§07/§✦ mobile recipe detail — meta + inline pantry block + method + tweak entry. */
+export function RecipeDetailScreen({ recipe, onBack, onStartCooking, onTweak }: RecipeDetailScreenProps) {
   const { favorited, toggle } = useFavorite(recipe.id, recipe.favorited);
 
   const meta: readonly [string, string][] = [
@@ -43,6 +46,8 @@ export function RecipeDetailScreen({ recipe, onBack, onStartCooking }: RecipeDet
         <Eyebrow>{s.metaEyebrow(recipe.difficulty, recipe.timeMinutes)}</Eyebrow>
         <Text style={styles.title}>{recipe.title}</Text>
         <Text style={styles.summary}>{recipe.summary}</Text>
+
+        {onTweak !== undefined && <RecipeChatEntry onOpen={onTweak} />}
 
         <View style={styles.metaStrip}>
           {meta.map(([key, value]) => (
