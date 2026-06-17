@@ -1,0 +1,40 @@
+# Local-only flow (CI execution deferred — see docs/checklists/m7-recipe-chat.md).
+# Precondition: api on :4000 + ai on :4001 (DEFAULT_AI_PROVIDER=mock, no keys needed),
+# maestro user signed in (run sign-in.yaml first) with at least one generated recipe
+# in the library (run generation.yaml first, or seed one).
+# Drives §✦ recipe detail → open co-pilot sheet → tweak → applied version → revert.
+appId: com.pantrycopilot.app
+---
+- launchApp
+- tapOn: 'Cook'
+- assertVisible:
+    id: 'library-screen'
+
+# Open the first recipe and launch the co-pilot from the floating FAB.
+- tapOn:
+    id: 'recipe-card'
+- assertVisible:
+    id: 'recipe-detail'
+- assertVisible:
+    id: 'recipe-chat-hint'
+- tapOn:
+    id: 'recipe-chat-fab'
+- assertVisible:
+    id: 'recipe-chat-sheet'
+
+# Send a tweak; the mock streams the canned "lighter, greener" response.
+- tapOn:
+    id: 'chat-input'
+- inputText: 'less butter, more greens'
+- tapOn:
+    id: 'chat-send'
+
+# The summary + change chip land in the thread, and the recipe gains spinach.
+- assertVisible: 'Lighter on the butter, with a handful of greens stirred through at the end.'
+- assertVisible: 'Halved the butter to 1 tsp'
+
+# Revert restores the original recipe and clears the thread.
+- tapOn:
+    id: 'chat-revert'
+- assertVisible:
+    id: 'recipe-chat-sheet'

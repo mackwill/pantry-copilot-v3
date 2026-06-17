@@ -409,3 +409,47 @@ shared weirdness vocabulary/gradient logic.
   containers pass explicit colors (e.g. tab bar active state).
 - Sheet scrim drops the board's `backdrop-filter: blur(2px)` (not supported in RN without an
   extra native dependency); scrim color/opacity match the design.
+
+## 2026-06-16 — M7 Chat against a recipe (§✦)
+
+The board is **not silent** on the chat UX (recipe-chat-b shows applied turns + a
+revert control), so we follow it; these are the interpretations and board-silent
+transient states logged per the engineering standard.
+
+- **Auto-apply each turn — no preview/apply gate.** The streamed `updatedRecipe`
+  becomes the live recipe immediately; the board's "apply bar" reading is the
+  version pill (`v3 · 2 tweaks`) + **Revert to original**, not a staged diff.
+  Settled this session alongside revert-to-original-only and mutate-in-place
+  versioning (one evolving `recipes` row: `version` counter + frozen
+  `original_snapshot`), so the library shows a single recipe at its current
+  version, not N rows.
+- **Versioning is mutate-in-place.** `recipes.version` starts at 1 and bumps per
+  applied tweak; `original_snapshot` is captured on the first tweak and restored
+  (snapshot nulled, thread deleted) on revert. The append-only `recipe_tweaks`
+  table is the audit log / chat thread — there is no separate job table (the
+  `tweakStream` subscription's `finally` writes nothing).
+- **Streaming summary appears whole, not char-by-char.** It lives inside the
+  `emit_tweak` tool-call JSON, so the tolerant `parsePartialJson` surfaces it only
+  once its closing quote lands; the tool schema orders `summary` first so it still
+  arrives ahead of the recipe body. The wire keeps the concatenation model
+  (`tweak_summary` deltas), so a future partial-string parser needs no client
+  change.
+- **Change chips ride in on `tweak_done`** (`response.changes`) — one mechanism,
+  no separate `tweak_change` event.
+- **Web entry vs chat are distinct layouts keyed on `?chat=true`** (entry = the
+  normal detail grid with the inverse "Tweak this recipe" button + accent-soft
+  suggestion strip; chat = `1fr 420px` live doc + docked panel). Search params are
+  optional so existing links to `/recipes/:id` need no `search` prop.
+- **Mobile overlays the sheet over the live detail.** The detail stays mounted and
+  the doc behind reflects the live recipe (so a tweak/revert is visible on close);
+  the `RecipeChatContainer` owns the hook. The sheet header (`ApplyBar`) scrolls
+  with the thread rather than pinning — the canonical `BottomSheet` body is one
+  ScrollView; the composer is the sticky footer.
+- **The pure tweak reducer is shared in `@pantry/utils`** (`reduceTweakEvent` +
+  `initialTweakState`/`beginTweakTurn` + `changeChipTone`), unit-tested once and
+  imported by both `useRecipeChat` hooks.
+- Icons added for the chat UI: web + native `Icon` registries gain `ArrowUp`,
+  `Replace`, `RotateCcw`, `Users` (and web `Info`, `MoreHorizontal`).
+- **Visual fidelity is NOT yet verified** — the 4 §✦ frames in
+  `docs/checklists/m7-recipe-chat.md` are pending review (web full stack; mobile
+  pinned simulator), per the M2–M6 precedent.
