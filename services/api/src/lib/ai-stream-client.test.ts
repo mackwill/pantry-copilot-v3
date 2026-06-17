@@ -1,8 +1,28 @@
-import type { AIGenerationRequest, GenerationEvent } from '@pantry/contracts';
+import type { AIGenerationRequest, AITweakRequest, GenerationEvent } from '@pantry/contracts';
 import { describe, expect, it, vi } from 'vitest';
 import { createHttpAiStreamClient } from './ai-stream-client.js';
 
 const REQ: AIGenerationRequest = { prompt: 'soup', weirdness: 20, pantry: [], mustInclude: [] };
+
+const TWEAK_REQ: AITweakRequest = {
+  recipe: {
+    title: 'Soup',
+    summary: 's',
+    weirdnessScore: 10,
+    ingredients: [{ name: 'Water', quantity: null, unit: null, optional: false, note: null }],
+    steps: [{ text: 'Boil' }],
+    timeMinutes: 5,
+    difficulty: 'easy',
+    substitutions: [],
+    pantryItemsUsed: [],
+    confidence: 0.7,
+    caveats: [],
+    whySuggested: 'why',
+    observation: null,
+  },
+  prompt: 'less oil',
+  priorTurns: [],
+};
 
 function sseBody(frames: string[]): ReadableStream<Uint8Array> {
   const enc = new TextEncoder();
@@ -62,6 +82,23 @@ describe('createHttpAiStreamClient', () => {
     const fetchImpl = vi.fn().mockResolvedValue(new Response('nope', { status: 401 }));
     const client = createHttpAiStreamClient({ baseUrl: 'http://ai', token: 't', fetchImpl });
     await expect(collect(client.streamGeneration(REQ, { requestId: 'r', signal: new AbortController().signal }))).rejects.toThrow(/401/);
+  });
+
+  it('streamTweak parses validated tweak events against the tweak schema', async () => {
+    const body = sseBody([
+      ': hb\n\n',
+      frame({ type: 'tweak_summary', text: 'Lighter.', seq: 0, t: 0 }),
+      'event: bogus\ndata: {not json}\n\n',
+      frame({ type: 'aborted', seq: 1, t: 5 }),
+    ]);
+    const fetchImpl = vi.fn().mockResolvedValue(new Response(body, { status: 200 }));
+    const client = createHttpAiStreamClient({ baseUrl: 'http://ai', token: 't', fetchImpl });
+    const out: { type: string }[] = [];
+    for await (const e of client.streamTweak(TWEAK_REQ, { requestId: 'r1', signal: new AbortController().signal })) {
+      out.push(e);
+    }
+    expect(out.map((e) => e.type)).toEqual(['tweak_summary', 'aborted']);
+    expect((fetchImpl.mock.calls[0]?.[0] as string)).toBe('http://ai/recipes/tweak/stream');
   });
 
   it('cancels the upstream fetch when the caller signal aborts', async () => {

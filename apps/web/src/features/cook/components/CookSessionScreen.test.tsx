@@ -31,6 +31,8 @@ function makeRecipe(): RecipeDetail {
     weirdness: 40,
     createdAt: '2026-06-16T00:00:00.000Z',
     favorited: false,
+    version: 1,
+    tweakCount: 0,
     title: 'Charred Scallion Rice',
     summary: 'Fast skillet rice.',
     weirdnessScore: 40,

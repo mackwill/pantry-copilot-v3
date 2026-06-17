@@ -15,8 +15,12 @@ export const recipes = pgTable('recipes', {
   weirdness: integer('weirdness').notNull(),
   title: text('title').notNull(),
   summary: text('summary'),
-  /** The full AI recipe body. */
+  /** The full AI recipe body — mutated in place as the co-pilot tweaks it. */
   data: jsonb('data').$type<AIRecipe>().notNull(),
+  /** Tweak version: 1 untweaked, +1 per applied tweak (board `v3` pill). */
+  version: integer('version').notNull().default(1),
+  /** Frozen pre-tweak recipe, captured on the first tweak; `revert` restores it. */
+  originalSnapshot: jsonb('original_snapshot').$type<AIRecipe>(),
   provider: text('provider'),
   model: text('model'),
   tokensUsed: integer('tokens_used'),

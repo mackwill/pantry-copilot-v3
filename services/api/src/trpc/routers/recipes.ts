@@ -1,19 +1,25 @@
 import {
   type AIGenerationRequest,
   type AIPantryChip,
+  type AITweakRequest,
+  type AITweakTurn,
   type RecipeDetail,
   type RecipeListItem,
+  type RecipeTweakTurn,
   generationRequestSchema,
   recipeByIdInputSchema,
   recipeListQuerySchema,
+  recipeRevertInputSchema,
+  recipeTweakRequestSchema,
   setFavoriteInputSchema,
 } from '@pantry/contracts';
 import { TRPCError } from '@trpc/server';
-import { and, desc, eq, inArray } from 'drizzle-orm';
-import { pantryItems, recipeFavorites, recipeGenerationJobs, recipes } from '../../db/schema/index.js';
+import { and, asc, count, desc, eq, inArray } from 'drizzle-orm';
+import { pantryItems, recipeFavorites, recipeGenerationJobs, recipeTweaks, recipes } from '../../db/schema/index.js';
 import { protectedProcedure, router } from '../init.js';
 
 type RecipeRow = typeof recipes.$inferSelect;
+type TweakRow = typeof recipeTweaks.$inferSelect;
 
 function toListItem(row: RecipeRow, favorited: boolean): RecipeListItem {
   return {
@@ -29,7 +35,7 @@ function toListItem(row: RecipeRow, favorited: boolean): RecipeListItem {
   };
 }
 
-function toDetail(row: RecipeRow, favorited: boolean): RecipeDetail {
+function toDetail(row: RecipeRow, favorited: boolean, tweakCount: number): RecipeDetail {
   return {
     ...row.data,
     id: row.id,
@@ -38,6 +44,19 @@ function toDetail(row: RecipeRow, favorited: boolean): RecipeDetail {
     weirdness: row.weirdness,
     createdAt: row.createdAt.toISOString(),
     favorited,
+    version: row.version,
+    tweakCount,
+  };
+}
+
+function toTweakTurn(row: TweakRow): RecipeTweakTurn {
+  return {
+    id: row.id,
+    turn: row.turn,
+    userMessage: row.userMessage,
+    summary: row.aiSummary,
+    changes: row.changes,
+    createdAt: row.createdAt.toISOString(),
   };
 }
 
@@ -150,7 +169,125 @@ export const recipesRouter = router({
       .select()
       .from(recipeFavorites)
       .where(and(eq(recipeFavorites.userId, userId), eq(recipeFavorites.recipeId, row.id)));
-    return toDetail(row, fav !== undefined);
+    const [tally] = await ctx.db
+      .select({ value: count() })
+      .from(recipeTweaks)
+      .where(eq(recipeTweaks.recipeId, row.id));
+    return toDetail(row, fav !== undefined, tally?.value ?? 0);
+  }),
+
+  /**
+   * Stream a tweak turn against a saved recipe (the recipe co-pilot). Loads
+   * the own recipe, replays prior turns for context, proxies the AI service's
+   * tweak SSE, and on `tweak_done` applies it in a transaction: bump
+   * `version`, overwrite `data`/title/summary, capture `originalSnapshot` on
+   * the first tweak, and append the turn row. Re-emits `tweak_done` with the
+   * persisted ids. Unsubscribe before `done` → nothing persists. The tweak
+   * rows are the audit log, so the `finally` writes nothing.
+   */
+  tweakStream: protectedProcedure.input(recipeTweakRequestSchema).subscription(async function* ({ ctx, input, signal }) {
+    const userId = ctx.session.user.id;
+    const [row] = await ctx.db
+      .select()
+      .from(recipes)
+      .where(and(eq(recipes.id, input.recipeId), eq(recipes.userId, userId)));
+    if (row === undefined) throw new TRPCError({ code: 'NOT_FOUND' });
+
+    const priorRows = await ctx.db
+      .select()
+      .from(recipeTweaks)
+      .where(eq(recipeTweaks.recipeId, row.id))
+      .orderBy(asc(recipeTweaks.turn));
+    const priorTurns: AITweakTurn[] = priorRows.map((r) => ({
+      userMessage: r.userMessage,
+      summary: r.aiSummary,
+      changes: r.changes,
+    }));
+
+    const aiReq: AITweakRequest = { recipe: row.data, prompt: input.prompt, priorTurns };
+    const abortSignal = signal ?? new AbortController().signal;
+    let applied = false;
+
+    for await (const ev of ctx.aiStream.streamTweak(aiReq, { requestId: ctx.requestId, signal: abortSignal })) {
+      if (ev.type === 'tweak_done' && !applied) {
+        applied = true;
+        const updated = ev.response.updatedRecipe;
+        const nextTurn = priorRows.length + 1;
+        const nextVersion = row.version + 1;
+        await ctx.db.transaction(async (tx) => {
+          await tx
+            .update(recipes)
+            .set({
+              data: updated,
+              title: updated.title,
+              summary: updated.summary,
+              version: nextVersion,
+              ...(row.originalSnapshot === null ? { originalSnapshot: row.data } : {}),
+            })
+            .where(eq(recipes.id, row.id));
+          await tx.insert(recipeTweaks).values({
+            recipeId: row.id,
+            userId,
+            turn: nextTurn,
+            userMessage: input.prompt,
+            aiSummary: ev.response.summary,
+            changes: ev.response.changes,
+          });
+        });
+        yield { ...ev, recipeId: row.id, turn: nextTurn, version: nextVersion };
+      } else {
+        yield ev;
+      }
+    }
+  }),
+
+  /** The ordered tweak thread for a recipe (own-row), for chat hydration. */
+  tweaks: protectedProcedure.input(recipeByIdInputSchema).query(async ({ ctx, input }): Promise<RecipeTweakTurn[]> => {
+    const userId = ctx.session.user.id;
+    const [owned] = await ctx.db
+      .select({ id: recipes.id })
+      .from(recipes)
+      .where(and(eq(recipes.id, input.recipeId), eq(recipes.userId, userId)));
+    if (owned === undefined) throw new TRPCError({ code: 'NOT_FOUND' });
+    const rows = await ctx.db
+      .select()
+      .from(recipeTweaks)
+      .where(eq(recipeTweaks.recipeId, input.recipeId))
+      .orderBy(asc(recipeTweaks.turn));
+    return rows.map(toTweakTurn);
+  }),
+
+  /**
+   * Restore a recipe to its pre-tweak snapshot: reset `data`/title/summary,
+   * set `version` back to 1, null the snapshot, and delete the tweak thread.
+   * A no-op (returns current detail) when the recipe was never tweaked.
+   */
+  revert: protectedProcedure.input(recipeRevertInputSchema).mutation(async ({ ctx, input }): Promise<RecipeDetail> => {
+    const userId = ctx.session.user.id;
+    const [row] = await ctx.db
+      .select()
+      .from(recipes)
+      .where(and(eq(recipes.id, input.recipeId), eq(recipes.userId, userId)));
+    if (row === undefined) throw new TRPCError({ code: 'NOT_FOUND' });
+
+    if (row.originalSnapshot !== null) {
+      const original = row.originalSnapshot;
+      await ctx.db.transaction(async (tx) => {
+        await tx
+          .update(recipes)
+          .set({ data: original, title: original.title, summary: original.summary, version: 1, originalSnapshot: null })
+          .where(eq(recipes.id, row.id));
+        await tx.delete(recipeTweaks).where(eq(recipeTweaks.recipeId, row.id));
+      });
+    }
+
+    const [fresh] = await ctx.db.select().from(recipes).where(eq(recipes.id, row.id));
+    if (fresh === undefined) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
+    const [fav] = await ctx.db
+      .select()
+      .from(recipeFavorites)
+      .where(and(eq(recipeFavorites.userId, userId), eq(recipeFavorites.recipeId, row.id)));
+    return toDetail(fresh, fav !== undefined, 0);
   }),
 
   setFavorite: protectedProcedure

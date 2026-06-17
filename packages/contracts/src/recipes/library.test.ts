@@ -64,9 +64,12 @@ describe('recipeDetailSchema', () => {
       weirdness: 38,
       createdAt: '2026-06-15T00:00:00.000Z',
       favorited: false,
+      version: 1,
+      tweakCount: 0,
     });
     expect(detail.favorited).toBe(false);
     expect(detail.title).toBe(baseRecipe.title);
+    expect(detail.version).toBe(1);
   });
 });
 

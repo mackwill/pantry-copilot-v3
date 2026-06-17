@@ -1,4 +1,4 @@
-import type { AIRecipe, GenerationEvent } from '@pantry/contracts';
+import type { AIRecipe, GenerationEvent, RecipeTweakEvent } from '@pantry/contracts';
 import { eq } from 'drizzle-orm';
 import type { FastifyInstance } from 'fastify';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
@@ -34,6 +34,10 @@ const noStream: AiStreamClient = {
   streamGeneration: async function* () {
     await Promise.resolve();
     for (const e of [] as GenerationEvent[]) yield e;
+  },
+  streamTweak: async function* () {
+    await Promise.resolve();
+    for (const e of [] as RecipeTweakEvent[]) yield e;
   },
 };
 

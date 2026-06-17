@@ -2,5 +2,6 @@ export * from './auth.js';
 export * from './cook-sessions.js';
 export * from './favorites.js';
 export * from './pantry.js';
+export * from './recipe-tweaks.js';
 export * from './recipes.js';
 export * from './scans.js';

@@ -21,6 +21,8 @@ function makeRecipe(overrides: Partial<RecipeDetail> = {}): RecipeDetail {
     weirdness: 38,
     createdAt: '2026-06-15T00:00:00.000Z',
     favorited: false,
+    version: 1,
+    tweakCount: 0,
     title: 'Charred scallion oil noodles',
     summary: 'A weeknight rerun done right.',
     weirdnessScore: 38,

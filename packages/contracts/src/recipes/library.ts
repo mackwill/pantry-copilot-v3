@@ -28,8 +28,17 @@ export const recipeListItemSchema = z.object({
 });
 export type RecipeListItem = z.infer<typeof recipeListItemSchema>;
 
-/** Full detail DTO — the persisted recipe plus this user's favorite flag. */
-export const recipeDetailSchema = recipeSchema.extend({ favorited: z.boolean() });
+/**
+ * Full detail DTO — the persisted recipe plus this user's favorite flag and
+ * its tweak lineage. `version` is 1 for an untweaked recipe and increments
+ * per applied tweak; `tweakCount` is the number of persisted tweak turns
+ * (the board's `v3 · 2 tweaks` pill).
+ */
+export const recipeDetailSchema = recipeSchema.extend({
+  favorited: z.boolean(),
+  version: z.number().int().positive(),
+  tweakCount: z.number().int().nonnegative(),
+});
 export type RecipeDetail = z.infer<typeof recipeDetailSchema>;
 
 export const setFavoriteInputSchema = z.object({ recipeId: z.uuid(), favorited: z.boolean() });
