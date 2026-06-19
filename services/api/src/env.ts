@@ -24,6 +24,22 @@ const schema = z
     AI_SERVICE_URL: z.url().default('http://localhost:4001'),
     /** Bearer token presented to the AI service (must match its AI_SERVICE_TOKEN). */
     AI_SERVICE_TOKEN: z.string().optional(),
+    // ── Subscription limits (per-period; free = weekly per board) ──
+    AI_FREE_RECIPES_PER_WEEK: z.coerce.number().int().nonnegative().default(3),
+    AI_FREE_SCANS_PER_WEEK: z.coerce.number().int().nonnegative().default(2),
+    AI_BASIC_RECIPES_PER_WEEK: z.coerce.number().int().nonnegative().default(10),
+    AI_BASIC_SCANS_PER_WEEK: z.coerce.number().int().nonnegative().default(5),
+    /** Pro is effectively unlimited — a high ceiling, not Infinity, so counters stay finite. */
+    AI_PRO_RECIPES_PER_WEEK: z.coerce.number().int().nonnegative().default(100000),
+    AI_PRO_SCANS_PER_WEEK: z.coerce.number().int().nonnegative().default(100000),
+    AI_TOP_UP_CREDIT_VALUE: z.coerce.number().int().positive().default(10),
+    // ── RevenueCat ──
+    REVENUECAT_SECRET_API_KEY: z.string().optional(),
+    REVENUECAT_API_BASE: z.url().default('https://api.revenuecat.com'),
+    REVENUECAT_PRO_ENTITLEMENT_ID: z.string().default('pro'),
+    REVENUECAT_BASIC_ENTITLEMENT_ID: z.string().default('basic'),
+    /** Shared secret RC sends in the webhook Authorization header. */
+    REVENUECAT_WEBHOOK_AUTH: z.string().optional(),
   })
   .refine((env) => !(env.AUTH_DEV_MAGIC_LINK && env.NODE_ENV === 'production'), {
     message: 'AUTH_DEV_MAGIC_LINK must not be enabled in production',

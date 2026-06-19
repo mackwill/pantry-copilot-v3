@@ -12,6 +12,8 @@ export const recipes = pgTable('recipes', {
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
   prompt: text('prompt').notNull(),
+  /** Origin of the recipe: 'ai' counts against the AI quota; 'manual' does not. */
+  source: text('source').notNull().default('ai'),
   weirdness: integer('weirdness').notNull(),
   title: text('title').notNull(),
   summary: text('summary'),
