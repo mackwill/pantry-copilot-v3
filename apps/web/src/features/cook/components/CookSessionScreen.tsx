@@ -3,14 +3,12 @@ import { Button, Card, Eyebrow, Icon, WebShell } from '@pantry/design-system/web
 import { useNavigate } from '@tanstack/react-router';
 import type { CookSession } from '@pantry/contracts';
 import { api } from '../../../lib/api';
-import { appNavItems, webShellUser } from '../../pantry-shared/nav';
+import { useShellNav, webShellUser } from '../../pantry-shared/nav';
 import { cookStrings as s } from '../strings';
 import { useCookSession } from '../useCookSession';
 import styles from '../cook.module.css';
 import { CookingNowBanner } from './CookingNowBanner';
 import { CookTimerRing } from './CookTimerRing';
-
-const NAV_ROUTES: Record<string, string> = { dashboard: '/home', pantry: '/pantry', cook: '/cook', recipes: '/recipes' };
 
 export interface CookSessionScreenUser {
   name: string;
@@ -37,6 +35,7 @@ function dotClass(index: number, current: number): string {
 /** Board §03.5 web "Cook · in session" — inverse banner, large step, ingredients + timer cards, nav. */
 export function CookSessionScreen({ user, session, recipe }: CookSessionScreenProps) {
   const navigate = useNavigate();
+  const shellNav = useShellNav('cook');
   const cook = useCookSession(session, recipe.steps);
   const caveat = recipe.caveats[0];
 
@@ -51,16 +50,7 @@ export function CookSessionScreen({ user, session, recipe }: CookSessionScreenPr
   };
 
   return (
-    <WebShell
-      navItems={appNavItems}
-      activeId="cook"
-      user={webShellUser(user)}
-      hideTopbar
-      onNavigate={(id) => {
-        const to = NAV_ROUTES[id];
-        if (to !== undefined) void navigate({ to });
-      }}
-    >
+    <WebShell {...shellNav} user={webShellUser(user)} hideTopbar>
       <div className={styles['wrap']}>
         <CookingNowBanner recipeTitle={recipe.title} startedAt={session.startedAt} actionLabel={s.exit} onAction={exit} />
 

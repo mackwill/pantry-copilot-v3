@@ -4,19 +4,12 @@ import { useNavigate } from '@tanstack/react-router';
 import { useMemo, useState } from 'react';
 import { CookingNowBanner } from '../../cook/components/CookingNowBanner';
 import { cookStrings } from '../../cook/strings';
-import { appNavItems, webShellUser } from '../../pantry-shared/nav';
+import { useShellNav, webShellUser } from '../../pantry-shared/nav';
 import { libraryStrings as s } from '../strings';
 import styles from '../library.module.css';
 import { LibraryFilters } from './LibraryFilters';
 import { RecipeLibraryEmpty } from './RecipeLibraryEmpty';
 import { RecipeListCard } from './RecipeListCard';
-
-const NAV_ROUTES: Record<string, string> = {
-  dashboard: '/home',
-  pantry: '/pantry',
-  cook: '/cook',
-  recipes: '/recipes',
-};
 
 export interface RecipeLibraryScreenUser {
   name: string;
@@ -32,6 +25,7 @@ export interface RecipeLibraryScreenProps {
 /** Board §03 web library, hosted under the Recipes nav (decision A). */
 export function RecipeLibraryScreen({ user, items, activeSession = null }: RecipeLibraryScreenProps) {
   const navigate = useNavigate();
+  const shellNav = useShellNav('recipes');
   const [filter, setFilter] = useState<RecipeLibraryFilter>('all');
 
   const visible = useMemo(
@@ -44,15 +38,7 @@ export function RecipeLibraryScreen({ user, items, activeSession = null }: Recip
   };
 
   return (
-    <WebShell
-      navItems={appNavItems}
-      activeId="recipes"
-      user={webShellUser(user)}
-      onNavigate={(id) => {
-        const to = NAV_ROUTES[id];
-        if (to !== undefined) void navigate({ to });
-      }}
-    >
+    <WebShell {...shellNav} user={webShellUser(user)}>
       <div className={styles['wrap']}>
         {activeSession !== null && (
           <CookingNowBanner

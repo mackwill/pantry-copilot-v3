@@ -453,3 +453,29 @@ transient states logged per the engineering standard.
 - **Visual fidelity is NOT yet verified** — the 4 §✦ frames in
   `docs/checklists/m7-recipe-chat.md` are pending review (web full stack; mobile
   pinned simulator), per the M2–M6 precedent.
+
+## Web navigation wiring + shell height (2026-06-19, bug fix)
+
+- **The board's prompt-first Home _is_ the `Dashboard` tab.** Board `WebHome`
+  renders `<WebShell active="dashboard">` at URL `pantrycopilot.app` (root). So the
+  post-login landing (`/home`) now renders the real `generation/HomeScreen` with
+  `activeNav="dashboard"`, replacing the leftover M1 placeholder
+  (`features/home/`, deleted). Login/index redirects to `/home` are unchanged.
+- **Sidebar nav is centralized in `pantry-shared/nav.ts`** via `useShellNav(activeId)`,
+  which owns the one canonical `NAV_ROUTES` map and is spread into every
+  `WebShell`. Previously each screen re-declared a partial map (or omitted
+  `onNavigate` entirely), so tabs were unclickable on Inventory, Ingredient form,
+  Recipe detail, Recipe chat, Generate, and Account. Root cause of the reported
+  "tabs show but aren't clickable" bug.
+- **`Shopping` is hidden from the sidebar until its screen is built** (board lists
+  it, but no Shopping frame is designed). `Dashboard`/`Pantry`/`Cook`/`Recipes`
+  are the live tabs. Re-add `Shopping` (and a real Dashboard, if it diverges from
+  Home) when those screens land.
+- **`WebShell` uses `min-height: 100dvh`** (was `100%`). The app mounts the shell
+  as the page frame with no height-bearing ancestor, so a percentage min-height
+  collapsed to content height (sidebar didn't fill the viewport). The board got
+  away with `100%` only because its capture harness gives the parent a fixed height.
+- **Known residual deviation:** `/cook` still renders the same prompt-first Home
+  (M4 leftover) as `/home`, so `Dashboard` and `Cook` currently show the same
+  screen. The board's distinct "Cook · empty" (resume-or-ask) screen is a separate
+  fidelity item — to be built when Cook sessions fidelity is revisited.

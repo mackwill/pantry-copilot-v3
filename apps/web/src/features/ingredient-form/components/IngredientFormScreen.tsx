@@ -1,6 +1,6 @@
 import type { PantryItem } from '@pantry/contracts';
 import { Button, Card, Eyebrow, Icon, WebShell } from '@pantry/design-system/web';
-import { appNavItems, webShellUser } from '../../pantry-shared/nav';
+import { useShellNav, webShellUser } from '../../pantry-shared/nav';
 import styles from '../ingredient-form.module.css';
 import { ingredientStrings } from '../strings';
 import { useIngredientForm } from '../useIngredientForm';
@@ -18,9 +18,10 @@ export interface IngredientFormScreenProps {
 
 export function IngredientFormScreen({ item, user }: IngredientFormScreenProps) {
   const form = useIngredientForm(item);
+  const shellNav = useShellNav('pantry');
   const title = item === undefined ? s.newTitle : item.name;
   return (
-    <WebShell navItems={appNavItems} activeId="pantry" user={webShellUser(user)} hideTopbar>
+    <WebShell {...shellNav} user={webShellUser(user)} hideTopbar>
       <div className={styles['backRow']}>
         <Button
           kind="ghost"

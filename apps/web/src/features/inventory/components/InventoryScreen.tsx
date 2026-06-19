@@ -1,7 +1,7 @@
 import type { PantryItem } from '@pantry/contracts';
 import { Button, Card, Icon, WebShell } from '@pantry/design-system/web';
 import { useNavigate } from '@tanstack/react-router';
-import { appNavItems, webShellUser } from '../../pantry-shared/nav';
+import { useShellNav, webShellUser } from '../../pantry-shared/nav';
 import { useInventory } from '../useInventory';
 import { inventoryStrings } from '../strings';
 import { CategoryFilter } from './CategoryFilter';
@@ -47,10 +47,10 @@ export function InventoryScreen({
   const { activeCategory, setActiveCategory, categories, stats, visibleItems, locationsCount } =
     useInventory(items);
   const navigate = useNavigate();
+  const shellNav = useShellNav('pantry');
   return (
     <WebShell
-      navItems={appNavItems}
-      activeId="pantry"
+      {...shellNav}
       user={webShellUser(user)}
       topbarRight={<Topbar onAdd={() => void navigate({ to: '/pantry/new' })} />}
     >

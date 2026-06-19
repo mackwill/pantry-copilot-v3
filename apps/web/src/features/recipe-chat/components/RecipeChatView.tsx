@@ -1,7 +1,7 @@
 import type { RecipeDetail } from '@pantry/contracts';
 import type { TweakThreadTurn } from '@pantry/utils';
 import { WebShell } from '@pantry/design-system/web';
-import { appNavItems, webShellUser } from '../../pantry-shared/nav';
+import { useShellNav, webShellUser } from '../../pantry-shared/nav';
 import type { RecipeDetailScreenUser } from '../../recipe-detail/components/RecipeDetailScreen';
 import { useRecipeChat, type RevertFn, type TweakSubscribe } from '../useRecipeChat';
 import styles from '../recipe-chat.module.css';
@@ -31,11 +31,12 @@ export function RecipeChatView({ user, recipe, turns, onClose, initialPrompt, su
     },
   );
 
+  const shellNav = useShellNav('recipes');
   const liveRecipe = chat.recipe ?? recipe;
   const title = liveRecipe.title ?? recipe.title;
 
   return (
-    <WebShell navItems={appNavItems} activeId="recipes" user={webShellUser(user)} hideTopbar>
+    <WebShell {...shellNav} user={webShellUser(user)} hideTopbar>
       <VersionBar
         version={chat.version}
         tweakCount={chat.turns.length}

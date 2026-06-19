@@ -2,7 +2,7 @@ import type { RecipeDetail } from '@pantry/contracts';
 import { Button, Card, Eyebrow, Icon, Pill, WebShell } from '@pantry/design-system/web';
 import { useNavigate } from '@tanstack/react-router';
 import { api } from '../../../lib/api';
-import { appNavItems, webShellUser } from '../../pantry-shared/nav';
+import { useShellNav, webShellUser } from '../../pantry-shared/nav';
 import { RecipeChatEntry } from '../../recipe-chat/components/RecipeChatEntry';
 import { recipeChatStrings } from '../../recipe-chat/strings';
 import { recipeDetailStrings as s } from '../strings';
@@ -27,6 +27,7 @@ export interface RecipeDetailScreenProps {
 /** Board §05/§07/§✦ web recipe detail — method + sticky ingredients card + copilot note + tweak entry. */
 export function RecipeDetailScreen({ user, recipe, onTweak }: RecipeDetailScreenProps) {
   const navigate = useNavigate();
+  const shellNav = useShellNav('recipes');
   const { favorited, toggle } = useFavorite(recipe.id, recipe.favorited);
   const note = recipe.observation ?? recipe.whySuggested;
 
@@ -46,7 +47,7 @@ export function RecipeDetailScreen({ user, recipe, onTweak }: RecipeDetailScreen
   ];
 
   return (
-    <WebShell navItems={appNavItems} activeId="recipes" user={webShellUser(user)} hideTopbar>
+    <WebShell {...shellNav} user={webShellUser(user)} hideTopbar>
       <div className={styles['topRow']}>
         <Button
           kind="ghost"

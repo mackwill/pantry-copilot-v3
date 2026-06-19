@@ -1,7 +1,7 @@
 import { Button, Eyebrow, Icon, WebShell } from '@pantry/design-system/web';
 import { useNavigate } from '@tanstack/react-router';
 import { useEffect, useRef, useState } from 'react';
-import { appNavItems, webShellUser } from '../../pantry-shared/nav';
+import { useShellNav, webShellUser } from '../../pantry-shared/nav';
 import { useFavorite } from '../../recipe-detail/useFavorite';
 import { type GenerationSubscribe, useGeneration } from '../useGeneration';
 import { generationStrings } from '../strings';
@@ -49,6 +49,7 @@ export interface GenerateScreenProps {
 /** Board §04/§02 — switches Thinking → Drafting → Result off the shared stream hook. */
 export function GenerateScreen({ prompt, weirdness, user, subscribe }: GenerateScreenProps) {
   const navigate = useNavigate();
+  const shellNav = useShellNav('cook');
   const gen = useGeneration(subscribe === undefined ? undefined : { subscribe });
   const { start } = gen;
   const elapsedMs = useElapsedMs(gen.isStreaming);
@@ -65,7 +66,7 @@ export function GenerateScreen({ prompt, weirdness, user, subscribe }: GenerateS
   const thoughtFor = secs(gen.thinkingMs);
 
   return (
-    <WebShell navItems={appNavItems} activeId="cook" user={webShellUser(user)}>
+    <WebShell {...shellNav} user={webShellUser(user)}>
       <div className={gen.status === 'result' ? styles['resultWrap'] : styles['genWrap']}>
         <div className={styles['crumbRow']}>
           <Button kind="ghost" size="sm" leftIcon={<Icon name="ArrowLeft" size={14} />} onClick={goHome}>

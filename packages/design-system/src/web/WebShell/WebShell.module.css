@@ -1,7 +1,10 @@
 .shell {
   display: grid;
   grid-template-columns: 232px 1fr;
-  min-height: 100%;
+  /* 100dvh, not 100%: the app mounts the shell as the page frame with no
+     height-bearing ancestor, so a percentage min-height would collapse to
+     content height (sidebar wouldn't fill the viewport). */
+  min-height: 100dvh;
   background: var(--bg);
   color: var(--fg);
   font-family: var(--font-sans);

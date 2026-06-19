@@ -1,7 +1,7 @@
 import { Button, Icon, WebShell } from '@pantry/design-system/web';
 import { useNavigate } from '@tanstack/react-router';
 import { authClient } from '../../../lib/auth-client';
-import { appNavItems, webShellUser } from '../../pantry-shared/nav';
+import { useShellNav, webShellUser } from '../../pantry-shared/nav';
 import { accountStrings as s } from '../strings';
 import styles from '../account.module.css';
 import { AccountSidebar } from './AccountSidebar';
@@ -20,6 +20,7 @@ interface AccountScreenProps {
 
 export function AccountScreen({ user }: AccountScreenProps) {
   const navigate = useNavigate();
+  const shellNav = useShellNav();
 
   const handleSignOut = () => {
     void authClient.signOut().then(() => {
@@ -28,11 +29,7 @@ export function AccountScreen({ user }: AccountScreenProps) {
   };
 
   return (
-    <WebShell
-      navItems={appNavItems}
-      user={webShellUser(user)}
-      hideTopbar
-    >
+    <WebShell {...shellNav} user={webShellUser(user)} hideTopbar>
       <div className={styles['topBar']}>
         <Button
           kind="ghost"

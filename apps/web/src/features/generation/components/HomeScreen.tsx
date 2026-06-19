@@ -3,7 +3,7 @@ import { Eyebrow, WebShell } from '@pantry/design-system/web';
 import { freshnessFor, freshnessLabel, rankByExpiration } from '@pantry/utils';
 import { useNavigate } from '@tanstack/react-router';
 import { useMemo, useState } from 'react';
-import { appNavItems, webShellUser } from '../../pantry-shared/nav';
+import { useShellNav, webShellUser } from '../../pantry-shared/nav';
 import { generationStrings } from '../strings';
 import styles from '../generation.module.css';
 import { type ExpiringEntry, HomeContextCards, type RecentEntry } from './HomeContextCards';
@@ -16,8 +16,6 @@ export interface HomeScreenUser {
   name: string;
   email: string;
 }
-
-const NAV_ROUTES: Record<string, string> = { dashboard: '/home', pantry: '/pantry', cook: '/cook' };
 
 function toExpiring(items: readonly PantryItem[]): ExpiringEntry[] {
   return rankByExpiration(items)
@@ -42,11 +40,14 @@ export interface HomeScreenProps {
   user: HomeScreenUser;
   items: readonly PantryItem[];
   recent?: readonly RecentEntry[];
+  /** Which sidebar tab is active. The board's Home is the `dashboard` tab. */
+  activeNav?: string;
 }
 
 /** Board §01 Home — prompt-first hero + ambient pantry/recipe context. */
-export function HomeScreen({ user, items, recent = [] }: HomeScreenProps) {
+export function HomeScreen({ user, items, recent = [], activeNav = 'cook' }: HomeScreenProps) {
   const navigate = useNavigate();
+  const shellNav = useShellNav(activeNav);
   const [prompt, setPrompt] = useState('');
   const [weirdness, setWeirdness] = useState(38);
   const [active, setActive] = useState<string[]>([]);
@@ -62,15 +63,7 @@ export function HomeScreen({ user, items, recent = [] }: HomeScreenProps) {
   };
 
   return (
-    <WebShell
-      navItems={appNavItems}
-      activeId="cook"
-      user={webShellUser(user)}
-      onNavigate={(id) => {
-        const to = NAV_ROUTES[id];
-        if (to !== undefined) void navigate({ to });
-      }}
-    >
+    <WebShell {...shellNav} user={webShellUser(user)}>
       <div className={styles['homeWrap']}>
         <div className={styles['metaRow']}>
           <Eyebrow>{s.kitchenEyebrow}</Eyebrow>
