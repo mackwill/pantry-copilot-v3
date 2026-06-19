@@ -2,6 +2,7 @@ import { type PantryItem, aiImageExtractionRequestSchema, confirmScanInput } fro
 import { TRPCError } from '@trpc/server';
 import { and, eq } from 'drizzle-orm';
 import { imageScans, inventoryEvents, pantryItems } from '../../db/schema/index.js';
+import { assertAiActionAllowed } from '../../modules/subscription/limits.js';
 import { protectedProcedure, router } from '../init.js';
 
 const toPantryDto = (row: typeof pantryItems.$inferSelect): PantryItem => ({
@@ -21,6 +22,7 @@ const toPantryDto = (row: typeof pantryItems.$inferSelect): PantryItem => ({
 
 export const scanRouter = router({
   extract: protectedProcedure.input(aiImageExtractionRequestSchema).mutation(async ({ ctx, input }) => {
+    await assertAiActionAllowed(ctx.db, ctx.session.user.id, 'scan', ctx.env);
     const userId = ctx.session.user.id;
     const [scan] = await ctx.db.insert(imageScans).values({ userId, status: 'processing' }).returning();
     if (scan === undefined) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });

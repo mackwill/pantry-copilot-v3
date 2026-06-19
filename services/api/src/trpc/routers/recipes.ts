@@ -16,6 +16,7 @@ import {
 import { TRPCError } from '@trpc/server';
 import { and, asc, count, desc, eq, inArray } from 'drizzle-orm';
 import { pantryItems, recipeFavorites, recipeGenerationJobs, recipeTweaks, recipes } from '../../db/schema/index.js';
+import { assertAiActionAllowed } from '../../modules/subscription/limits.js';
 import { protectedProcedure, router } from '../init.js';
 
 type RecipeRow = typeof recipes.$inferSelect;
@@ -95,6 +96,8 @@ export const recipesRouter = router({
     }));
 
     const aiReq: AIGenerationRequest = { prompt: input.prompt, weirdness: input.weirdness, pantry, mustInclude: [] };
+
+    await assertAiActionAllowed(ctx.db, userId, 'recipe', ctx.env);
 
     const [job] = await ctx.db.insert(recipeGenerationJobs).values({ userId, request: input, status: 'streaming' }).returning();
     if (job === undefined) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
