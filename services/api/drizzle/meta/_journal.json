@@ -57,6 +57,13 @@
       "when": 1781662114705,
       "tag": "0007_neat_sunspot",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1781899101795,
+      "tag": "0008_milky_lila_cheney",
+      "breakpoints": true
     }
   ]
 }
