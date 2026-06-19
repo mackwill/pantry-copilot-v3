@@ -57,7 +57,7 @@ describe('cook sessions', () => {
 
   function callerFor(session: Context['session']) {
     const deps = createDeps(env(), { aiStream: noStream });
-    const ctx: Context = { db: testDb.db, session, aiClient: deps.aiClient, aiStream: noStream, requestId: 'test-req' };
+    const ctx: Context = { db: testDb.db, env: env(), session, aiClient: deps.aiClient, aiStream: noStream, requestId: 'test-req' };
     return appRouter.createCaller(ctx);
   }
 

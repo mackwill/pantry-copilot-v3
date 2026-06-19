@@ -56,7 +56,7 @@ describe('trpc recipes.generateStream', () => {
 
   function callerFor(stream: AiStreamClient, session: Context['session']) {
     const deps = createDeps(env(), { aiStream: stream });
-    const ctx: Context = { db: testDb.db, session, aiClient: deps.aiClient, aiStream: stream, requestId: 'test-req' };
+    const ctx: Context = { db: testDb.db, env: env(), session, aiClient: deps.aiClient, aiStream: stream, requestId: 'test-req' };
     return appRouter.createCaller(ctx);
   }
 
