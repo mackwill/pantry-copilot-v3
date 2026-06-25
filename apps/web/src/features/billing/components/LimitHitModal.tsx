@@ -80,7 +80,7 @@ export function LimitHitModal({ open, onClose, onUpgrade }: LimitHitModalProps) 
                 kind="primary"
                 size="lg"
                 full
-                leftIcon={<Icon name="Sparkles" size={16} color="#fff" />}
+                leftIcon={<Icon name="Sparkles" size={16} color="var(--accent-fg)" />}
                 onClick={onUpgrade}
               >
                 {c.startTrial}

@@ -81,7 +81,7 @@ export function TrialEndingScreen({ user, onBack, onKeepPro, onCancel }: TrialEn
           <Button
             kind="primary"
             size="lg"
-            leftIcon={<Icon name="Check" size={16} color="#fff" />}
+            leftIcon={<Icon name="Check" size={16} color="var(--accent-fg)" />}
             onClick={onKeepPro}
           >
             {c.keepPro}

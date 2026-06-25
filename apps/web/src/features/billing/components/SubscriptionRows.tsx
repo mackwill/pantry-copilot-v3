@@ -63,7 +63,7 @@ export function SubscriptionRows({ subscription, onManage }: SubscriptionRowsPro
             <Button
               kind="primary"
               size="md"
-              leftIcon={<Icon name="Sparkles" size={14} color="#fff" />}
+              leftIcon={<Icon name="Sparkles" size={14} color="var(--accent-fg)" />}
               onClick={onManage}
             >
               {c.freeCta}
