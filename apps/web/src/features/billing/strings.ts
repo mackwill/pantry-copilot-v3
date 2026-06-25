@@ -26,21 +26,6 @@ export const billingStrings = {
       basic: 'More than the trial allows. For weekday rhythms.',
       pro: 'The full copilot. For households that cook a lot.',
     },
-    features: {
-      basic: [
-        '10 recipe generations / week',
-        '5 pantry or receipt scans / week',
-        'Weirdness up to adventurous',
-        '1 household member',
-      ],
-      pro: [
-        'Unlimited generations & scans',
-        'Full weirdness (chaotic unlocked)',
-        'Household sharing · up to 5',
-        'Web + mobile · sync everywhere',
-        'Priority generation (10× faster)',
-      ],
-    },
   },
   paywall: {
     eyebrow: 'Pantry CoPilot · Pro',
