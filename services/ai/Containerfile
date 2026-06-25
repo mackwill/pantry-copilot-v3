@@ -7,7 +7,11 @@ RUN pnpm --filter @pantry/ai... build
 RUN pnpm --config.force-legacy-deploy=true deploy --filter @pantry/ai --prod /out
 
 FROM docker.io/library/node:22-slim
+ENV NODE_ENV=production
 WORKDIR /app
 COPY --from=build /out .
+USER node
 EXPOSE 4001
+HEALTHCHECK --interval=15s --timeout=3s --retries=5 \
+  CMD node -e "fetch('http://127.0.0.1:4001/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
 CMD ["node", "dist/index.js"]

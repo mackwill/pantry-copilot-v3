@@ -1,0 +1,13 @@
+**/node_modules
+**/dist
+**/.output
+**/.tanstack
+**/.turbo
+**/coverage
+**/test-results
+**/.git
+**/.env
+**/.env.*
+tools/design-fidelity/output
+tools/design-fidelity/references
+e2e/**/test-results
