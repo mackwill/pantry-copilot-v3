@@ -1,13 +1,20 @@
+import type { SubscriptionState } from '@pantry/contracts';
 import { Button, Eyebrow, fonts, Icon } from '@pantry/design-system/native';
 import { tokens } from '@pantry/design-system/tokens';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { authClient } from '../../../lib/auth-client';
+import { SubscriptionSection } from '../../billing/components/SubscriptionSection';
 import { accountStrings } from '../strings';
 import { AccountStatsCard } from './AccountStatsCard';
 import { SettingsSection } from './SettingsSection';
 
 export interface AccountScreenProps {
   user: { name: string; email: string };
+  /** Server entitlement state; absent while loading (section hidden until present). */
+  subscription?: SubscriptionState | undefined;
+  /** Free → paywall trial; trial/pro → manage subscription. */
+  onUpgrade?: (() => void) | undefined;
+  onManage?: (() => void) | undefined;
 }
 
 function initialsOf(name: string): string {
@@ -19,7 +26,7 @@ function initialsOf(name: string): string {
     .toUpperCase();
 }
 
-export function AccountScreen({ user }: AccountScreenProps) {
+export function AccountScreen({ user, subscription, onUpgrade, onManage }: AccountScreenProps) {
   return (
     <ScrollView
       style={styles.screen}
@@ -39,6 +46,14 @@ export function AccountScreen({ user }: AccountScreenProps) {
       </View>
 
       <AccountStatsCard />
+
+      {subscription !== undefined && (
+        <SubscriptionSection
+          subscription={subscription}
+          onUpgrade={onUpgrade ?? (() => {})}
+          onManage={onManage ?? (() => {})}
+        />
+      )}
 
       {accountStrings.sections.map((section) => (
         <SettingsSection

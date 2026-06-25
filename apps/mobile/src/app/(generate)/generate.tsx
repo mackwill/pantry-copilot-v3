@@ -22,6 +22,9 @@ export default function Screen() {
       onClose={() => {
         router.back();
       }}
+      onUpgrade={() => {
+        router.push('/(billing)/paywall');
+      }}
     />
   );
 }

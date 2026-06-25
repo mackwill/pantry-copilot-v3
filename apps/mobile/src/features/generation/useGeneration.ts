@@ -1,3 +1,4 @@
+import { isLimitReachedError } from '@pantry/api-client';
 import type { AIRecipePartial, BranchAction, GenerationEvent, GenerationRequest, ToolEvent } from '@pantry/contracts';
 import { buildBranchInput } from '@pantry/utils';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -25,6 +26,8 @@ export interface GenerationState {
   /** The single surfaced observation, if any. */
   notice: string | null;
   error: { code: string; message: string } | null;
+  /** True when the last stream failed the weekly quota — opens the limit-hit sheet. */
+  limitReached: boolean;
   /** ms the thinking beat ran before drafting began (drives the collapsed summary). */
   thinkingMs: number;
 }
@@ -39,6 +42,7 @@ const INITIAL: GenerationState = {
   recipeId: null,
   notice: null,
   error: null,
+  limitReached: false,
   thinkingMs: 0,
 };
 
@@ -78,7 +82,12 @@ function reduce(state: GenerationState, event: GenerationEvent): GenerationState
     case 'done':
       return { ...state, status: 'result', recipe: event.recipe, recipeId: event.recipeId };
     case 'error':
-      return { ...state, status: 'error', error: { code: event.code, message: event.message } };
+      return {
+        ...state,
+        status: 'error',
+        error: { code: event.code, message: event.message },
+        limitReached: event.code === 'limit_reached',
+      };
     case 'aborted':
       return { ...state, status: 'aborted' };
   }
@@ -115,6 +124,8 @@ export interface UseGeneration extends GenerationState {
   stop: () => void;
   /** One-tap re-prompt: transform the last request and re-run. */
   branch: (action: BranchAction) => void;
+  /** Dismiss the limit-hit sheet without re-running. */
+  dismissLimitReached: () => void;
 }
 
 /**
@@ -140,7 +151,13 @@ export function useGeneration(options?: { subscribe?: GenerationSubscribe }): Us
         },
         onError: (err) => {
           const message = err instanceof Error ? err.message : String(err);
-          setState((prev) => ({ ...prev, status: 'error', error: { code: 'stream_error', message } }));
+          const limitReached = isLimitReachedError(err);
+          setState((prev) => ({
+            ...prev,
+            status: 'error',
+            error: { code: limitReached ? 'limit_reached' : 'stream_error', message },
+            limitReached,
+          }));
         },
         onComplete: () => {},
       });
@@ -165,6 +182,10 @@ export function useGeneration(options?: { subscribe?: GenerationSubscribe }): Us
     [start],
   );
 
+  const dismissLimitReached = useCallback(() => {
+    setState((prev) => ({ ...prev, limitReached: false }));
+  }, []);
+
   useEffect(
     () => () => {
       subRef.current?.unsubscribe();
@@ -178,5 +199,6 @@ export function useGeneration(options?: { subscribe?: GenerationSubscribe }): Us
     start,
     stop,
     branch,
+    dismissLimitReached,
   };
 }

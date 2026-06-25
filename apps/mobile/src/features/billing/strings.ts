@@ -110,4 +110,83 @@ export const billingStrings = {
     cancel: 'Cancel before billing',
     finePrint: 'Cancel any time in Settings · managed by RevenueCat',
   },
+  /** Contextual limit-hit bottom sheet (board `paywall-contextual` · MobileLimitHit). */
+  limitHit: {
+    eyebrow: 'Weekly limit reached',
+    quota: '3 of 3 generations · resets Sun',
+    headlineLead: 'One more idea?',
+    headlineEmphasis: 'Try Pro free for 7 days.',
+    body:
+      'Unlimited generations, scans, and the full weirdness slider. ' +
+      "Cancel any time before day 8 and you won't be charged.",
+    quotaCardHeader: 'This week · Free',
+    quotaCardCount: '3 / 3',
+    quotaResets: 'resets Sunday',
+    quotaUpgrade: 'or upgrade for ∞',
+    startTrial: 'Start 7-day free trial',
+    seePlans: 'See plans · or wait til Sunday',
+    finePrint: 'Free for 7 days, then $9.99/mo · cancel any time',
+    /** a11y / sheet eyebrow handle. */
+    sheetEyebrow: 'Upgrade',
+  },
+  /** Settings → subscription section, by entitlement state (board `subscription` frames 11–13). */
+  subscription: {
+    /** Free state — upsell banner. */
+    freeEyebrow: 'Currently on Free',
+    freeTitle: 'Try Pro free for 7 days',
+    freeBlurb: 'Unlimited generations, scans, household sharing.',
+    freeMeta: 'No charges until day 8',
+    freeCta: 'Start free trial',
+    /** Trial state — countdown + manage entry. */
+    trialEyebrow: 'Trial · in progress',
+    trialTitle: 'Pantry CoPilot · Pro',
+    trialBlurb: 'Trial ends soon. Then $9.99/mo unless you cancel.',
+    trialMeta: 'Switch to annual · save 33%',
+    trialCta: 'Manage trial',
+    /** Pro state — status + manage entry. */
+    proEyebrow: 'Current plan',
+    proTitle: 'Pantry CoPilot · Pro',
+    proBlurb: 'Unlimited everything. Renews automatically.',
+    proMeta: '$9.99/mo · via App Store',
+    proCta: 'Manage',
+    /** Section eyebrow above the status card. */
+    sectionEyebrow: 'Subscription',
+  },
+  /** Manage-subscription screen (board `subscription` frame 13 · MobileManageSubscription). */
+  manage: {
+    eyebrow: 'Subscription',
+    heroEyebrow: 'Current plan',
+    heroTitleLead: 'Pantry CoPilot',
+    heroTitleEmphasis: 'Pro',
+    heroBlurb: 'Unlimited generations & scans, full weirdness, household up to 5.',
+    heroPrice: '$9.99 / month',
+    usageEyebrow: 'Usage this week',
+    usageRows: [
+      { label: 'Generations', sub: 'unlimited on Pro' },
+      { label: 'Pantry scans', sub: 'unlimited on Pro' },
+    ],
+    /** Unlimited marker rendered beside the usage count. */
+    usageUnlimited: '/ ∞',
+    billingEyebrow: 'Billing',
+    billingRows: {
+      plan: 'Plan',
+      planValue: 'Pro · Monthly',
+      renews: 'Renews',
+      expires: 'Expires',
+      amount: 'Amount',
+      amountValue: '$9.99 / mo',
+      method: 'Method',
+      topUp: 'Top-up credits',
+    },
+    switchAnnual: 'Switch to annual · save 33%',
+    downgrade: 'Downgrade to Basic',
+    cancel: 'Cancel subscription',
+    restore: 'Restore purchases',
+    finePrint:
+      'Subscription managed via App Store · synced through RevenueCat. ' +
+      'To cancel immediately, open Settings → Apple ID → Subscriptions.',
+    /** Fallback when a billing value is unknown. */
+    unknown: '—',
+    backLabel: 'Back',
+  },
 } as const;

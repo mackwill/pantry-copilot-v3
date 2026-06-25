@@ -2,6 +2,38 @@
 
 Board-silent composition calls and scope deviations, newest first.
 
+## 2026-06-25 — M8 mobile limit-hit sheet + settings subscription section/manage + generation limit wiring (Slice H part 3)
+
+Files: `apps/mobile/src/features/billing/` — `sheets/LimitHitSheet.tsx`, `components/SubscriptionSection.tsx`,
+`components/ManageSubscription.tsx`, `useSubscription.ts` (+ tests); route `app/(billing)/manage.tsx`;
+`features/account/components/AccountScreen.tsx` + `me.tsx` (subscription wiring);
+`features/generation/useGeneration.ts` + `components/GenerateScreen.tsx` + `(generate)/generate.tsx`
+(limit-hit wiring). Copy extended in `features/billing/strings.ts` (`limitHit`, `subscription`, `manage` groups).
+
+- **(A) Trial state derived from `periodType`, not `subState`.** `SubState` enum has no `trial` member;
+  RevenueCat's `period_type === 'trial'` is the source (set server-side in `subscription/service.ts`).
+  `SubscriptionSection.deriveDisplayState`: `!isPro` → free; `isPro && periodType === 'trial'` → trial;
+  else → pro. Mirrors the board's three settings frames (11 free / 12 trial / 13 pro).
+- **(B) Pro status card uses a solid `accent` top bar.** The board's pro card top edge is a brand
+  `linear-gradient`; consistent with part 2 decision (A), it renders as a solid `tokens.accent` bar
+  (no native gradient dependency). Same applies to the `ManageSubscription` pro hero accent.
+- **(C) `LimitHitSheet` composed on the canonical `BottomSheet`.** Board frame 6's limit-hit sheet is the
+  contextual presentation of the same offer as the standalone `TrialOffer` (part 2); content reuses the
+  trial-offer layout (icon header, quota viz, CTAs, fine print) hosted inside `BottomSheet` with a short
+  `Upgrade` eyebrow. Both CTAs (`Start trial`, `See plans`) fire `onUpgrade` → `/(billing)/paywall`.
+- **(D) `useSubscription` query hook (mobile data idiom).** Mobile has no router loaders (unlike web's
+  TanStack `loader`); following `useLibrary`/`usePantry`, a small `useEffect` + `api.subscription.get.query()`
+  hook feeds both `me.tsx` (→ AccountScreen section) and `(billing)/manage.tsx`. The section is hidden while
+  subscription is `undefined` (loading), so AccountScreen stays usable pre-fetch and existing tests pass.
+- **(E) Manage actions: cancel/change-plan route to the compare paywall.** Real cancellation is
+  App-Store/RevenueCat-managed (no in-app cancel API; the fine print directs users to iOS Settings), so
+  `Cancel subscription` and the change-plan buttons route to `/(billing)/paywall?variant=compare`;
+  `Restore purchases` calls `useBilling.restore()` (the only billing action with a real SDK path).
+- **(F) `ManageSubscription` billing rows partly static.** Plan/amount labels (`Pro · Monthly`, `$9.99 / mo`)
+  are board copy in `strings.ts`; renew-vs-expire label + date derive from `willRenew`/`expiresAt`, method
+  from `store`, top-up from `topUpCredits`. Usage counts are shown as `/ ∞` (board pro frame) rather than
+  live `usage.query()` numbers — usage wiring stays out of scope for this manage screen.
+
 ## 2026-06-25 — M8 mobile paywall A/B + trial offer/ending screens + billing routes (Slice H part 2)
 
 Files: `apps/mobile/src/features/billing/components/` — `PaywallA.tsx`, `PaywallB.tsx`,

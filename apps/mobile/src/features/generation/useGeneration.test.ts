@@ -63,6 +63,7 @@ const ev = {
     t: 3600,
   },
   error: { type: 'error', code: 'no_response', message: 'nothing came back', seq: 8, t: 100 },
+  limit: { type: 'error', code: 'limit_reached', message: 'limit_reached', seq: 9, t: 100 },
 } satisfies Record<string, GenerationEvent>;
 
 describe('useGeneration (mobile)', () => {
@@ -154,6 +155,35 @@ describe('useGeneration (mobile)', () => {
     fake.fail(new Error('socket closed'));
     expect(result.current.status).toBe('error');
     expect(result.current.error?.message).toContain('socket closed');
+    expect(result.current.limitReached).toBe(false);
+  });
+
+  it('flags limitReached on a limit_reached error frame', () => {
+    const fake = makeFakeSubscribe();
+    const { result } = renderHook(() => useGeneration({ subscribe: fake.subscribe }));
+    act(() => { result.current.start(baseInput); });
+    fake.emit(ev.limit);
+    expect(result.current.status).toBe('error');
+    expect(result.current.limitReached).toBe(true);
+  });
+
+  it('flags limitReached when the subscription throws a limit_reached error', () => {
+    const fake = makeFakeSubscribe();
+    const { result } = renderHook(() => useGeneration({ subscribe: fake.subscribe }));
+    act(() => { result.current.start(baseInput); });
+    // Mirrors the tRPC TRPCClientError shape isLimitReachedError matches.
+    fake.fail({ message: 'limit_reached', data: { cause: 'limit_reached' } });
+    expect(result.current.limitReached).toBe(true);
+    expect(result.current.error?.code).toBe('limit_reached');
+  });
+
+  it('dismissLimitReached() clears the flag', () => {
+    const fake = makeFakeSubscribe();
+    const { result } = renderHook(() => useGeneration({ subscribe: fake.subscribe }));
+    act(() => { result.current.start(baseInput); });
+    fake.emit(ev.limit);
+    act(() => { result.current.dismissLimitReached(); });
+    expect(result.current.limitReached).toBe(false);
   });
 
   it('stop() unsubscribes and marks the run aborted mid-stream', () => {

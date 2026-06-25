@@ -2,6 +2,7 @@ import { Button, Eyebrow, Icon, fonts } from '@pantry/design-system/native';
 import { tokens } from '@pantry/design-system/tokens';
 import { useEffect, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { LimitHitSheet } from '../../billing/sheets/LimitHitSheet';
 import { type GenerationSubscribe, useGeneration } from '../useGeneration';
 import { generationStrings } from '../strings';
 import { BranchGrid } from './BranchGrid';
@@ -39,12 +40,14 @@ export interface GenerateScreenProps {
   weirdness: number;
   pantryItemIds: string[];
   onClose: () => void;
+  /** Navigate to the paywall when the weekly quota blocks a generation. */
+  onUpgrade?: (() => void) | undefined;
   /** Injectable subscription for tests/fidelity; production uses the real tRPC subscription. */
   subscribe?: GenerationSubscribe | undefined;
 }
 
 /** §04/§02 — switches Thinking → Drafting → Result off the shared stream hook. */
-export function GenerateScreen({ prompt, weirdness, pantryItemIds, onClose, subscribe }: GenerateScreenProps) {
+export function GenerateScreen({ prompt, weirdness, pantryItemIds, onClose, onUpgrade, subscribe }: GenerateScreenProps) {
   const gen = useGeneration(subscribe === undefined ? undefined : { subscribe });
   const { start } = gen;
   const elapsedMs = useElapsedMs(gen.isStreaming);
@@ -116,6 +119,14 @@ export function GenerateScreen({ prompt, weirdness, pantryItemIds, onClose, subs
           </View>
         )}
       </ScrollView>
+      <LimitHitSheet
+        open={gen.limitReached}
+        onClose={gen.dismissLimitReached}
+        onUpgrade={() => {
+          gen.dismissLimitReached();
+          onUpgrade?.();
+        }}
+      />
     </View>
   );
 }
