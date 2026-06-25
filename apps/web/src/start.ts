@@ -14,9 +14,13 @@ const csrfMiddleware = createCsrfMiddleware({
   filter: (ctx) => ctx.handlerType === 'serverFn',
 });
 
+const isDev = (): boolean =>
+  typeof process !== 'undefined' && process.env['NODE_ENV'] !== 'production';
+
 // Attach strict CSP + companion headers to every document/SSR response.
 const securityHeadersMiddleware = createMiddleware({ type: 'request' }).server(async ({ next }) => {
-  for (const [name, value] of Object.entries(securityHeaders({ apiUrl: resolveApiUrl() }))) {
+  const headers = securityHeaders({ apiUrl: resolveApiUrl(), dev: isDev() });
+  for (const [name, value] of Object.entries(headers)) {
     setResponseHeader(name, value);
   }
   return next();

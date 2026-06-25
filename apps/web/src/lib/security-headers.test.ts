@@ -20,4 +20,12 @@ describe('securityHeaders', () => {
     expect(h['Referrer-Policy']).toBe('no-referrer');
     expect(h['Strict-Transport-Security']).toContain('max-age=');
   });
+
+  it('keeps scripts strict in production but loosens them for the dev server', () => {
+    expect(h['Content-Security-Policy']).toContain("script-src 'self'");
+    expect(h['Content-Security-Policy']).not.toContain("'unsafe-eval'");
+    const dev = securityHeaders({ apiUrl: 'http://localhost:4000', dev: true });
+    expect(dev['Content-Security-Policy']).toContain("'unsafe-eval'");
+    expect(dev['Content-Security-Policy']).toContain('ws:');
+  });
 });
