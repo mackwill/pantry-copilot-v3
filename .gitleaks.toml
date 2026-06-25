@@ -1,0 +1,17 @@
+title = "pantry-copilot gitleaks config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Test fixtures + example env use deterministic non-secret tokens"
+paths = [
+  '''\.env\.example''',
+  '''.*\.test\.ts''',
+  '''e2e/.*''',
+  '''tools/design-fidelity/.*''',
+]
+regexes = [
+  '''0123456789012345678901234567890123''',
+  '''e2e-ai-service-token-e2e-ai-service-token''',
+]
