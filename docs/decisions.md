@@ -2,6 +2,35 @@
 
 Board-silent composition calls and scope deviations, newest first.
 
+## 2026-06-25 — M8 mobile paywall A/B + trial offer/ending screens + billing routes (Slice H part 2)
+
+Files: `apps/mobile/src/features/billing/components/` — `PaywallA.tsx`, `PaywallB.tsx`,
+`TrialOffer.tsx`, `TrialEnding.tsx`, `BillingToggle.tsx` (+ tests); routes
+`apps/mobile/src/app/(billing)/` — `_layout.tsx`, `paywall.tsx`, `trial.tsx`. Copy extended in
+`features/billing/strings.ts` (`compare`, `trialOffer`, `trialEnding` groups).
+
+- **(A) Weirdness gradient → solid `accentStrong` bar.** The board's brand "weirdness" line is a CSS
+  `linear-gradient` (the `weirdGradient` token is a CSS-string, unusable in native `StyleSheet`).
+  React Native has no built-in gradient and the project ships no gradient dependency, so the
+  brand-anchor bar on `PaywallA`/`PaywallB` is rendered as a solid `tokens.accentStrong` pill.
+  **Follow-up:** swap to `expo-linear-gradient` at a milestone boundary if exact-gradient fidelity is required.
+- **(B) `FoodImageSlot` placeholder is a flat sunk tile, not a hatched repeating gradient.** The board's
+  hero photo slot uses a `repeating-linear-gradient` hatch; with no native gradient it renders as a
+  `bgSunk` tile bordered by `line`, keeping the mono caption chip (`hero · serif-led dish`). Real food
+  photography replaces it when assets land.
+- **(C) Shared mobile `BillingToggle` composed from primitives.** The DS ships no segmented control;
+  the board's monthly/annual pill toggle is composed from two `Pressable` segments + `tokens`/`fonts`
+  (mirrors web `BillingToggle`). Reused across `PaywallA`/`PaywallB`.
+- **(D) Route → frame mapping.** `(billing)/paywall.tsx` renders `PaywallA` by default and `PaywallB`
+  on `?variant=compare` (board frames 2/4). `(billing)/trial.tsx` renders `TrialEnding` by default
+  (board frame 8) and `TrialOffer` on `?variant=offer` (board frame 7 · pre-trial offer) — both live
+  on one route since they are the two faces of the trial journey; `onSeePlans` deep-links to the
+  compare paywall. `TrialOffer` is a full-screen card here (not a `BottomSheet`); the limit-hit
+  *sheet* presentation is part 3's `LimitHitSheet`. Group uses `fullScreenModal` presentation,
+  matching `(generate)`.
+- **(E) Plan names from `PLAN_CATALOG`.** `PaywallB` column headers render `PLAN_CATALOG.basic/pro.name`
+  rather than inline literals (no-JSX-literals rule + single source of truth).
+
 ## 2026-06-25 — M8 mobile billing foundation: RevenueCat needs a dev build (Slice H part 1)
 
 Files: `apps/mobile/src/features/billing/purchases.ts` (RC wrapper), `useBilling.ts`/`.test.ts`,
