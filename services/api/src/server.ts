@@ -14,6 +14,7 @@ import { createDb, type Db } from './db/client.js';
 import { webOrigins, type Env } from './env.js';
 import { type AiClient, createHttpAiClient } from './lib/ai-client.js';
 import { type AiStreamClient, createHttpAiStreamClient } from './lib/ai-stream-client.js';
+import { registerRevenueCatWebhook } from './modules/subscription/webhook.js';
 import { createContextFactory } from './trpc/context.js';
 import { appRouter } from './trpc/router.js';
 
@@ -86,6 +87,8 @@ export async function buildServer(deps: AppDeps): Promise<FastifyInstance> {
   registerAuthRoutes(app, auth, { rateLimitMax: env.AUTH_RATE_LIMIT_MAX });
 
   if (env.AUTH_DEV_MAGIC_LINK) registerDevMagicLink(app, deps);
+
+  registerRevenueCatWebhook(app, deps);
 
   await app.register(fastifyTRPCPlugin, {
     prefix: '/trpc',
