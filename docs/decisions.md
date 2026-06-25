@@ -2,6 +2,26 @@
 
 Board-silent composition calls and scope deviations, newest first.
 
+## 2026-06-25 — M8 mobile billing foundation: RevenueCat needs a dev build (Slice H part 1)
+
+Files: `apps/mobile/src/features/billing/purchases.ts` (RC wrapper), `useBilling.ts`/`.test.ts`,
+`strings.ts`, `components/PlanOption.tsx`/`.test.ts`; `lib/env.ts` (RC keys); `app/_layout.tsx`
+(bootstrap). Dep `react-native-purchases@10.4.0` (exact-pinned via `.npmrc`).
+
+- **(A) Real purchases require a dev build / EAS — Expo Go no-ops billing.** `react-native-purchases`
+  is a native module; the project runs in **Expo Go (no dev build)** where importing it at module
+  load throws. The wrapper therefore (1) reaches the SDK only via a lazy `import('react-native-purchases')`
+  inside a guarded path — never a top-level static import; (2) gates every call on a platform RC key
+  (`EXPO_PUBLIC_REVENUECAT_IOS_KEY` / `_ANDROID_KEY` → `isConfigured`); (3) when unconfigured/absent,
+  `configure`/`logIn` no-op and `getOfferings`/`purchasePackage`/`restorePurchases` throw a typed
+  `PurchasesUnavailableError`, which `useBilling` surfaces as `status: 'error'` so screens still render
+  and Maestro can drive them. To exercise REAL purchases, build a dev/EAS client with the RC keys set.
+
+- **(B) `PlanOption` mirrors web `PlanCard` as a selectable row (board `paywall-a` · MobilePaywallA).**
+  The board's mobile plan option is a tappable row (radio circle + name, price/period right, tagline below,
+  optional "Best value" badge), not a feature-listing card — feature highlights live once beneath the rows
+  per the board. `selected` uses `bgInverse`; icons `Check` (radio tick) exist in the DS set. No new icons needed.
+
 ## 2026-06-24 — M8 contextual paywalls + settings subscription + limit wiring (Slice G part 3)
 
 Screens: `LimitHitModal` (board `paywall-contextual` · frame 5 · `WebLimitHit`),
