@@ -1,5 +1,27 @@
 import { describe, expect, expectTypeOf, it, vi } from 'vitest';
-import { type ApiClientOptions, createApiClient } from './index.js';
+import { type ApiClientOptions, createApiClient, isLimitReachedError } from './index.js';
+
+describe('isLimitReachedError', () => {
+  it('detects the server message discriminator', () => {
+    expect(isLimitReachedError({ message: 'limit_reached' })).toBe(true);
+  });
+
+  it('detects the serialized data.cause discriminator', () => {
+    expect(isLimitReachedError({ message: 'Forbidden', data: { cause: 'limit_reached' } })).toBe(true);
+  });
+
+  it('detects the serialized data.message discriminator', () => {
+    expect(isLimitReachedError({ data: { message: 'limit_reached', code: 'FORBIDDEN' } })).toBe(true);
+  });
+
+  it('is false for unrelated errors and non-objects', () => {
+    expect(isLimitReachedError(new Error('boom'))).toBe(false);
+    expect(isLimitReachedError({ message: 'something_else', data: { cause: 'nope' } })).toBe(false);
+    expect(isLimitReachedError(null)).toBe(false);
+    expect(isLimitReachedError('limit_reached')).toBe(false);
+    expect(isLimitReachedError(undefined)).toBe(false);
+  });
+});
 
 describe('createApiClient', () => {
   it('exposes a typed user.me', () => {

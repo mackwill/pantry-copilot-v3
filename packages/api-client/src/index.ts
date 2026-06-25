@@ -55,4 +55,23 @@ export function createApiClient(opts: ApiClientOptions): TRPCClient<AppRouter> {
   });
 }
 
+/**
+ * True when a thrown tRPC error is the server's `limit_reached` quota
+ * signal (from `assertAiActionAllowed`). Clients catch this to open the
+ * paywall instead of surfacing a generic error. Robust to both the live
+ * `TRPCClientError` (`.message === 'limit_reached'`) and its serialized
+ * forms (`data.cause` / `data.message`).
+ */
+export function isLimitReachedError(err: unknown): boolean {
+  if (typeof err !== 'object' || err === null) return false;
+  const e = err as { message?: unknown; data?: unknown };
+  if (e.message === 'limit_reached') return true;
+  const data = e.data;
+  if (typeof data === 'object' && data !== null) {
+    const d = data as { cause?: unknown; message?: unknown };
+    if (d.cause === 'limit_reached' || d.message === 'limit_reached') return true;
+  }
+  return false;
+}
+
 export type { AppRouter };
