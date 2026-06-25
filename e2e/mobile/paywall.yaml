@@ -1,0 +1,46 @@
+# Local-only flow (CI execution deferred — see docs/checklists/m8-monetization.md).
+# Precondition: api on :4000 + ai on :4001 (DEFAULT_AI_PROVIDER=mock, no keys needed),
+# maestro user signed in (run sign-in.yaml first). For the limit-hit branch the user
+# must be at the free weekly recipe cap (3 `source='ai'` recipes this week) — seed via
+# psql against the dev db, or run generation.yaml three times. RevenueCat purchases
+# are no-ops in Expo Go (a dev build / EAS with RC keys exercises a real unlock — see
+# decisions 2026-06-25 Slice H part 1); this flow drives the screens, not a live charge.
+# Drives §06 limit-hit sheet → §11 paywall → §13 settings/manage.
+appId: com.pantrycopilot.app
+---
+- launchApp
+
+# §06 — a blocked generation surfaces the contextual limit-hit sheet.
+- tapOn: 'Home'
+- assertVisible:
+    id: 'hero-prompt-input'
+- tapOn:
+    id: 'hero-prompt-input'
+- inputText: 'One more idea, please'
+- hideKeyboard
+- tapOn:
+    id: 'cook-this'
+# When at the weekly cap the sheet opens with the trial CTA.
+- assertVisible:
+    id: 'limit-hit-upgrade'
+
+# §11 — the trial CTA opens the paywall (PaywallA); start the trial.
+- tapOn:
+    id: 'limit-hit-upgrade'
+- assertVisible:
+    id: 'paywall-cta'
+- tapOn:
+    id: 'paywall-cta'
+
+# §13 — after the (mock) purchase, Settings shows the Pro subscription section
+# with a Manage entry. In Expo Go the purchase no-ops, so this asserts the section
+# renders; a dev build with RC keys flips it to the Pro state and routes to Manage.
+- tapOn: 'Me'
+- assertVisible:
+    id: 'subscription-section-cta'
+- tapOn:
+    id: 'subscription-section-cta'
+- assertVisible:
+    id: 'manage-back'
+- assertVisible:
+    id: 'manage-restore'

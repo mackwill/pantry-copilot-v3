@@ -2,6 +2,35 @@
 
 Board-silent composition calls and scope deviations, newest first.
 
+## 2026-06-25 — M8 monetization: backend + product decisions (consolidated)
+
+Settled with the milestone; the UI-composition calls are recorded in the per-slice
+entries below (2026-06-19 → 2026-06-25). These are the cross-cutting backend / product
+choices that govern the whole milestone:
+
+- **(1) Weekly free quota window, reset Sunday 00:00 UTC.** Board-faithful (the limit
+  copy reads "resets Sunday"), chosen over v2's monthly window. `startOfWeek` (UTC,
+  `limits.ts`) anchors `countWeeklyAiUsage`; per-tier allowances come from env
+  (`AI_FREE_RECIPES_PER_WEEK=3`, `AI_FREE_SCANS_PER_WEEK=2`, basic 10/5, pro a high
+  ceiling). One window applies to both action kinds.
+- **(2) Three-tier enum `free / basic / pro` with `isPro` derived**, chosen over v2's
+  binary pro flag. `userSubscriptions.tier` is the source; `isPro` is the derived
+  entitlement column the clients read. Basic exists as a real plan in `PLAN_CATALOG`
+  and the compare paywall, not just a label.
+- **(3) RevenueCat behind env guards on both clients.** Web Billing initialises only
+  when `VITE_REVENUECAT_WEB_BILLING_KEY` is set (otherwise purchase paths are inert and
+  the screens still render); mobile reaches `react-native-purchases` only via a lazy
+  guarded import gated on a platform RC key, and **Expo Go no-ops real purchases — a
+  dev build / EAS client with RC keys is required** to exercise an actual charge (see
+  the 2026-06-25 Slice H part 1 entry). RC webhooks are the canonical entitlement
+  source; the server mirrors them into `user_subscriptions`, deduped on `event.id`
+  (`revenuecat_webhook_events`) since RC retries up to 3× and may double-deliver.
+- **(4) Scan quota counts every `image_scans` row, including failed attempts** —
+  distinct from the recipe quota, which counts only `recipes.source = 'ai'` (excluding
+  manual/imported recipes). Rationale: every scan row is an AI inference that incurred
+  cost; excluding failures would be an abuse vector (retry-to-bypass). A failed *recipe*
+  generation writes no `recipes` row, so the asymmetry is structural, not a special case.
+
 ## 2026-06-25 — M8 mobile limit-hit sheet + settings subscription section/manage + generation limit wiring (Slice H part 3)
 
 Files: `apps/mobile/src/features/billing/` — `sheets/LimitHitSheet.tsx`, `components/SubscriptionSection.tsx`,
