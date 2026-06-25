@@ -4,11 +4,11 @@ import { api } from '../../lib/api';
 
 export const Route = createFileRoute('/_authed/settings')({
   ssr: false,
-  loader: () => api.user.me.query(),
+  loader: () => Promise.all([api.user.me.query(), api.subscription.get.query()]),
   component: SettingsRoute,
 });
 
 function SettingsRoute() {
-  const user = Route.useLoaderData();
-  return <AccountScreen user={user} />;
+  const [user, subscription] = Route.useLoaderData();
+  return <AccountScreen user={user} subscription={subscription} />;
 }

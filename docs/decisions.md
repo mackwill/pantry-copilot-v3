@@ -2,6 +2,44 @@
 
 Board-silent composition calls and scope deviations, newest first.
 
+## 2026-06-24 — M8 contextual paywalls + settings subscription + limit wiring (Slice G part 3)
+
+Screens: `LimitHitModal` (board `paywall-contextual` · frame 5 · `WebLimitHit`),
+`TrialEndingScreen` (frame 9 · `WebTrialEnding`), `SubscriptionRows` (board `subscription`
+· frame 10 · `WebSubscription` card stack). New `/trial` route; `limit_reached` wired into
+`useGeneration` → `LimitHitModal` in `GenerateScreen`; `SubscriptionRows` embedded in
+`AccountScreen` (fed by the `settings` loader).
+
+- **(A) No web Modal primitive — overlay composed in-feature.** The design system only ships
+  `BottomSheet` (mobile). The board's `WebLimitHit` is a centered modal over a dimmed
+  cook-screen scrim. Composed the overlay from a fixed-position `div` (`.modalOverlay`
+  `role="presentation"`, click-scrim → `onClose`) wrapping a `role="dialog" aria-modal`
+  card. **Follow-up:** promote to a shared `Modal` primitive at a milestone boundary if a
+  second web modal appears.
+- **(B) The board's faux cook-screen behind the modal is not reproduced.** Frame 5 renders a
+  blurred `WebShell` with placeholder cook copy *behind* the scrim purely to show the modal in
+  context; in the app the real `GenerateScreen` is already mounted behind the modal, so
+  `LimitHitModal` renders only the scrim + dialog (no duplicate faux shell).
+- **(C) `LimitHitModal` quota copy is static board text.** The board hard-codes "3 of 3
+  generations this week · resets Sunday". Kept as a fixed string in `billingStrings.limitHit`
+  (no live `UsageState` plumbed into the modal yet — the limit signal is binary from
+  `isLimitReachedError`). **Follow-up:** parameterize from `api.subscription.usage` when a
+  contextual count is desired.
+- **(D) `TrialEndingScreen` is in-shell (`WebShell active="dashboard" hideTopbar`),** matching
+  the board frame 9 exactly (sidebar present, no topbar). The `/trial` route loads the user
+  (mirrors `settings`) for the shell user block. Trial countdown/timeline figures ("2 days",
+  "day 5 of 7", "May 3") are static board copy — no live trial-clock wired this slice.
+- **(E) `SubscriptionRows` derives Pro vs Free from `subscription.isPro`** (board frame 10
+  shows the Pro-active state; the Free upsell variant comes from the same board's `SubStatusCard`
+  `state="free"`). Billing-detail rows are populated from `SubscriptionState`: the date label
+  flips Renews/Expires on `willRenew`, `expiresAt` formats in UTC, `store`/`topUpCredits`
+  render live; unknown values fall back to an em-dash. The board's Basic/trial palette states
+  are out of scope for this slice (no contract field distinguishes them on web yet).
+- **(F) `Button` has no `className` prop** — the limit-modal primary CTA needs `flex: 1`, so it
+  is wrapped in a `.modalCtaPrimary` div (`full` button inside). Danger/"cancel" affordances
+  use the existing `style` escape hatch (`color: var(--danger)`), matching the board's inline
+  `style={{ color: T.danger }}`.
+
 ## 2026-06-19 — M8 web paywall screens (Slice G part 2)
 
 Screens: `PaywallEditorial` (board `paywall-a` · `WebPaywallA`) and `PaywallCompare`

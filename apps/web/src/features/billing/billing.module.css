@@ -545,3 +545,393 @@
   color: var(--fg-subtle);
   text-align: right;
 }
+
+/* ── Limit-hit modal (board paywall-contextual · frame 5 · WebLimitHit) ── */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  /* token --fg (ink) at 42% — board dim scrim over the cook screen. */
+  background: rgba(14, 18, 14, 0.42);
+  backdrop-filter: blur(3px);
+}
+
+.modal {
+  width: 560px;
+  max-width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+
+.modalAccent {
+  height: 4px;
+  background: var(--weird-gradient);
+}
+
+.modalBody {
+  padding: 28px 32px 30px;
+}
+
+.modalHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 18px;
+}
+
+.modalHeadMeta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.modalIconBadge {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--r-md);
+  background: var(--accent-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.modalQuota {
+  font: 500 14px/1 var(--font-sans);
+  color: var(--fg);
+  margin-top: 4px;
+}
+
+.modalClose {
+  all: unset;
+  cursor: pointer;
+  display: flex;
+  color: var(--fg-subtle);
+}
+
+.modalHeadline {
+  font: 400 36px/1.05 var(--font-display);
+  letter-spacing: -0.025em;
+  color: var(--fg);
+  margin: 8px 0 12px;
+  max-width: 440px;
+}
+
+.modalHeadlineEm {
+  color: var(--accent);
+  font-style: italic;
+}
+
+.modalText {
+  font: 400 15px/1.55 var(--font-sans);
+  color: var(--fg-muted);
+  letter-spacing: -0.005em;
+  margin: 0 0 22px;
+  max-width: 460px;
+}
+
+.modalPerks {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  padding: 16px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 22px;
+}
+
+.modalPerkValue {
+  font: 400 22px/1 var(--font-display);
+  color: var(--fg);
+  letter-spacing: -0.02em;
+}
+
+.modalPerkValueItalic {
+  font-style: italic;
+}
+
+.modalPerkLabel {
+  font: 400 12px/1 var(--font-sans);
+  color: var(--fg-muted);
+  margin-top: 4px;
+}
+
+.modalCtas {
+  display: flex;
+  gap: 10px;
+}
+
+.modalCtaPrimary {
+  flex: 1;
+}
+
+.modalFineprint {
+  font: 400 11.5px/1.4 var(--font-mono);
+  color: var(--fg-subtle);
+  margin-top: 14px;
+  text-align: center;
+}
+
+/* ── Trial-ending page (board paywall-contextual · frame 9 · WebTrialEnding) ── */
+.trialBack {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.trialBody {
+  max-width: 760px;
+}
+
+.trialBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px;
+  border-radius: var(--r-pill);
+  background: var(--warning-soft);
+  color: var(--warning-fg);
+  font: 600 10px/1 var(--font-sans);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.trialBadgeDot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--r-pill);
+  background: var(--warning);
+}
+
+.trialHeadline {
+  font: 400 64px/1 var(--font-display);
+  letter-spacing: -0.025em;
+  color: var(--fg);
+  margin: 0 0 16px;
+}
+
+.trialHeadlineEm {
+  color: var(--fg-subtle);
+  font-style: italic;
+}
+
+.trialText {
+  font: 400 16px/1.6 var(--font-sans);
+  color: var(--fg-muted);
+  letter-spacing: -0.005em;
+  margin: 0 0 28px;
+  max-width: 580px;
+}
+
+.trialPerksGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+
+.trialPerkValue {
+  font: 400 32px/1 var(--font-display);
+  color: var(--fg);
+  letter-spacing: -0.025em;
+}
+
+.trialPerkValueItalic {
+  font-style: italic;
+}
+
+.trialPerkLabel {
+  font: 500 13px/1 var(--font-sans);
+  color: var(--fg-muted);
+  margin-top: 6px;
+}
+
+.trialPerkSub {
+  font: 400 11px/1 var(--font-mono);
+  color: var(--fg-subtle);
+  margin-top: 2px;
+}
+
+.trialTimeline {
+  position: relative;
+  height: 8px;
+  border-radius: var(--r-pill);
+  background: var(--bg-sunk);
+}
+
+.trialTimelineFill {
+  position: absolute;
+  inset: 0;
+  width: 71%;
+  border-radius: var(--r-pill);
+  background: linear-gradient(90deg, var(--accent-strong), var(--warning));
+}
+
+.trialTimelineLabels {
+  display: flex;
+  justify-content: space-between;
+  font: 400 12px/1 var(--font-mono);
+  color: var(--fg-subtle);
+  margin-top: 10px;
+}
+
+.trialCtas {
+  display: flex;
+  gap: 10px;
+}
+
+.trialCancel {
+  margin-left: auto;
+}
+
+.trialCardSpacer {
+  margin-bottom: 14px;
+}
+
+.trialCardSpacerLg {
+  margin-bottom: 22px;
+}
+
+/* ── Settings subscription rows (board subscription · frame 10) ── */
+.subCard {
+  position: relative;
+  border-radius: var(--r-lg);
+  padding: 20px 22px;
+  overflow: hidden;
+  background: var(--bg-raised);
+  color: var(--fg);
+  border: 1px solid var(--line);
+}
+
+.subCardPro {
+  background: var(--bg-inverse);
+  color: var(--fg-on-inverse);
+  border-color: var(--bg-inverse);
+}
+
+.subCardAccent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--weird-gradient);
+}
+
+.subEyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  font: 600 10px/1 var(--font-sans);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+
+.subCardPro .subEyebrow {
+  color: var(--accent);
+}
+
+.subEyebrowDot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--r-pill);
+  background: var(--accent);
+}
+
+.subTopRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.subTitleCol {
+  flex: 1;
+  min-width: 240px;
+}
+
+.subTitle {
+  font: 400 28px/1.1 var(--font-display);
+  letter-spacing: -0.025em;
+  margin-bottom: 8px;
+}
+
+.subBlurb {
+  font: 400 13.5px/1.5 var(--font-sans);
+  letter-spacing: -0.005em;
+  color: var(--fg-muted);
+}
+
+.subCardPro .subBlurb {
+  /* token --fg-on-inverse at 70% — muted blurb on the inverse hero. */
+  color: rgba(250, 250, 247, 0.7);
+}
+
+.subMeta {
+  font: 400 11px/1 var(--font-mono);
+  color: var(--fg-subtle);
+  margin-top: 10px;
+}
+
+.subCardPro .subMeta {
+  color: rgba(250, 250, 247, 0.55);
+}
+
+.subSectionTitle {
+  font: 600 16px/1.3 var(--font-sans);
+  letter-spacing: -0.01em;
+  margin: 0 0 16px;
+}
+
+.subRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.subRow:last-child {
+  border-bottom: none;
+}
+
+.subRowKey {
+  font: 500 14px/1.4 var(--font-sans);
+  color: var(--fg-muted);
+}
+
+.subRowVal {
+  font: 400 14px/1.4 var(--font-sans);
+  color: var(--fg);
+}
+
+.subActions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.subFineprint {
+  font: 400 11.5px/1.5 var(--font-mono);
+  color: var(--fg-subtle);
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.subStack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}

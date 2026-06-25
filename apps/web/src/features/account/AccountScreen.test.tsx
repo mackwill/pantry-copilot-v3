@@ -1,6 +1,20 @@
+import type { SubscriptionState } from '@pantry/contracts';
 import { render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { AccountScreen } from './components/AccountScreen';
+
+const subscription: SubscriptionState = {
+  tier: 'free',
+  isPro: false,
+  subState: 'none',
+  expiresAt: null,
+  willRenew: false,
+  productIdentifier: null,
+  periodType: null,
+  store: null,
+  topUpCredits: 0,
+  inGracePeriod: false,
+};
 
 const navigate = vi.fn();
 vi.mock('@tanstack/react-router', () => ({
@@ -24,23 +38,23 @@ describe('AccountScreen', () => {
   });
 
   it('renders the user name and email', () => {
-    render(<AccountScreen user={{ name: 'Mara Singh', email: 'mara@home.kitchen' }} />);
+    render(<AccountScreen user={{ name: 'Mara Singh', email: 'mara@home.kitchen' }} subscription={subscription} />);
     expect(screen.getAllByText('Mara Singh').length).toBeGreaterThan(0);
     expect(screen.getAllByText('mara@home.kitchen').length).toBeGreaterThan(0);
   });
 
   it('renders the Account heading', () => {
-    render(<AccountScreen user={{ name: 'Mara Singh', email: 'mara@home.kitchen' }} />);
+    render(<AccountScreen user={{ name: 'Mara Singh', email: 'mara@home.kitchen' }} subscription={subscription} />);
     expect(screen.getByRole('heading', { name: 'Account' })).toBeTruthy();
   });
 
   it('renders Stats since you joined', () => {
-    render(<AccountScreen user={{ name: 'Mara Singh', email: 'mara@home.kitchen' }} />);
+    render(<AccountScreen user={{ name: 'Mara Singh', email: 'mara@home.kitchen' }} subscription={subscription} />);
     expect(screen.getByText('Stats since you joined')).toBeTruthy();
   });
 
   it('renders the three stat numbers', () => {
-    render(<AccountScreen user={{ name: 'Mara Singh', email: 'mara@home.kitchen' }} />);
+    render(<AccountScreen user={{ name: 'Mara Singh', email: 'mara@home.kitchen' }} subscription={subscription} />);
     expect(screen.getByText('142')).toBeTruthy();
     expect(screen.getByText('$680')).toBeTruthy();
     expect(screen.getByText('38 lbs')).toBeTruthy();

@@ -118,4 +118,88 @@ export const billingStrings = {
       ledgerReminder: 'reminder 2 days before',
     },
   },
+  /** Limit-hit modal (board paywall-contextual · frame 5 · WebLimitHit). */
+  limitHit: {
+    /** Accessible label for the modal dialog. */
+    ariaLabel: 'Weekly limit reached',
+    eyebrow: 'Weekly limit reached',
+    /** Quota sub-line beneath the eyebrow. */
+    quota: '3 of 3 generations this week · resets Sunday',
+    headlineLead: 'One more idea?',
+    headlineEmphasis: 'Try Pro free for 7 days.',
+    body:
+      'Unlimited recipe generations, unlimited pantry scans, full weirdness slider, ' +
+      "household sharing. Cancel any time before day 8 and you won't be charged.",
+    /** Three-up perk row. */
+    perks: [
+      { value: '∞', label: 'generations' },
+      { value: '∞', label: 'scans' },
+      { value: 'chaotic evil', label: 'weirdness' },
+    ],
+    startTrial: 'Start 7-day free trial',
+    seePlans: 'See plans',
+    waitTilSunday: 'Wait til Sunday',
+    close: 'Close',
+    fineprint: 'Free 7 days · then $9.99/mo or $79/yr · cancel any time · billed via RevenueCat',
+  },
+  /** Trial-ending page (board paywall-contextual · frame 9 · WebTrialEnding). */
+  trialEnding: {
+    back: 'Back to dashboard',
+    badge: 'Trial ends in 2 days',
+    headlineLead: 'Two days left of Pro.',
+    headlineEmphasis: 'Want to keep going?',
+    body:
+      "Your free trial ends Friday, May 3. You'll be billed $9.99 unless you cancel. " +
+      'Switch to annual now and save 33%.',
+    perksEyebrow: 'What Pro got you · last 5 days',
+    /** Four-up usage recap: [value, label, sub]. */
+    perks: [
+      { value: '14', label: 'recipes generated', sub: 'on Free: 3 max' },
+      { value: '6', label: 'pantry scans', sub: 'on Free: 2 max' },
+      { value: 'chaotic', label: 'weirdest dish', sub: 'locked on Free' },
+      { value: '3', label: 'household members', sub: 'locked on Free' },
+    ],
+    timelineEyebrow: 'Trial timeline',
+    timeline: {
+      start: 'started · Apr 26',
+      today: 'day 5 of 7 · today',
+      billing: 'billing · May 3 · $9.99',
+    },
+    keepPro: 'Keep Pro · $9.99/mo',
+    switchAnnual: 'Switch to annual · save 33%',
+    cancelTrial: 'Cancel trial',
+  },
+  /** Settings subscription rows (board subscription · frame 10 · WebSubscription). */
+  subscription: {
+    proEyebrow: 'Current plan',
+    proTitle: 'Pantry CoPilot · Pro',
+    proBlurb: 'Unlimited everything. Renews on the 3rd.',
+    proManage: 'Manage',
+    freeEyebrow: 'Currently on Free',
+    freeTitle: 'Try Pro free for 7 days',
+    freeBlurb: 'Unlimited generations, scans, household sharing.',
+    freeCta: 'Start free trial',
+    freeMeta: 'No charges until day 8',
+    proBadge: 'Pro',
+    /** Billing-details card. */
+    billingTitle: 'Billing details',
+    billingRows: {
+      plan: 'Plan',
+      renews: 'Renews',
+      expires: 'Expires',
+      amount: 'Amount',
+      billedVia: 'Billed via',
+      topUp: 'Top-up credits',
+    },
+    /** Change-plan card. */
+    changeTitle: 'Change plan',
+    switchAnnual: 'Switch to annual · save 33%',
+    downgrade: 'Downgrade to Basic',
+    cancel: 'Cancel subscription',
+    fineprint:
+      'Billing handled via App Store · restored automatically across devices through ' +
+      'RevenueCat. Refunds via Apple within 14 days.',
+    /** Fallback when a billing value is unknown. */
+    unknown: '—',
+  },
 } as const;

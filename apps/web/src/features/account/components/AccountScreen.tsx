@@ -1,6 +1,8 @@
+import type { SubscriptionState } from '@pantry/contracts';
 import { Button, Icon, WebShell } from '@pantry/design-system/web';
 import { useNavigate } from '@tanstack/react-router';
 import { authClient } from '../../../lib/auth-client';
+import { SubscriptionRows } from '../../billing/components/SubscriptionRows';
 import { useShellNav, webShellUser } from '../../pantry-shared/nav';
 import { accountStrings as s } from '../strings';
 import styles from '../account.module.css';
@@ -16,9 +18,10 @@ export interface AccountScreenUser {
 
 interface AccountScreenProps {
   user: AccountScreenUser;
+  subscription: SubscriptionState;
 }
 
-export function AccountScreen({ user }: AccountScreenProps) {
+export function AccountScreen({ user, subscription }: AccountScreenProps) {
   const navigate = useNavigate();
   const shellNav = useShellNav();
 
@@ -45,6 +48,10 @@ export function AccountScreen({ user }: AccountScreenProps) {
         <div className={styles['contentCol']}>
           <h1 className={styles['pageTitle']}>{s.title}</h1>
           <ProfileCard user={user} />
+          <SubscriptionRows
+            subscription={subscription}
+            onManage={() => void navigate({ to: '/upgrade' })}
+          />
           <PreferencesCard />
           <StatsCard />
         </div>
