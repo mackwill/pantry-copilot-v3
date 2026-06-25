@@ -2,6 +2,27 @@
 
 Board-silent composition calls and scope deviations, newest first.
 
+## 2026-06-19 — M8 web paywall screens (Slice G part 2)
+
+Screens: `PaywallEditorial` (board `paywall-a` · `WebPaywallA`) and `PaywallCompare`
+(board `paywall-b` · `WebPaywallB`), wired to `useBilling`; `/upgrade` route switches on
+`?variant=compare`.
+
+- **(A) Full-bleed, no `WebShell`.** Both board frames render a top-of-page absolute
+  `Wordmark` (left) + close `Button` (right) over a centered max-width container, with **no
+  sidebar**. So both screens render full-bleed (`.paywall` wrapper), not inside `WebShell`,
+  matching the frames exactly. The `/upgrade` route therefore composes the screen directly.
+- **(B) Missing icon `shield-check` → `Lock`.** The editorial reassurance line uses lucide
+  `shield-check` (board), which is not in the curated `Icon` map. Substituted `Lock` (closest
+  available "secure billing" glyph). **Follow-up:** add `ShieldCheck` to the Icon map at a
+  milestone boundary if exact fidelity is wanted. (The board's mobile `sparkles` CTA icon is
+  not used by the web variants.)
+- **(C) Free column maps to dismiss.** `WebPaywallB` has three CTAs (Free/Basic/Pro). Basic/Pro
+  call `useBilling.purchase('basic'|'pro')`; the Free "Stay on Free" CTA and the close button
+  both call `onDismiss` (the catalog has no `'free'` plan — Free is the current/no-op state).
+- **(D) Food image is a CSS placeholder.** The board `FoodImageSlot` is a striped placeholder
+  with a mono caption; reproduced as `.foodSlot` (no real asset wired — matches the board).
+
 ## 2026-06-16 — M6 cook sessions + consume flow
 
 Settled in code per the M6 plan (`docs/superpowers/plans/2026-06-16-m6-cook-sessions-consume-flow.md`).

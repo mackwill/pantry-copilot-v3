@@ -152,3 +152,396 @@
   color: var(--fg);
   box-shadow: var(--shadow-xs);
 }
+
+/* ── Shared full-bleed paywall chrome (board paywall-a / paywall-b) ── */
+.paywall {
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  position: relative;
+  overflow: hidden;
+}
+
+.paywallWordmark {
+  position: absolute;
+  top: 26px;
+  left: 36px;
+  z-index: 5;
+}
+
+.paywallClose {
+  position: absolute;
+  top: 22px;
+  right: 28px;
+  z-index: 5;
+}
+
+/* ── Editorial paywall (paywall-a · WebPaywallA) ── */
+.editorialGrid {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 56px;
+  padding: 90px 56px 64px;
+  max-width: 1280px;
+  margin: 0 auto;
+  align-items: flex-start;
+}
+
+.editorialHeadline {
+  font: 400 64px/1.02 var(--font-display);
+  letter-spacing: -0.025em;
+  color: var(--fg);
+  margin: 0 0 18px;
+}
+
+.editorialHeadlineEm {
+  color: var(--accent);
+  font-style: italic;
+}
+
+.editorialBody {
+  font: 400 17px/1.6 var(--font-sans);
+  color: var(--fg-muted);
+  margin: 0 0 28px;
+  letter-spacing: -0.005em;
+  max-width: 520px;
+}
+
+.weirdGradient {
+  height: 6px;
+  border-radius: var(--r-pill);
+  margin-bottom: 28px;
+  max-width: 360px;
+  background: var(--weird-gradient);
+}
+
+.editorialToggle {
+  margin-bottom: 28px;
+}
+
+.reassurance {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font: 400 12px/1 var(--font-mono);
+  color: var(--fg-subtle);
+}
+
+.statRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+  margin-top: 48px;
+  padding-top: 28px;
+  border-top: 1px solid var(--line);
+}
+
+.statValue {
+  font: 400 22px/1 var(--font-display);
+  color: var(--fg);
+  letter-spacing: -0.02em;
+}
+
+.statValueItalic {
+  font-style: italic;
+}
+
+.statLabel {
+  font: 400 12px/1 var(--font-sans);
+  color: var(--fg-muted);
+  margin-top: 4px;
+}
+
+.editorialAside {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.editorialCards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.foodSlot {
+  aspect-ratio: 4 / 3;
+  background: repeating-linear-gradient(135deg, var(--bg-sunk) 0 10px, #eae9e2 10px 20px);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  padding: 14px;
+  position: relative;
+  overflow: hidden;
+}
+
+.foodSlotLabel {
+  font: 400 11px/1 var(--font-mono);
+  color: var(--fg-subtle);
+  /* token --bg at 85% opacity — frosted caption over the placeholder texture. */
+  background: rgba(250, 250, 247, 0.85);
+  padding: 4px 8px;
+  border-radius: var(--r-sm);
+  backdrop-filter: blur(4px);
+}
+
+.asideFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font: 400 12px/1 var(--font-sans);
+  color: var(--fg-subtle);
+  padding: 4px 4px 0;
+}
+
+.restoreCta {
+  all: unset;
+  cursor: pointer;
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.compareLink {
+  all: unset;
+  cursor: pointer;
+  color: var(--fg-subtle);
+}
+
+.proofRow {
+  display: flex;
+  gap: 32px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 56px 48px;
+  max-width: 1280px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+}
+
+.proofItem {
+  text-align: center;
+}
+
+.proofStat {
+  font: 400 22px/1 var(--font-display);
+  color: var(--fg);
+  letter-spacing: -0.02em;
+}
+
+.proofSub {
+  font: 400 12px/1 var(--font-sans);
+  color: var(--fg-muted);
+  margin-top: 2px;
+}
+
+.proofDivider {
+  width: 1px;
+  height: 28px;
+  background: var(--line);
+}
+
+/* ── Compare / ledger paywall (paywall-b · WebPaywallB) ── */
+.compareWrap {
+  padding: 90px 56px 32px;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.compareHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 30px;
+}
+
+.compareHeadline {
+  font: 400 56px/1 var(--font-display);
+  letter-spacing: -0.025em;
+  color: var(--fg);
+  margin: 0;
+}
+
+.compareHeadlineEm {
+  color: var(--fg-subtle);
+  font-style: italic;
+}
+
+.compareToggleCol {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.compareToggleNote {
+  font: 400 11px/1 var(--font-mono);
+  color: var(--fg-subtle);
+}
+
+.compareGrid {
+  display: grid;
+  grid-template-columns: 1.5fr 0.7fr 0.7fr 0.7fr;
+  gap: 12px;
+  align-items: center;
+}
+
+.compareHeaderRow {
+  padding: 20px 16px 18px;
+  align-items: flex-end;
+  border-bottom: 1px solid var(--fg);
+  border-top: 1px solid var(--fg);
+}
+
+.compareLabelKicker {
+  font: 400 11px/1 var(--font-mono);
+  color: var(--fg-subtle);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  margin-bottom: 4px;
+}
+
+.compareLabelSub {
+  font: 400 13px/1.4 var(--font-sans);
+  color: var(--fg-muted);
+  max-width: 320px;
+  letter-spacing: -0.005em;
+}
+
+.colHead {
+  text-align: center;
+  position: relative;
+}
+
+.colBadge {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: var(--r-pill);
+  background: var(--accent);
+  color: var(--accent-fg);
+  font: 600 9px/1 var(--font-sans);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.colName {
+  font: 400 28px/1 var(--font-display);
+  letter-spacing: -0.02em;
+  margin-bottom: 4px;
+}
+
+.colPrice {
+  font: 400 13px/1 var(--font-mono);
+  color: var(--fg);
+}
+
+.colPriceUnit {
+  color: var(--fg-subtle);
+}
+
+.colSave {
+  font: 400 10px/1 var(--font-mono);
+  color: var(--accent);
+  margin-top: 2px;
+}
+
+.compareRows {
+  margin-bottom: 20px;
+}
+
+.compareRow {
+  padding: 13px 16px;
+  border-bottom: 1px dashed var(--line);
+}
+
+.rowLabel {
+  font: 500 13.5px/1 var(--font-sans);
+  color: var(--fg);
+  letter-spacing: -0.005em;
+}
+
+.rowCell {
+  font: 400 13px/1 var(--font-mono);
+  color: var(--fg-muted);
+  text-align: center;
+}
+
+.rowCellPro {
+  color: var(--fg);
+}
+
+.rowCellMuted {
+  color: var(--fg-subtle);
+}
+
+.rowCellItalic {
+  font-style: italic;
+}
+
+.rowCheck {
+  display: flex;
+  justify-content: center;
+}
+
+.compareCtas {
+  padding: 4px 16px 0;
+  align-items: center;
+}
+
+.compareTotalLabel {
+  font: 400 12px/1 var(--font-mono);
+  color: var(--fg-subtle);
+}
+
+.receipt {
+  margin-top: 36px;
+  padding: 20px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--bg-raised);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 16px;
+  align-items: center;
+}
+
+.receiptKicker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.receiptDot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--r-pill);
+  background: linear-gradient(90deg, var(--accent-strong), #2b3b6e);
+}
+
+.receiptKickerText {
+  font: 600 11px/1 var(--font-sans);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+
+.receiptHeadline {
+  font: 400 22px/1.2 var(--font-display);
+  letter-spacing: -0.02em;
+  color: var(--fg);
+}
+
+.receiptHeadlineEm {
+  color: var(--fg-subtle);
+  font-style: italic;
+}
+
+.receiptLedger {
+  font: 400 12px/1.6 var(--font-mono);
+  color: var(--fg-subtle);
+  text-align: right;
+}
