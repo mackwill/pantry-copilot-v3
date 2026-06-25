@@ -20,6 +20,8 @@ const schema = z
       .transform((v) => v === 'true'),
     RATE_LIMIT_MAX: z.coerce.number().int().positive().default(300),
     AUTH_RATE_LIMIT_MAX: z.coerce.number().int().positive().default(10),
+    /** Per-user/minute ceiling on AI generation + scan procedures (cost guard). */
+    AI_ACTION_RATE_LIMIT_MAX: z.coerce.number().int().positive().default(20),
     /** Network-isolated AI service the scan router calls over REST. */
     AI_SERVICE_URL: z.url().default('http://localhost:4001'),
     /** Bearer token presented to the AI service (must match its AI_SERVICE_TOKEN). */

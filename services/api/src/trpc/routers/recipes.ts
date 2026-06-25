@@ -17,7 +17,7 @@ import { TRPCError } from '@trpc/server';
 import { and, asc, count, desc, eq, inArray } from 'drizzle-orm';
 import { pantryItems, recipeFavorites, recipeGenerationJobs, recipeTweaks, recipes } from '../../db/schema/index.js';
 import { assertAiActionAllowed } from '../../modules/subscription/limits.js';
-import { protectedProcedure, router } from '../init.js';
+import { aiRateLimitedProcedure, protectedProcedure, router } from '../init.js';
 
 type RecipeRow = typeof recipes.$inferSelect;
 type TweakRow = typeof recipeTweaks.$inferSelect;
@@ -78,7 +78,7 @@ export const recipesRouter = router({
    * terminal status. Unsubscribe → the generator's `finally` runs → job
    * marked `aborted`, no recipe written.
    */
-  generateStream: protectedProcedure.input(generationRequestSchema).subscription(async function* ({ ctx, input, signal }) {
+  generateStream: aiRateLimitedProcedure.input(generationRequestSchema).subscription(async function* ({ ctx, input, signal }) {
     const userId = ctx.session.user.id;
 
     const rows =
@@ -188,7 +188,7 @@ export const recipesRouter = router({
    * persisted ids. Unsubscribe before `done` → nothing persists. The tweak
    * rows are the audit log, so the `finally` writes nothing.
    */
-  tweakStream: protectedProcedure.input(recipeTweakRequestSchema).subscription(async function* ({ ctx, input, signal }) {
+  tweakStream: aiRateLimitedProcedure.input(recipeTweakRequestSchema).subscription(async function* ({ ctx, input, signal }) {
     const userId = ctx.session.user.id;
     const [row] = await ctx.db
       .select()

@@ -3,7 +3,7 @@ import { TRPCError } from '@trpc/server';
 import { and, eq } from 'drizzle-orm';
 import { imageScans, inventoryEvents, pantryItems } from '../../db/schema/index.js';
 import { assertAiActionAllowed } from '../../modules/subscription/limits.js';
-import { protectedProcedure, router } from '../init.js';
+import { aiRateLimitedProcedure, protectedProcedure, router } from '../init.js';
 
 const toPantryDto = (row: typeof pantryItems.$inferSelect): PantryItem => ({
   id: row.id,
@@ -21,7 +21,7 @@ const toPantryDto = (row: typeof pantryItems.$inferSelect): PantryItem => ({
 });
 
 export const scanRouter = router({
-  extract: protectedProcedure.input(aiImageExtractionRequestSchema).mutation(async ({ ctx, input }) => {
+  extract: aiRateLimitedProcedure.input(aiImageExtractionRequestSchema).mutation(async ({ ctx, input }) => {
     await assertAiActionAllowed(ctx.db, ctx.session.user.id, 'scan', ctx.env);
     const userId = ctx.session.user.id;
     const [scan] = await ctx.db.insert(imageScans).values({ userId, status: 'processing' }).returning();
