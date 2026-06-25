@@ -1,5 +1,6 @@
 import { aiGenerationRequestSchema, aiTweakRequestSchema } from '@pantry/contracts';
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
+import { logStreamCost } from '../lib/log.js';
 import type { AppDeps } from '../server.js';
 
 /**
@@ -62,15 +63,29 @@ async function pipeSseStream(
 
   req.log.info({ reqId: req.id, provider: deps.provider.name }, `${label}_open`);
 
+  const startedAt = Date.now();
+  let events = 0;
+  let tokensIn = 0;
+  let tokensOut = 0;
+  let outcome: 'completed' | 'aborted' | 'errored' = 'completed';
+
   try {
     for await (const ev of run(controller.signal)) {
       if (state.clientClosed) break;
       writeEvent(ev);
+      events += 1;
+      const usage = (ev as { tokensUsed?: { input?: number; output?: number } }).tokensUsed;
+      if (usage) {
+        tokensIn = usage.input ?? tokensIn;
+        tokensOut = usage.output ?? tokensOut;
+      }
     }
     if (state.timedOut && !state.clientClosed) {
       writeEvent({ type: 'error', code: 'timeout', message: 'Request timed out.', seq: -1, t: deps.env.AI_PROVIDER_TIMEOUT_MS });
+      outcome = 'aborted';
     }
   } catch (err) {
+    outcome = 'errored';
     req.log.error({ reqId: req.id, err }, `${label}_error`);
     if (!state.clientClosed) {
       const message = err instanceof Error ? err.message.slice(0, 500) : 'unknown';
@@ -80,6 +95,17 @@ async function pipeSseStream(
     clearInterval(heartbeat);
     clearTimeout(timeout);
     state.weEnded = true;
+    if (state.clientClosed) outcome = 'aborted';
+    logStreamCost(req.log, {
+      label,
+      provider: deps.provider.name,
+      model: deps.env.DEFAULT_AI_MODEL,
+      tokensIn,
+      tokensOut,
+      events,
+      ms: Date.now() - startedAt,
+      outcome,
+    });
     if (!state.clientClosed) reply.raw.end();
   }
 }
