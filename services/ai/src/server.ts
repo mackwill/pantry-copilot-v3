@@ -47,6 +47,20 @@ export async function buildServer(deps: AppDeps): Promise<FastifyInstance> {
 
   app.get('/health', () => ({ status: 'ok' }));
 
+  app.get('/ready', async (_req, reply) => {
+    const provider = env.DEFAULT_AI_PROVIDER;
+    const keyByProvider: Record<string, string | undefined> = {
+      anthropic: env.ANTHROPIC_API_KEY,
+      openai: env.OPENAI_API_KEY,
+    };
+    const needsKey = provider in keyByProvider;
+    if (needsKey && (keyByProvider[provider] ?? '').length === 0) {
+      reply.code(503);
+      return { status: 'not_ready', reason: `${provider}_api_key_missing` };
+    }
+    return { status: 'ready' };
+  });
+
   registerScanRoutes(app, deps);
   registerRecipeRoutes(app, deps);
 
