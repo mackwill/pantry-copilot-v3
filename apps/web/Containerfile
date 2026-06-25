@@ -1,0 +1,18 @@
+# syntax=docker/dockerfile:1
+FROM docker.io/library/node:22-slim AS build
+RUN corepack enable
+WORKDIR /repo
+COPY . .
+RUN pnpm install --frozen-lockfile --filter @pantry/web...
+RUN pnpm --filter @pantry/web... build
+RUN pnpm --config.force-legacy-deploy=true deploy --filter @pantry/web --prod /out
+
+FROM docker.io/library/node:22-slim
+ENV NODE_ENV=production
+WORKDIR /app
+COPY --from=build /out .
+USER node
+EXPOSE 3000
+HEALTHCHECK --interval=15s --timeout=3s --retries=5 \
+  CMD node -e "fetch('http://127.0.0.1:3000/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+CMD ["node", "serve.mjs"]

@@ -11,3 +11,13 @@
 tools/design-fidelity/output
 tools/design-fidelity/references
 e2e/**/test-results
+# Mobile native projects + caches — never built in a container image.
+apps/mobile/ios
+apps/mobile/android
+**/.expo
+**/.gradle
+# Misc heavy/irrelevant context.
+**/*.log
+**/.DS_Store
+docs
+.github

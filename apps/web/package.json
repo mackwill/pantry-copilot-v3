@@ -3,6 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
+  "files": [
+    "dist",
+    "serve.mjs"
+  ],
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
@@ -21,7 +25,9 @@
     "@tanstack/react-start": "1.168.25",
     "better-auth": "1.6.16",
     "react": "19.2.7",
-    "react-dom": "19.2.7"
+    "react-dom": "19.2.7",
+    "srvx": "0.11.17",
+    "zod": "4.4.3"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "6.9.1",

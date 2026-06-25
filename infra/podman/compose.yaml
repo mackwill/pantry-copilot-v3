@@ -18,6 +18,7 @@ services:
     build:
       context: ../..
       dockerfile: services/api/Containerfile
+    restart: unless-stopped
     depends_on:
       postgres:
         condition: service_healthy
@@ -32,15 +33,36 @@ services:
       AI_SERVICE_URL: http://ai:4001
     ports:
       - "4000:4000"
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"fetch('http://127.0.0.1:4000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\""]
+      interval: 10s
+      timeout: 3s
+      retries: 10
   ai:
     build:
       context: ../..
       dockerfile: services/ai/Containerfile
+    restart: unless-stopped
     env_file:
       - ${ENV_FILE:-../../.env}
     environment:
       PORT: 4001
     ports:
       - "4001:4001"
+  web:
+    build:
+      context: ../..
+      dockerfile: apps/web/Containerfile
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    # SSR runs inside this container and must reach the API over the compose
+    # network (`api:4000`). The browser bundle keeps its build-time default
+    # (`localhost:4000`, published on the host); see apps/web/src/lib/session.ts.
+    environment:
+      VITE_API_URL: http://api:4000
+    ports:
+      - "3000:3000"
 volumes:
   pgdata:
