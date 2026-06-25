@@ -75,3 +75,4 @@ export function isLimitReachedError(err: unknown): boolean {
 }
 
 export type { AppRouter };
+export { newRequestId, requestIdHeaders } from './request-id.js';

@@ -1,9 +1,12 @@
-import { createApiClient } from '@pantry/api-client';
+import { createApiClient, requestIdHeaders } from '@pantry/api-client';
 import { authClient } from './auth-client';
 import { env } from './env';
 import { createRNEventSource } from './rn-event-source';
 
-const authHeaders = (): Record<string, string> => ({ cookie: authClient.getCookie() });
+const authHeaders = (): Record<string, string> => ({
+  cookie: authClient.getCookie(),
+  ...requestIdHeaders(),
+});
 
 export const api = createApiClient({
   url: `${env.EXPO_PUBLIC_API_URL}/trpc`,
