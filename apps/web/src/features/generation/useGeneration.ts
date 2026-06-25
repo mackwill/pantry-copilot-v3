@@ -1,3 +1,4 @@
+import { isLimitReachedError } from '@pantry/api-client';
 import type { AIRecipePartial, BranchAction, GenerationEvent, GenerationRequest, ToolEvent } from '@pantry/contracts';
 import { buildBranchInput } from '@pantry/utils';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -25,6 +26,8 @@ export interface GenerationState {
   /** The single surfaced observation, if any. */
   notice: string | null;
   error: { code: string; message: string } | null;
+  /** True when generation was blocked by a `limit_reached` entitlement error — opens the paywall modal. */
+  limitReached: boolean;
   /** ms the thinking beat ran before drafting began (drives the collapsed summary). */
   thinkingMs: number;
 }
@@ -39,6 +42,7 @@ const INITIAL: GenerationState = {
   recipeId: null,
   notice: null,
   error: null,
+  limitReached: false,
   thinkingMs: 0,
 };
 
@@ -115,6 +119,8 @@ export interface UseGeneration extends GenerationState {
   stop: () => void;
   /** One-tap re-prompt: transform the last request and re-run. */
   branch: (action: BranchAction) => void;
+  /** Dismiss the limit-hit paywall modal without restarting generation. */
+  dismissLimitReached: () => void;
 }
 
 /**
@@ -138,6 +144,15 @@ export function useGeneration(options?: { subscribe?: GenerationSubscribe }): Us
           setState((prev) => reduce(prev, event));
         },
         onError: (err) => {
+          if (isLimitReachedError(err)) {
+            setState((prev) => ({
+              ...prev,
+              status: 'error',
+              error: { code: 'limit_reached', message: 'limit_reached' },
+              limitReached: true,
+            }));
+            return;
+          }
           const message = err instanceof Error ? err.message : String(err);
           setState((prev) => ({ ...prev, status: 'error', error: { code: 'stream_error', message } }));
         },
@@ -164,6 +179,10 @@ export function useGeneration(options?: { subscribe?: GenerationSubscribe }): Us
     [start],
   );
 
+  const dismissLimitReached = useCallback(() => {
+    setState((prev) => ({ ...prev, limitReached: false }));
+  }, []);
+
   useEffect(
     () => () => {
       subRef.current?.unsubscribe();
@@ -177,5 +196,6 @@ export function useGeneration(options?: { subscribe?: GenerationSubscribe }): Us
     start,
     stop,
     branch,
+    dismissLimitReached,
   };
 }

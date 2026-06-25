@@ -1,6 +1,7 @@
 import { Button, Eyebrow, Icon, WebShell } from '@pantry/design-system/web';
 import { useNavigate } from '@tanstack/react-router';
 import { useEffect, useRef, useState } from 'react';
+import { LimitHitModal } from '../../billing/components/LimitHitModal';
 import { useShellNav, webShellUser } from '../../pantry-shared/nav';
 import { useFavorite } from '../../recipe-detail/useFavorite';
 import { type GenerationSubscribe, useGeneration } from '../useGeneration';
@@ -137,6 +138,11 @@ export function GenerateScreen({ prompt, weirdness, user, subscribe }: GenerateS
           </div>
         )}
       </div>
+      <LimitHitModal
+        open={gen.limitReached}
+        onClose={gen.dismissLimitReached}
+        onUpgrade={() => void navigate({ to: '/upgrade' })}
+      />
     </WebShell>
   );
 }

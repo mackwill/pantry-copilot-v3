@@ -46,11 +46,17 @@ const tape: GenerationEvent[] = [
 /** Fake subscription capturing handlers so the test drives the tape frame-by-frame. */
 function makeFake() {
   let onData: (e: GenerationEvent) => void = () => {};
+  let onError: (err: unknown) => void = () => {};
   const subscribe: GenerationSubscribe = (_input, handlers) => {
     onData = handlers.onData;
+    onError = handlers.onError;
     return { unsubscribe: vi.fn() };
   };
-  return { subscribe, emit: (e: GenerationEvent) => { act(() => { onData(e); }); } };
+  return {
+    subscribe,
+    emit: (e: GenerationEvent) => { act(() => { onData(e); }); },
+    fail: (err: unknown) => { act(() => { onError(err); }); },
+  };
 }
 
 describe('generation flow (Thinking → Drafting → Result)', () => {
@@ -81,5 +87,14 @@ describe('generation flow (Thinking → Drafting → Result)', () => {
     expect(screen.getByRole('button', { name: /Start cooking/ })).toBeTruthy();
     expect(screen.getByText('Weirder')).toBeTruthy();
     expect(screen.getByText('Different angle')).toBeTruthy();
+  });
+
+  it('opens the limit-hit paywall modal when generation hits the weekly limit', () => {
+    const fake = makeFake();
+    render(<GenerateScreen prompt="cozy carrots" weirdness={40} user={user} subscribe={fake.subscribe} />);
+
+    expect(screen.queryByRole('dialog')).toBeNull();
+    fake.fail({ message: 'limit_reached' });
+    expect(screen.getByRole('dialog', { name: /weekly limit reached/i })).toBeTruthy();
   });
 });

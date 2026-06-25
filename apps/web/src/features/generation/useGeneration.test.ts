@@ -147,6 +147,18 @@ describe('useGeneration', () => {
     fake.fail(new Error('socket closed'));
     expect(result.current.status).toBe('error');
     expect(result.current.error?.message).toContain('socket closed');
+    expect(result.current.limitReached).toBe(false);
+  });
+
+  it('flags limitReached (opening the paywall) on a limit_reached error', () => {
+    const fake = makeFakeSubscribe();
+    const { result } = renderHook(() => useGeneration({ subscribe: fake.subscribe }));
+    act(() => { result.current.start(baseInput); });
+    fake.fail({ message: 'limit_reached' });
+    expect(result.current.limitReached).toBe(true);
+    expect(result.current.error?.code).toBe('limit_reached');
+    act(() => { result.current.dismissLimitReached(); });
+    expect(result.current.limitReached).toBe(false);
   });
 
   it('stop() unsubscribes and marks the run aborted mid-stream', () => {
