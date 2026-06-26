@@ -2,6 +2,40 @@
 
 Board-silent composition calls and scope deviations, newest first.
 
+## 2026-06-26 — Mobile recipe-generation streaming fix (Hermes)
+
+Mobile recipe generation failed with "That generation hit a snag" (stream 0.0s) —
+the §02 `result-after-generation--mobile-result` frame was unblockable. Two distinct
+Hermes (Expo/React Native engine) gaps had to be closed; the first masked the second.
+
+- **Polyfill `Symbol.dispose` / `Symbol.asyncDispose` / `SuppressedError` before any
+  tRPC code.** tRPC v11's `httpSubscriptionLink` consumes the SSE stream with
+  `await using` (oxc `_usingCtx` helper). The producer (`makeResource`/
+  `makeAsyncResource`, bundled from `@trpc/server`) writes the disposer to the bare
+  `obj[Symbol.dispose]`; the consumer reads `obj[Symbol.dispose || Symbol.for('Symbol.dispose')]`.
+  On Hermes those well-known symbols are absent, so the keys disagree and disposal
+  throws "Object is not disposable", re-wrapped as a `SuppressedError`. Installing the
+  symbols as `Symbol.for(...)` at a custom entry (`apps/mobile/index.js` →
+  `src/lib/polyfills.ts`, zero deps) makes producer and consumer agree. **Necessary
+  but not sufficient.**
+- **Root cause: `newRequestId()` called the bare global `crypto.randomUUID()`.**
+  With the disposal machinery fixed, the underlying error became legible:
+  `ReferenceError: Property 'crypto' doesn't exist`. Hermes has no global `crypto`,
+  and `requestIdHeaders()` (sent on every request, including the subscription) minted
+  the correlation id via `crypto.randomUUID()`. **Fix:** `@pantry/api-client`
+  `request-id.ts` now uses `crypto.randomUUID()` only when available and otherwise
+  falls back to a `Math.random` UUIDv4. A correlation id needs no cryptographic
+  randomness, so no `crypto`/`get-random-values` dependency is added; web/Node keep
+  using `crypto.randomUUID()` unchanged.
+
+  Verified on an iPhone 15 simulator: `maestro test e2e/mobile/generation.yaml` now
+  passes end-to-end (Home → §04 Thinking/Drafting → §02 Result + branch re-prompt).
+
+- **`tools/design-fidelity/tsconfig.json` now includes `vitest.config.ts`.** It was
+  the only package whose tsconfig omitted its `vitest.config.ts` (every sibling lists
+  `["src", "vitest.config.ts"]`), so `projectService` lint flagged the file as "not
+  found by the project service". One-token consistency fix; restores the repo lint gate.
+
 ## 2026-06-25 — M9 hardening + launch readiness
 
 Settled with the user during execution; M9 adds no product features.
