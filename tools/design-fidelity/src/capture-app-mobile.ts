@@ -10,8 +10,19 @@
 // screenshotted. Frames with no mapping (mid-flow sheets / interaction states
 // that need app-side dev deep-links) are skipped and reported as missing — the
 // sweep (sweep.ts) tracks them in the approval checklist.
+//
+// ⚠ KNOWN LIMITATION (verified 2026-06-26): against the installed **dev build**
+// (com.pantrycopilot.app), `simctl openurl` does NOT route — iOS shows an
+// unavoidable "Open in 'pantry-copilot'?" prompt and the expo-dev-client
+// intercepts the scheme (grey screen). Use the Maestro UI-navigation flow
+// `tools/design-fidelity/maestro/fidelity-capture.yaml` instead (after
+// `e2e/mobile/sign-in.yaml`). This deep-link script is retained for an
+// embedded/production build or Expo Go, where scheme routing may behave
+// differently. The screenshot→resize→copy mechanics below still apply.
 import { execFile } from 'node:child_process';
-import { mkdir, readFile } from 'node:fs/promises';
+import { copyFile, mkdir, readFile, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
 
@@ -81,12 +92,18 @@ for (const entry of mobile) {
   }
   await run('xcrun', ['simctl', 'openurl', 'booted', deepLink]);
   await new Promise((r) => setTimeout(r, 1500));
-  await run('xcrun', ['simctl', 'io', 'booted', 'screenshot', `${APP_DIR}${slug}.png`]);
-  // Normalize the native screenshot to the reference width (aspect-preserved)
-  // so the committed actual is review-friendly and the sweep diff is meaningful
-  // — sips is macOS-native, no runtime dep. Mirrors normalize.ts's resample.
+  // simctl (the CoreSimulator daemon) can't write into macOS-protected dirs
+  // like ~/Documents (TCC), so screenshot to a temp file, then resize and copy
+  // it into APP_DIR from node (which does have access).
+  const tmpPath = join(tmpdir(), `fidelity-mobile-${slug}.png`);
+  await run('xcrun', ['simctl', 'io', 'booted', 'screenshot', tmpPath]);
+  // Normalize to the reference width (aspect-preserved) so the committed actual
+  // is review-friendly and the sweep diff is meaningful — sips is macOS-native,
+  // no runtime dep. Mirrors normalize.ts's resample.
   const refWidth = await pngWidth(`${REFS_DIR}${slug}.png`);
-  await run('sips', ['--resampleWidth', String(refWidth), `${APP_DIR}${slug}.png`]);
+  await run('sips', ['--resampleWidth', String(refWidth), tmpPath]);
+  await copyFile(tmpPath, `${APP_DIR}${slug}.png`);
+  await rm(tmpPath, { force: true });
   captured += 1;
   console.log(`captured → ${slug}.png (resized to ${String(refWidth)}px wide)`);
 }

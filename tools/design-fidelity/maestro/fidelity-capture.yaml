@@ -1,0 +1,63 @@
+# Mobile fidelity capture via Maestro UI navigation.
+#
+# Why not the deep-link harness (capture-app-mobile.ts)? On the installed dev
+# build, `simctl openurl pantrycopilot://…` triggers iOS's unavoidable "Open in
+# 'pantry-copilot'?" confirmation, and the expo-dev-client then intercepts the
+# scheme as a launcher command instead of routing it through expo-router — so
+# deep links land on a grey screen. `launchApp` + in-app taps is the reliable
+# path. This flow captures the screens reachable from the signed-in tab bar.
+#
+# Prereqs:
+#   1. Booted iOS simulator with the dev build (com.pantrycopilot.app) installed
+#      and Metro running: `pnpm --filter @pantry/mobile exec expo start --dev-client`.
+#   2. Signed in once: `maestro test e2e/mobile/sign-in.yaml` (maestro@example.com).
+#   3. Frozen status bar:
+#      xcrun simctl status_bar booted override --time "9:41" \
+#        --batteryLevel 100 --batteryState charged --cellularBars 4 --wifiBars 3
+#
+# Screenshots land in the cwd as <slug>.png. Resize each to its reference width
+# and move it into output/app, e.g.:
+#   for s in *.png; do slug=${s%.png}; \
+#     w=$(sips -g pixelWidth references/$slug.png | awk '/pixelWidth/{print $2}'); \
+#     sips --resampleWidth "$w" "$s" >/dev/null; mv "$s" output/app/; done
+# then `pnpm --filter @pantry/design-fidelity sweep`.
+#
+# Reachable here (6): home, pantry, cook library, account, scan viewfinder,
+# add-ingredient. Not reachable in this build (need an app-side fix):
+#   - login          → sign-out button does not end the session on this build;
+#   - result         → mobile generation errors ("hit a snag", stream 0.0s);
+#   - paywall/trial/manage → no in-app entry point + deep links blocked.
+appId: com.pantrycopilot.app
+---
+- launchApp
+- runFlow:
+    when: { visible: 'Open' }
+    commands: [{ tapOn: 'Cancel' }]
+- extendedWaitUntil:
+    visible: 'YOUR KITCHEN'
+    timeout: 25000
+- waitForAnimationToEnd
+- takeScreenshot: home--mobile-home
+- tapOn: 'Pantry'
+- waitForAnimationToEnd
+- takeScreenshot: mobile-pantry-recipe--pantry-tap-to-cook
+- tapOn: { id: 'add-ingredient-button' }
+- waitForAnimationToEnd
+- takeScreenshot: mobile-add-ingredient-edit-ingredient--add-ingredient
+- tapOn: { id: 'modal-close' }
+- runFlow:
+    when: { visible: 'ADD TO PANTRY' }
+    commands: [{ tapOn: { point: '5%,8%' } }] # X close, top-left fallback
+- tapOn: 'Cook'
+- waitForAnimationToEnd
+- takeScreenshot: cook-tab-library--mobile-cook-default
+- tapOn: 'Me'
+- waitForAnimationToEnd
+- takeScreenshot: mobile-account--account
+- tapOn: 'Scan'
+- waitForAnimationToEnd
+- runFlow:
+    when: { visible: 'Allow' }
+    commands: [{ tapOn: 'Allow' }]
+- waitForAnimationToEnd
+- takeScreenshot: mobile-camera-scan-flow--1-viewfinder

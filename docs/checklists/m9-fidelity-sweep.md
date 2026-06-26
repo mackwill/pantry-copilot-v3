@@ -44,46 +44,53 @@ screenshot is auto-resized to its reference width (`sips`) so the sweep diff is
 meaningful (the ~60% mismatches above were a pure scale artifact, now fixed by
 `normalizeForDiff`).
 
-Tags: **`[deep-link]`** = reachable now via `pantrycopilot://…` (11 frames,
-mapped in `capture-app-mobile.ts` `ROUTES`); **`[needs dev deep-link]`** =
-mid-flow / state-dependent view with no addressable route — deferred until the
-mobile app exposes a dev-only deep link (out of scope for this capture plan;
-it's an app change). The mismatch %s below predate the normalization fix.
+Tags: **`[deep-link]`** = a statically-addressable top-level screen;
+**`[needs dev deep-link]`** = mid-flow / state-dependent view with no
+addressable route.
+
+**Capture method (important):** `simctl openurl pantrycopilot://…` does **not**
+work against the installed dev build — iOS shows an unavoidable "Open in app?"
+prompt and the expo-dev-client intercepts the scheme (grey screen). The working
+method is **Maestro UI navigation** (`tools/design-fidelity/maestro/fidelity-capture.yaml`),
+after `e2e/mobile/sign-in.yaml` establishes a session. 6 frames captured this
+way (✓ below). 5 `[deep-link]` frames remain blocked in this build (app-side
+fixes needed — noted inline). Each captured shot is sips-resized to its
+reference width; `normalizeForDiff` handles residual scale. % = latest measured.
 
 - [ ] `pantry-consume-flow--1-result-pantry-shown-inline` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
 - [ ] `pantry-consume-flow--2-end-of-cook-the-ask` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
 - [ ] `pantry-consume-flow--3-consume-sheet` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
 - [ ] `chat-against-a-recipe--mobile-1-entry-on-recipe` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
 - [ ] `chat-against-a-recipe--mobile-2-chat-sheet-open` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
-- [ ] `marketing-auth--mobile-login` _[deep-link]_ — _65.58% mismatch_ — approved by ___ on ___
-- [ ] `home--mobile-home` _[deep-link]_ — _61.62% mismatch_ — approved by ___ on ___
+- [ ] `marketing-auth--mobile-login` _[deep-link]_ — _not captured · blocked: sign-out button does not end the session on this dev build_ — approved by ___ on ___
+- [ ] `home--mobile-home` _[deep-link]_ — _13.79% mismatch · ✓ captured (Maestro)_ — approved by ___ on ___
 - [ ] `home--mobile-home-selecting` _[needs dev deep-link]_ — _61.88% mismatch_ — approved by ___ on ___
 - [ ] `home--mobile-home-browse-pantry` _[needs dev deep-link]_ — _67.77% mismatch_ — approved by ___ on ___
-- [ ] `result-after-generation--mobile-result` _[deep-link]_ — _61.43% mismatch_ — approved by ___ on ___
-- [ ] `cook-tab-library--mobile-cook-default` _[deep-link]_ — _not captured_ — approved by ___ on ___
+- [ ] `result-after-generation--mobile-result` _[deep-link]_ — _not captured · blocked: mobile generation errors ("hit a snag", stream 0.0s)_ — approved by ___ on ___
+- [ ] `cook-tab-library--mobile-cook-default` _[deep-link]_ — _12.27% mismatch · ✓ captured (Maestro)_ — approved by ___ on ___
 - [ ] `cook-tab-library--mobile-cook-with-resume` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
 - [ ] `cook-tab-library--mobile-cook-new-tapped` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
 - [ ] `cook-tab-at-the-stove--mobile-cook-in-session` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
 - [ ] `generating-state--mobile-1-thinking` _[needs dev deep-link]_ — _60.81% mismatch_ — approved by ___ on ___
 - [ ] `generating-state--mobile-2-drafting` _[needs dev deep-link]_ — _61.10% mismatch_ — approved by ___ on ___
-- [ ] `mobile-pantry-recipe--pantry-tap-to-cook` _[deep-link]_ — _not captured_ — approved by ___ on ___
+- [ ] `mobile-pantry-recipe--pantry-tap-to-cook` _[deep-link]_ — _17.78% mismatch · ✓ captured (Maestro) · empty pantry (maestro user has no items)_ — approved by ___ on ___
 - [ ] `mobile-pantry-recipe--recipe-detail` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
-- [ ] `mobile-camera-scan-flow--1-viewfinder` _[deep-link]_ — _not captured_ — approved by ___ on ___
+- [ ] `mobile-camera-scan-flow--1-viewfinder` _[deep-link]_ — _24.88% mismatch · ✓ captured (Maestro)_ — approved by ___ on ___
 - [ ] `mobile-camera-scan-flow--2-detecting` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
 - [ ] `mobile-camera-scan-flow--3-review-items` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
 - [ ] `mobile-camera-scan-flow--4-added-to-pantry` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
-- [ ] `mobile-add-ingredient-edit-ingredient--add-ingredient` _[deep-link]_ — _not captured_ — approved by ___ on ___
+- [ ] `mobile-add-ingredient-edit-ingredient--add-ingredient` _[deep-link]_ — _17.24% mismatch · ✓ captured (Maestro)_ — approved by ___ on ___
 - [ ] `mobile-add-ingredient-edit-ingredient--edit-ingredient` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
 - [ ] `mobile-bottom-sheets--category-picker` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
 - [ ] `mobile-bottom-sheets--location-picker` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
 - [ ] `mobile-bottom-sheets--best-by-picker` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
-- [ ] `mobile-account--account` _[deep-link]_ — _not captured_ — approved by ___ on ___
-- [ ] `paywall-variation-a--mobile-paywall` _[deep-link]_ — _not captured_ — approved by ___ on ___
+- [ ] `mobile-account--account` _[deep-link]_ — _11.07% mismatch · ✓ captured (Maestro)_ — approved by ___ on ___
+- [ ] `paywall-variation-a--mobile-paywall` _[deep-link]_ — _not captured · blocked: no in-app entry point + deep links blocked on dev build_ — approved by ___ on ___
 - [ ] `paywall-variation-b--mobile-paywall` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
 - [ ] `contextual-paywalls--mobile-limit-hit-sheet` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
-- [ ] `free-trial-lifecycle--mobile-pre-trial-offer` _[deep-link]_ — _not captured_ — approved by ___ on ___
+- [ ] `free-trial-lifecycle--mobile-pre-trial-offer` _[deep-link]_ — _not captured · blocked: no in-app entry point + deep links blocked on dev build_ — approved by ___ on ___
 - [ ] `free-trial-lifecycle--mobile-trial-ending` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
 - [ ] `subscription-in-settings--mobile-settings-free-user` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
 - [ ] `subscription-in-settings--mobile-settings-trial` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
 - [ ] `subscription-in-settings--mobile-settings-pro-active` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
-- [ ] `subscription-in-settings--mobile-manage-subscription` _[deep-link]_ — _not captured_ — approved by ___ on ___
+- [ ] `subscription-in-settings--mobile-manage-subscription` _[deep-link]_ — _not captured · blocked: no in-app entry point + deep links blocked on dev build_ — approved by ___ on ___

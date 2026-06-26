@@ -83,14 +83,33 @@ auto-resized to its reference width (`sips`), and the sweep scales any residual
 size mismatch via `normalizeForDiff` — so a captured mobile frame reads as a
 meaningful single/low-double-digit %, not the old ~60% scale artifact.
 
+**Capture method:** `simctl openurl pantrycopilot://…` does **not** route on the
+installed dev build (iOS "Open in app?" prompt + expo-dev-client intercepts the
+scheme → grey screen). Drive the app with **Maestro UI navigation** instead.
+
 ```bash
 # 1. Boot + freeze a simulator for deterministic chrome.
 xcrun simctl boot "iPhone 15" 2>/dev/null || true
 xcrun simctl status_bar booted override --time "9:41" \
   --batteryLevel 100 --batteryState charged --cellularBars 4 --wifiBars 3
-# 2. Run the app on it and wait for Home.
-pnpm --filter @pantry/mobile start   # then press `i` (or open the dev URL)
-# 3. Capture + sweep.
-pnpm --filter @pantry/design-fidelity capture:mobile   # SKIPs the [needs dev deep-link] frames
+# 2. Metro + a real dev client (Expo Go won't host the dev build's scheme).
+pnpm --filter @pantry/mobile exec expo start --dev-client
+# 3. Sign in once (creates the maestro user first if needed — see sign-in.yaml).
+export JAVA_HOME=/opt/homebrew/opt/openjdk/libexec/openjdk.jdk/Contents/Home
+export PATH="$HOME/.maestro/bin:$PATH"
+maestro test e2e/mobile/sign-in.yaml
+# 4. Capture the tab-reachable frames, resize to reference width, sweep.
+cd tools/design-fidelity
+maestro test maestro/fidelity-capture.yaml          # writes <slug>.png to cwd
+for s in *--mobile-*.png; do slug=${s%.png}; \
+  w=$(sips -g pixelWidth references/$slug.png | awk '/pixelWidth/{print $2}'); \
+  sips --resampleWidth "$w" "$s" >/dev/null; mv "$s" output/app/; done
 pnpm --filter @pantry/design-fidelity sweep
 ```
+
+Captures 6 frames (home, pantry, cook library, account, scan viewfinder,
+add-ingredient). Five `[deep-link]` frames are still blocked on this build and
+need app-side fixes (tracked in `m9-fidelity-sweep.md`): **login** (the sign-out
+button doesn't end the session), **result** (mobile generation errors — "hit a
+snag", stream 0.0s), and **paywall / trial / manage** (no in-app entry point,
+and deep links don't route). The `[needs dev deep-link]` frames remain deferred.
