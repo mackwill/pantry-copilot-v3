@@ -35,8 +35,23 @@ interface ManifestEntry {
 
 /**
  * Maps a mobile reference slug → the deep link that renders that frame state.
- * Top-level screens are mapped here; mid-flow states (sheets open, scanning,
- * generating) need app-side dev-only deep links and are left for follow-up.
+ *
+ * These 11 are the *statically* reachable top-level screens: the expo-router
+ * routes under apps/mobile/src/app render standalone (no required search param,
+ * no prior app state). Every other mobile frame is a mid-flow / state-dependent
+ * view and is deliberately left unmapped (the loop logs `SKIP … no deep link
+ * mapped`), because reaching it by a bare deep link would require inventing UI:
+ *   - open bottom sheets (category/location/best-by pickers, consume sheet,
+ *     limit-hit sheet) — no addressable route;
+ *   - mid-scan / mid-generate beats (detecting, review-items, thinking,
+ *     drafting) — transient stream states;
+ *   - home selecting / browse-pantry, cook new-tapped / resume — interaction
+ *     or active-session state;
+ *   - recipe detail + chat — need a real `[recipeId]` and tweak state;
+ *   - paywall variant B, trial-ending, settings tiers (free/trial/pro),
+ *     edit-ingredient — one route per file renders a single state; the variant
+ *     comes from props/subscription state, not the URL.
+ * These need app-side dev-only deep links (see docs/checklists/m9 + launch-readiness).
  */
 const ROUTES: Record<string, string> = {
   'marketing-auth--mobile-login': 'pantrycopilot://login',
