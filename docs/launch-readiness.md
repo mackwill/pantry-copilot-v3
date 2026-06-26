@@ -108,8 +108,11 @@ pnpm --filter @pantry/design-fidelity sweep
 ```
 
 Captures 6 frames (home, pantry, cook library, account, scan viewfinder,
-add-ingredient). Five `[deep-link]` frames are still blocked on this build and
-need app-side fixes (tracked in `m9-fidelity-sweep.md`): **login** (the sign-out
-button doesn't end the session), **result** (mobile generation errors — "hit a
-snag", stream 0.0s), and **paywall / trial / manage** (no in-app entry point,
-and deep links don't route). The `[needs dev deep-link]` frames remain deferred.
+add-ingredient). **login** is captured separately by invalidating the session —
+`psql … -c "delete from sessions s using users u where s.user_id=u.id and
+u.email='maestro@example.com'"` then relaunch (the in-app sign-out button does
+not end the session on this build). The remaining 4 `[deep-link]` frames need
+app-side fixes (tracked in `m9-fidelity-sweep.md`): **result** (mobile
+generation errors — "hit a snag", stream 0.0s) and **paywall / trial / manage**
+(no in-app entry point, and deep links don't route). The `[needs dev deep-link]`
+frames remain deferred.

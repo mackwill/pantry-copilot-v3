@@ -52,17 +52,19 @@ addressable route.
 work against the installed dev build — iOS shows an unavoidable "Open in app?"
 prompt and the expo-dev-client intercepts the scheme (grey screen). The working
 method is **Maestro UI navigation** (`tools/design-fidelity/maestro/fidelity-capture.yaml`),
-after `e2e/mobile/sign-in.yaml` establishes a session. 6 frames captured this
-way (✓ below). 5 `[deep-link]` frames remain blocked in this build (app-side
-fixes needed — noted inline). Each captured shot is sips-resized to its
-reference width; `normalizeForDiff` handles residual scale. % = latest measured.
+after `e2e/mobile/sign-in.yaml` establishes a session. **7 frames captured**
+(✓ below); login was captured by deleting the server session
+(`delete from sessions …`) and relaunching. 4 `[deep-link]` frames remain
+blocked in this build (app-side fixes needed — noted inline). Each captured shot
+is sips-resized to its reference width; `normalizeForDiff` handles residual
+scale. % = latest measured.
 
 - [ ] `pantry-consume-flow--1-result-pantry-shown-inline` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
 - [ ] `pantry-consume-flow--2-end-of-cook-the-ask` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
 - [ ] `pantry-consume-flow--3-consume-sheet` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
 - [ ] `chat-against-a-recipe--mobile-1-entry-on-recipe` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
 - [ ] `chat-against-a-recipe--mobile-2-chat-sheet-open` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
-- [ ] `marketing-auth--mobile-login` _[deep-link]_ — _not captured · blocked: sign-out button does not end the session on this dev build_ — approved by ___ on ___
+- [ ] `marketing-auth--mobile-login` _[deep-link]_ — _12.74% mismatch · ✓ captured (relaunch after deleting the server session; the in-app sign-out button does not end the session on this build)_ — approved by ___ on ___
 - [ ] `home--mobile-home` _[deep-link]_ — _13.79% mismatch · ✓ captured (Maestro)_ — approved by ___ on ___
 - [ ] `home--mobile-home-selecting` _[needs dev deep-link]_ — _61.88% mismatch_ — approved by ___ on ___
 - [ ] `home--mobile-home-browse-pantry` _[needs dev deep-link]_ — _67.77% mismatch_ — approved by ___ on ___

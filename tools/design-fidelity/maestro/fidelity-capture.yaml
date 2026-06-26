@@ -23,8 +23,10 @@
 # then `pnpm --filter @pantry/design-fidelity sweep`.
 #
 # Reachable here (6): home, pantry, cook library, account, scan viewfinder,
-# add-ingredient. Not reachable in this build (need an app-side fix):
-#   - login          → sign-out button does not end the session on this build;
+# add-ingredient. login is captured separately by invalidating the session
+# (`delete from sessions …` for the maestro user) then relaunching — the in-app
+# sign-out button does not end the session on this build. Not reachable (need an
+# app-side fix):
 #   - result         → mobile generation errors ("hit a snag", stream 0.0s);
 #   - paywall/trial/manage → no in-app entry point + deep links blocked.
 appId: com.pantrycopilot.app
