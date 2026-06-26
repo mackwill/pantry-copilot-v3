@@ -68,7 +68,7 @@ scale. % = latest measured.
 - [ ] `home--mobile-home` _[deep-link]_ — _13.79% mismatch · ✓ captured (Maestro)_ — approved by ___ on ___
 - [ ] `home--mobile-home-selecting` _[needs dev deep-link]_ — _61.88% mismatch_ — approved by ___ on ___
 - [ ] `home--mobile-home-browse-pantry` _[needs dev deep-link]_ — _67.77% mismatch_ — approved by ___ on ___
-- [ ] `result-after-generation--mobile-result` _[deep-link]_ — _not captured · blocked: mobile generation errors ("hit a snag", stream 0.0s)_ — approved by ___ on ___
+- [ ] `result-after-generation--mobile-result` _[deep-link]_ — _not captured · BLOCKED BY BUG: mobile recipe generation fails ("hit a snag", stream 0.0s). Root cause: the tRPC subscription (`httpSubscriptionLink` + `react-native-sse`) throws an empty `SuppressedError` on Hermes and the request never reaches the api (api SSE verified working via curl; auth/quota/IPv6 ruled out). Real functional bug — fix the mobile subscription transport, then this frame captures._ — approved by ___ on ___
 - [ ] `cook-tab-library--mobile-cook-default` _[deep-link]_ — _12.27% mismatch · ✓ captured (Maestro)_ — approved by ___ on ___
 - [ ] `cook-tab-library--mobile-cook-with-resume` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
 - [ ] `cook-tab-library--mobile-cook-new-tapped` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
