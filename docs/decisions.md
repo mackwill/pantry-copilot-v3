@@ -2,6 +2,46 @@
 
 Board-silent composition calls and scope deviations, newest first.
 
+## 2026-06-25 — M9 hardening + launch readiness
+
+Settled with the user during execution; M9 adds no product features.
+
+- **Services are bundled (tsup) for containers.** The api/ai Containerfiles
+  already existed but the stack could not boot: the compiled services imported
+  `@pantry/contracts`/`@pantry/utils`, which ship raw `.ts`, and Node cannot
+  strip types under `node_modules`. Chosen fix (over building those packages to
+  `dist`): bundle the two services with tsup (`noExternal: [/@pantry/]`) so
+  `node dist/index.js` runs no TypeScript and the workspace packages stay
+  source-only for the bundler/test consumers. Smallest blast radius.
+- **Web is served by `apps/web/serve.mjs` (srvx).** TanStack Start's Vite build
+  emits a fetch handler (`dist/server`) + static assets (`dist/client`), not a
+  listening server. `serve.mjs` binds them with srvx (static-first, SSR
+  fallthrough). `zod` added as a direct web dep so `pnpm deploy` hoists the SSR
+  external. In compose, SSR points at `api:4000` (container network) while the
+  browser bundle keeps its build-time `localhost:4000`
+  (`apps/web/src/lib/session.ts` already reads the runtime env server-side).
+- **Web CSP `style-src 'unsafe-inline'`** is required — the design system ships
+  inline styles via CSS Modules hydration; scripts stay strict (`'self'`) in
+  production. The dev server relaxes `script-src`/`connect-src` (Vite HMR uses
+  inline/eval scripts + a websocket; strict CSP blocked hydration, breaking all
+  e2e). Applied via a TanStack Start global request middleware (`src/start.ts`),
+  which also re-registers Start's CSRF middleware (a custom start instance
+  replaces the built-in one).
+- **In-memory per-user AI rate limiter** (`AI_ACTION_RATE_LIMIT_MAX`, default 20)
+  — single API instance for launch; swap for Redis when scaling horizontally.
+- **Web bundle budget = 1500 KB** client JS (~15% over the measured ~1300 KB) —
+  headroom without masking regressions.
+- **`undici` forced to `>= 7.28.0`** via a pnpm override to clear 3 high-severity
+  advisories (transitive via jsdom); milestone-boundary bump.
+- **Mobile fidelity capture is deep-link driven** (`pantrycopilot://…` →
+  `simctl screenshot`). Top-level screens are mapped; mid-flow states (sheets,
+  scanning, generating) need app-side dev deep-links and are left for follow-up —
+  the sweep marks uncaptured frames "missing", not regressions.
+- **Fidelity sweep is a local tool, not a CI gate** (per scope decision): it
+  diffs every manifest frame, writes `output/report.html` + `sweep.json`, and
+  trips only on already-captured frames over `SWEEP_TRIPWIRE_PCT` (2%). Per-frame
+  sign-off is tracked in `docs/checklists/m9-fidelity-sweep.md`.
+
 ## 2026-06-25 — M8 monetization: backend + product decisions (consolidated)
 
 Settled with the milestone; the UI-composition calls are recorded in the per-slice
