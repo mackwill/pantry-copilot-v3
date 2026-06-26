@@ -67,7 +67,30 @@ below the gate threshold; re-review at the next dependency-bump boundary.
       `eas build --profile development` for a real dev client (required for real
       RevenueCat purchases — Expo Go no-ops them).
 - [ ] Sandbox purchase verification (`docs/checklists/m8-monetization.md`).
-- [ ] Full-board fidelity sign-off: `pnpm --filter @pantry/design-fidelity sweep`,
-      open `tools/design-fidelity/output/report.html`, record approvals in
-      `docs/checklists/m9-fidelity-sweep.md`. Web frames captured via
-      `capture:web`; mobile via `capture:mobile` against the booted simulator.
+- [ ] Full-board fidelity sign-off: web frames are captured autonomously
+      (`pnpm --filter @pantry/design-fidelity capture:web:all`, 0/18 missing);
+      mobile needs the simulator procedure below. Then
+      `pnpm --filter @pantry/design-fidelity sweep`, open
+      `tools/design-fidelity/output/report.html`, and record approvals in
+      `docs/checklists/m9-fidelity-sweep.md`.
+
+### Mobile fidelity capture (simulator)
+
+Captures the 11 `[deep-link]` mobile frames (see `m9-fidelity-sweep.md`); the
+26 `[needs dev deep-link]` frames are deferred until the app exposes dev-only
+deep links for its mid-flow / state-dependent views. Each screenshot is
+auto-resized to its reference width (`sips`), and the sweep scales any residual
+size mismatch via `normalizeForDiff` — so a captured mobile frame reads as a
+meaningful single/low-double-digit %, not the old ~60% scale artifact.
+
+```bash
+# 1. Boot + freeze a simulator for deterministic chrome.
+xcrun simctl boot "iPhone 15" 2>/dev/null || true
+xcrun simctl status_bar booted override --time "9:41" \
+  --batteryLevel 100 --batteryState charged --cellularBars 4 --wifiBars 3
+# 2. Run the app on it and wait for Home.
+pnpm --filter @pantry/mobile start   # then press `i` (or open the dev URL)
+# 3. Capture + sweep.
+pnpm --filter @pantry/design-fidelity capture:mobile   # SKIPs the [needs dev deep-link] frames
+pnpm --filter @pantry/design-fidelity sweep
+```
