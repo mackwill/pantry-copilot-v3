@@ -11,6 +11,7 @@
     "capture:m2": "tsx src/capture-m2-web.ts",
     "capture:m5": "tsx src/capture-m5-web.ts",
     "capture:m6": "tsx src/capture-m6-web.ts",
+    "capture:m7": "tsx src/capture-m7-web.ts",
     "capture:mobile": "tsx src/capture-app-mobile.ts",
     "capture:gallery": "tsx src/capture-gallery.ts",
     "compare": "tsx src/compare.ts",
