@@ -36,6 +36,45 @@ Hermes (Expo/React Native engine) gaps had to be closed; the first masked the se
   `["src", "vitest.config.ts"]`), so `projectService` lint flagged the file as "not
   found by the project service". One-token consistency fix; restores the repo lint gate.
 
+## 2026-06-26 — Fidelity sweep review: cosmetic accepts + divergence dispositions
+
+After the full web sweep (18/18 captured) and the reachable mobile captures, the
+fidelity diffs sort into "accept (intended v3 behavior)" and "real divergence".
+
+**Accepted as-is — not defects, no change:**
+- **Side nav omits `Shopping` + the `LISTS` section** the board shows. Already a
+  logged decision (Shopping hidden until its screen exists — see 2026-06-19 entry).
+- **Inventory** renders granular location labels (`Fridge — door`) vs the board's
+  buckets (`Fridge`/`Cupboard`), and ranks danger-first (overripe at top) vs the
+  board's expiry order. Both are the real `useInventory`/`locationLabels` behavior.
+- **Generated frames** (result / recipe-detail / chat) carry the deterministic mock
+  recipe body, which differs in wording from the board's authored recipe — a capture
+  fixture difference, not a UI defect.
+- Captures use the fresh test identity (Mara Quinn / `fidelity-…@example.com`).
+- **Mobile** frames are the real iOS aspect resized to the board's stylized 780-wide
+  device element; residual % is geometry — reviewed side-by-side (pixelmatch is a
+  non-gate for mobile, per `local-dev-runtime`).
+
+**Real divergences (app gaps) — recommended dispositions:**
+- **Web Settings has no dedicated Subscription page** (`subscription-in-settings--web-…pro-active`,
+  17.55%). The board has a standalone Subscription screen with a "Usage this week"
+  meter; v3 composes the Pro card inline on `/settings` (entitlement, billing rows,
+  manage/change actions all present). **Disposition: accept inline for v3;** the
+  dedicated page + usage meter is a post-launch enhancement.
+- **Mobile billing screens (paywall / trial / manage) have no in-app entry point**
+  from the reachable tabs (routes exist but aren't navigable). **Disposition:
+  follow-up** — wire the Me subscription row → manage/paywall and the limit-hit sheet
+  → paywall. (Also why those 3 mobile frames stay uncaptured.)
+- **Web cook-in-session lacks the board's Read-aloud / Pause / +1 timer controls.**
+  **Disposition: follow-up** (non-blocking; step flow + dark token theme match).
+- **`/cook` duplicates Home** — already logged (2026-06-19); the distinct "Cook ·
+  empty" screen is a separate fidelity item.
+
+Cosmetic web frames are recorded approved in `docs/checklists/m9-fidelity-sweep.md`.
+Milestone Status (M2/M5/M6/M7/M8) stays "fidelity review pending" until each
+milestone's **mobile** frames are captured + approved — web is done; mobile is
+partial (see the m9 checklist `[deep-link]` / `[needs dev deep-link]` tags).
+
 ## 2026-06-25 — M9 hardening + launch readiness
 
 Settled with the user during execution; M9 adds no product features.

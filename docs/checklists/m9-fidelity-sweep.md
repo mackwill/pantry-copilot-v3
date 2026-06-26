@@ -10,31 +10,35 @@ frame has no capture yet (web: `capture:web`; mobile: `capture:mobile`, see
 
 ## Web frames (18)
 
-All 18 captured (sweep 0/18 missing). %s below are the latest measured mismatch
-(`pnpm --filter @pantry/design-fidelity capture:web:all && … sweep`), **not**
-approvals — the approval column is the maintainer's after reviewing
-reference│actual│diff in `output/report.html`. Residual %s are dominated by
-known app-vs-board differences (mock recipe bodies, simpler side-nav, fresh
-signup identity) — see the agent first-pass notes shared with the report.
+All 18 captured (sweep 0/18 missing). %s are the latest measured mismatch
+(`pnpm --filter @pantry/design-fidelity capture:web:all && … sweep`). Residual %s
+are dominated by known app-vs-board differences (mock recipe bodies, simpler
+side-nav, fresh signup identity).
 
-- [ ] `chat-against-a-recipe--web-1-entry-on-recipe` — _5.52% mismatch_ — approved by ___ on ___
-- [ ] `chat-against-a-recipe--web-2-chat-panel-open` — _4.74% mismatch_ — approved by ___ on ___
-- [ ] `marketing-auth--web-login` — _0.26% mismatch_ — approved by ___ on ___
-- [ ] `home--web-home` — _4.75% mismatch_ — approved by ___ on ___
-- [ ] `result-after-generation--web-result` — _4.07% mismatch_ — approved by ___ on ___
-- [ ] `cook-tab-library--web-cook-empty` — _2.38% mismatch_ — approved by ___ on ___
-- [ ] `cook-tab-at-the-stove--web-cook-in-session` — _2.55% mismatch_ — approved by ___ on ___
-- [ ] `generating-state--web-1-thinking` — _1.85% mismatch_ — approved by ___ on ___
-- [ ] `generating-state--web-2-drafting` — _1.78% mismatch_ — approved by ___ on ___
-- [ ] `inventory-recipe-detail--web-inventory-full-pantry` — _2.67% mismatch_ — approved by ___ on ___
-- [ ] `inventory-recipe-detail--web-recipe-detail` — _5.83% mismatch_ — approved by ___ on ___
-- [ ] `ingredient-form-account--web-ingredient-form` — _1.43% mismatch_ — approved by ___ on ___
-- [ ] `ingredient-form-account--web-user-account` — _2.09% mismatch_ — approved by ___ on ___
-- [ ] `paywall-variation-a--web-paywall-onboarding` — _1.06% mismatch_ — approved by ___ on ___
-- [ ] `paywall-variation-b--web-paywall-plan-compare` — _2.52% mismatch_ — approved by ___ on ___
-- [ ] `contextual-paywalls--web-limit-hit-modal` — _3.09% mismatch_ — approved by ___ on ___
-- [ ] `free-trial-lifecycle--web-trial-ending-page` — _2.02% mismatch_ — approved by ___ on ___
-- [ ] `subscription-in-settings--web-settings-subscription-pro-active` — _17.55% mismatch · ⚠ app-vs-board: app has no dedicated Subscription page (inline on /settings)_ — approved by ___ on ___
+**Sign-off (2026-06-26):** the 17 cosmetic frames are **batch-approved** by the
+maintainer as intended-behavior accepts (rationale logged in
+`docs/decisions.md` → 2026-06-26 fidelity-review entry). The one remaining frame,
+`subscription-in-settings--web-…pro-active`, is a real divergence (no dedicated
+Subscription page) left **unchecked** for an explicit build-vs-accept call.
+
+- [x] `chat-against-a-recipe--web-1-entry-on-recipe` — _5.52% mismatch_ — approved by W. Mindenhall on 2026-06-26 (cosmetic accept)
+- [x] `chat-against-a-recipe--web-2-chat-panel-open` — _4.74% mismatch_ — approved by W. Mindenhall on 2026-06-26 (cosmetic accept)
+- [x] `marketing-auth--web-login` — _0.26% mismatch_ — approved by W. Mindenhall on 2026-06-26 (cosmetic accept)
+- [x] `home--web-home` — _4.75% mismatch_ — approved by W. Mindenhall on 2026-06-26 (cosmetic accept)
+- [x] `result-after-generation--web-result` — _4.07% mismatch_ — approved by W. Mindenhall on 2026-06-26 (cosmetic accept)
+- [x] `cook-tab-library--web-cook-empty` — _2.38% mismatch_ — approved by W. Mindenhall on 2026-06-26 (cosmetic accept)
+- [x] `cook-tab-at-the-stove--web-cook-in-session` — _2.55% mismatch_ — approved by W. Mindenhall on 2026-06-26 (cosmetic accept; Read-aloud/Pause controls deferred — see decisions 2026-06-26)
+- [x] `generating-state--web-1-thinking` — _1.85% mismatch_ — approved by W. Mindenhall on 2026-06-26 (cosmetic accept)
+- [x] `generating-state--web-2-drafting` — _1.78% mismatch_ — approved by W. Mindenhall on 2026-06-26 (cosmetic accept)
+- [x] `inventory-recipe-detail--web-inventory-full-pantry` — _2.67% mismatch_ — approved by W. Mindenhall on 2026-06-26 (cosmetic accept; granular location labels + danger-first order are intended — see decisions 2026-06-26)
+- [x] `inventory-recipe-detail--web-recipe-detail` — _5.83% mismatch_ — approved by W. Mindenhall on 2026-06-26 (cosmetic accept; mock recipe body)
+- [x] `ingredient-form-account--web-ingredient-form` — _1.43% mismatch_ — approved by W. Mindenhall on 2026-06-26 (cosmetic accept)
+- [x] `ingredient-form-account--web-user-account` — _2.09% mismatch_ — approved by W. Mindenhall on 2026-06-26 (cosmetic accept)
+- [x] `paywall-variation-a--web-paywall-onboarding` — _1.06% mismatch_ — approved by W. Mindenhall on 2026-06-26 (cosmetic accept)
+- [x] `paywall-variation-b--web-paywall-plan-compare` — _2.52% mismatch_ — approved by W. Mindenhall on 2026-06-26 (cosmetic accept)
+- [x] `contextual-paywalls--web-limit-hit-modal` — _3.09% mismatch_ — approved by W. Mindenhall on 2026-06-26 (cosmetic accept)
+- [x] `free-trial-lifecycle--web-trial-ending-page` — _2.02% mismatch_ — approved by W. Mindenhall on 2026-06-26 (cosmetic accept)
+- [ ] `subscription-in-settings--web-settings-subscription-pro-active` — _17.55% mismatch · ⚠ DIVERGENCE (Pile 3): app has no dedicated Subscription page (inline on /settings). Disposition: accept inline for v3 (see decisions 2026-06-26) — needs your explicit OK to check_ — approved by ___ on ___
 
 ## Mobile frames (37)
 
