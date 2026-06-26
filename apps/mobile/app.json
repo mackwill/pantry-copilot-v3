@@ -5,6 +5,8 @@
     "version": "0.0.0",
     "scheme": "pantrycopilot",
     "orientation": "portrait",
+    "runtimeVersion": { "policy": "appVersion" },
+    "extra": { "eas": { "projectId": "FILL_VIA_eas_init" } },
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "ios": {
