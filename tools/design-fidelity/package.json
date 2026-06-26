@@ -8,6 +8,7 @@
     "serve": "tsx src/serve-board.ts",
     "capture:references": "tsx src/capture-references.ts",
     "capture:web": "tsx src/capture-app-web.ts",
+    "capture:mobile": "tsx src/capture-app-mobile.ts",
     "capture:gallery": "tsx src/capture-gallery.ts",
     "compare": "tsx src/compare.ts"
   },
