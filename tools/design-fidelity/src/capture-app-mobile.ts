@@ -17,7 +17,14 @@ import { promisify } from 'node:util';
 
 const run = promisify(execFile);
 const APP_DIR = fileURLToPath(new URL('../output/app/', import.meta.url));
-const REFS = fileURLToPath(new URL('../references/manifest.json', import.meta.url));
+const REFS_DIR = fileURLToPath(new URL('../references/', import.meta.url));
+const REFS = `${REFS_DIR}manifest.json`;
+
+/** Read a PNG's pixel width straight from the IHDR (bytes 16–19, big-endian). */
+async function pngWidth(path: string): Promise<number> {
+  const header = await readFile(path);
+  return header.readUInt32BE(16);
+}
 
 interface ManifestEntry {
   kind: 'web' | 'mobile';
@@ -60,7 +67,12 @@ for (const entry of mobile) {
   await run('xcrun', ['simctl', 'openurl', 'booted', deepLink]);
   await new Promise((r) => setTimeout(r, 1500));
   await run('xcrun', ['simctl', 'io', 'booted', 'screenshot', `${APP_DIR}${slug}.png`]);
+  // Normalize the native screenshot to the reference width (aspect-preserved)
+  // so the committed actual is review-friendly and the sweep diff is meaningful
+  // — sips is macOS-native, no runtime dep. Mirrors normalize.ts's resample.
+  const refWidth = await pngWidth(`${REFS_DIR}${slug}.png`);
+  await run('sips', ['--resampleWidth', String(refWidth), `${APP_DIR}${slug}.png`]);
   captured += 1;
-  console.log(`captured → ${slug}.png`);
+  console.log(`captured → ${slug}.png (resized to ${String(refWidth)}px wide)`);
 }
 console.log(`mobile capture complete: ${String(captured)}/${String(mobile.length)} frames`);

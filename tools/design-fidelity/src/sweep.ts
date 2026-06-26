@@ -7,6 +7,7 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import pixelmatch from 'pixelmatch';
 import { PNG } from 'pngjs';
+import { normalizeForDiff } from './normalize';
 
 const REFS = fileURLToPath(new URL('../references/', import.meta.url));
 const APP = fileURLToPath(new URL('../output/app/', import.meta.url));
@@ -24,13 +25,6 @@ interface Row {
   kind: string;
   mismatchPct: number;
   missing: boolean;
-}
-
-function pad(png: PNG, w: number, h: number): PNG {
-  if (png.width === w && png.height === h) return png;
-  const out = new PNG({ width: w, height: h });
-  PNG.bitblt(png, out, 0, 0, png.width, png.height, 0, 0);
-  return out;
 }
 
 async function tryRead(path: string): Promise<PNG | null> {
@@ -73,10 +67,10 @@ for (const entry of manifest) {
     rows.push({ slug, kind: entry.kind, mismatchPct: 100, missing: true });
     continue;
   }
-  const w = Math.max(ref.width, act.width);
-  const h = Math.max(ref.height, act.height);
+  const norm = normalizeForDiff(ref, act);
+  const { w, h } = norm;
   const diff = new PNG({ width: w, height: h });
-  const mismatched = pixelmatch(pad(ref, w, h).data, pad(act, w, h).data, diff.data, w, h, {
+  const mismatched = pixelmatch(norm.ref.data, norm.act.data, diff.data, w, h, {
     threshold: 0.1,
   });
   await mkdir(`${OUT}${slug}/`, { recursive: true });
