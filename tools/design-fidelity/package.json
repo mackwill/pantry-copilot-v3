@@ -10,7 +10,8 @@
     "capture:web": "tsx src/capture-app-web.ts",
     "capture:mobile": "tsx src/capture-app-mobile.ts",
     "capture:gallery": "tsx src/capture-gallery.ts",
-    "compare": "tsx src/compare.ts"
+    "compare": "tsx src/compare.ts",
+    "sweep": "tsx src/sweep.ts"
   },
   "devDependencies": {
     "@types/node": "25.9.3",
