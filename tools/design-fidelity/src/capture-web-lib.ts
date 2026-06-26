@@ -9,12 +9,20 @@
 // services/api/src — only subscription read/sync, cook.start, and the AI
 // generate path exist). Subscription tier in particular has no setter
 // procedure (only a RevenueCat webhook gated behind REVENUECAT_WEBHOOK_AUTH,
-// which is unset in dev). So `seedState` seeds the **local dev postgres**
-// directly via `podman exec … psql` — macOS/local-only, no new runtime dep,
-// matching the plan's sips/simctl shell-out approach. It never adds a
+// which is unset in dev). So `seedState` seeds the **dev postgres** that the
+// api actually uses, directly via `psql` — macOS/local-only, no new runtime
+// dep, matching the plan's sips/simctl shell-out approach. It never adds a
 // production endpoint.
+//
+// DB targeting: the api's DATABASE_URL is `…@localhost:5432/pantry`, but on
+// this machine a native postgres (IPv4 127.0.0.1:5432) and the podman compose
+// postgres (IPv6 :5432) both bind 5432. node/the api reach the native one via
+// IPv4 `localhost`, so we seed 127.0.0.1 explicitly to hit the same database
+// the api writes to. `psql` from postgresql@17 is keg-only, so resolve it from
+// a candidate list rather than assuming PATH.
 import { execFile } from 'node:child_process';
-import { mkdir } from 'node:fs/promises';
+import { access, mkdir } from 'node:fs/promises';
+import { constants } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
 import { chromium, type Browser, type Page } from 'playwright';
@@ -24,7 +32,15 @@ const run = promisify(execFile);
 export const API = 'http://localhost:4000';
 export const WEB = 'http://localhost:3000';
 const APP_DIR = fileURLToPath(new URL('../output/app/', import.meta.url));
-const PG_CONTAINER = 'podman-postgres-1';
+/** The api's DB, addressed over IPv4 to avoid the podman IPv6 :5432 binding. */
+const DB_URL = process.env['FIDELITY_DB_URL'] ?? 'postgres://pantry:pantry@127.0.0.1:5432/pantry';
+const PSQL_CANDIDATES = [
+  process.env['PSQL_BIN'],
+  '/opt/homebrew/opt/postgresql@17/bin/psql',
+  '/opt/homebrew/bin/psql',
+  '/usr/local/bin/psql',
+  '/usr/bin/psql',
+].filter((p): p is string => p !== undefined);
 
 /** ISO date (YYYY-MM-DD) `days` from today — for bestBy/purchasedAt fixtures. */
 export function isoIn(days: number): string {
@@ -160,20 +176,23 @@ export interface SeedPayload {
   exhaustRecipeQuota?: boolean;
 }
 
+let psqlBinPromise: Promise<string> | null = null;
+async function resolvePsql(): Promise<string> {
+  for (const candidate of PSQL_CANDIDATES) {
+    try {
+      await access(candidate, constants.X_OK);
+      return candidate;
+    } catch {
+      // try the next candidate
+    }
+  }
+  return 'psql'; // last resort: assume it's on PATH (spawn errors if not)
+}
+
 async function runSql(sql: string): Promise<void> {
-  await run('podman', [
-    'exec',
-    PG_CONTAINER,
-    'psql',
-    '-U',
-    'pantry',
-    '-d',
-    'pantry',
-    '-v',
-    'ON_ERROR_STOP=1',
-    '-c',
-    sql,
-  ]);
+  psqlBinPromise ??= resolvePsql();
+  const psql = await psqlBinPromise;
+  await run(psql, [DB_URL, '-v', 'ON_ERROR_STOP=1', '-c', sql]);
 }
 
 /**
