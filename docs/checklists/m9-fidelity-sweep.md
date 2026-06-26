@@ -9,24 +9,32 @@ frame has no capture yet (web: `capture:web`; mobile: `capture:mobile`, see
 `docs/launch-readiness.md`).
 
 ## Web frames (18)
-- [ ] `chat-against-a-recipe--web-1-entry-on-recipe` — _not captured_ — approved by ___ on ___
-- [ ] `chat-against-a-recipe--web-2-chat-panel-open` — _not captured_ — approved by ___ on ___
+
+All 18 captured (sweep 0/18 missing). %s below are the latest measured mismatch
+(`pnpm --filter @pantry/design-fidelity capture:web:all && … sweep`), **not**
+approvals — the approval column is the maintainer's after reviewing
+reference│actual│diff in `output/report.html`. Residual %s are dominated by
+known app-vs-board differences (mock recipe bodies, simpler side-nav, fresh
+signup identity) — see the agent first-pass notes shared with the report.
+
+- [ ] `chat-against-a-recipe--web-1-entry-on-recipe` — _5.52% mismatch_ — approved by ___ on ___
+- [ ] `chat-against-a-recipe--web-2-chat-panel-open` — _4.74% mismatch_ — approved by ___ on ___
 - [ ] `marketing-auth--web-login` — _0.26% mismatch_ — approved by ___ on ___
-- [ ] `home--web-home` — _4.73% mismatch_ — approved by ___ on ___
-- [ ] `result-after-generation--web-result` — _4.05% mismatch_ — approved by ___ on ___
-- [ ] `cook-tab-library--web-cook-empty` — _not captured_ — approved by ___ on ___
-- [ ] `cook-tab-at-the-stove--web-cook-in-session` — _not captured_ — approved by ___ on ___
-- [ ] `generating-state--web-1-thinking` — _1.95% mismatch_ — approved by ___ on ___
-- [ ] `generating-state--web-2-drafting` — _1.74% mismatch_ — approved by ___ on ___
-- [ ] `inventory-recipe-detail--web-inventory-full-pantry` — _not captured_ — approved by ___ on ___
-- [ ] `inventory-recipe-detail--web-recipe-detail` — _not captured_ — approved by ___ on ___
-- [ ] `ingredient-form-account--web-ingredient-form` — _not captured_ — approved by ___ on ___
-- [ ] `ingredient-form-account--web-user-account` — _not captured_ — approved by ___ on ___
-- [ ] `paywall-variation-a--web-paywall-onboarding` — _not captured_ — approved by ___ on ___
-- [ ] `paywall-variation-b--web-paywall-plan-compare` — _not captured_ — approved by ___ on ___
-- [ ] `contextual-paywalls--web-limit-hit-modal` — _not captured_ — approved by ___ on ___
-- [ ] `free-trial-lifecycle--web-trial-ending-page` — _not captured_ — approved by ___ on ___
-- [ ] `subscription-in-settings--web-settings-subscription-pro-active` — _not captured_ — approved by ___ on ___
+- [ ] `home--web-home` — _4.75% mismatch_ — approved by ___ on ___
+- [ ] `result-after-generation--web-result` — _4.07% mismatch_ — approved by ___ on ___
+- [ ] `cook-tab-library--web-cook-empty` — _2.38% mismatch_ — approved by ___ on ___
+- [ ] `cook-tab-at-the-stove--web-cook-in-session` — _2.55% mismatch_ — approved by ___ on ___
+- [ ] `generating-state--web-1-thinking` — _1.85% mismatch_ — approved by ___ on ___
+- [ ] `generating-state--web-2-drafting` — _1.78% mismatch_ — approved by ___ on ___
+- [ ] `inventory-recipe-detail--web-inventory-full-pantry` — _2.67% mismatch_ — approved by ___ on ___
+- [ ] `inventory-recipe-detail--web-recipe-detail` — _5.83% mismatch_ — approved by ___ on ___
+- [ ] `ingredient-form-account--web-ingredient-form` — _1.43% mismatch_ — approved by ___ on ___
+- [ ] `ingredient-form-account--web-user-account` — _2.09% mismatch_ — approved by ___ on ___
+- [ ] `paywall-variation-a--web-paywall-onboarding` — _1.06% mismatch_ — approved by ___ on ___
+- [ ] `paywall-variation-b--web-paywall-plan-compare` — _2.52% mismatch_ — approved by ___ on ___
+- [ ] `contextual-paywalls--web-limit-hit-modal` — _3.09% mismatch_ — approved by ___ on ___
+- [ ] `free-trial-lifecycle--web-trial-ending-page` — _2.02% mismatch_ — approved by ___ on ___
+- [ ] `subscription-in-settings--web-settings-subscription-pro-active` — _17.55% mismatch · ⚠ app-vs-board: app has no dedicated Subscription page (inline on /settings)_ — approved by ___ on ___
 
 ## Mobile frames (37)
 
