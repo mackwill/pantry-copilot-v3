@@ -15,11 +15,12 @@ All 18 captured (sweep 0/18 missing). %s are the latest measured mismatch
 are dominated by known app-vs-board differences (mock recipe bodies, simpler
 side-nav, fresh signup identity).
 
-**Sign-off (2026-06-26):** the 17 cosmetic frames are **batch-approved** by the
-maintainer as intended-behavior accepts (rationale logged in
-`docs/decisions.md` → 2026-06-26 fidelity-review entry). The one remaining frame,
-`subscription-in-settings--web-…pro-active`, is a real divergence (no dedicated
-Subscription page) left **unchecked** for an explicit build-vs-accept call.
+**Sign-off (2026-06-26):** all 18 web frames **approved** by the maintainer.
+The 17 cosmetic frames are intended-behavior accepts; `subscription-in-settings--web-…pro-active`
+is accepted as the inline-on-`/settings` composition for v3 (the dedicated
+Subscription page + usage meter is a post-launch enhancement). Rationale logged
+in `docs/decisions.md` → 2026-06-26 fidelity-review entry. **Web fidelity is
+complete.**
 
 - [x] `chat-against-a-recipe--web-1-entry-on-recipe` — _5.52% mismatch_ — approved by W. Mindenhall on 2026-06-26 (cosmetic accept)
 - [x] `chat-against-a-recipe--web-2-chat-panel-open` — _4.74% mismatch_ — approved by W. Mindenhall on 2026-06-26 (cosmetic accept)
@@ -38,7 +39,7 @@ Subscription page) left **unchecked** for an explicit build-vs-accept call.
 - [x] `paywall-variation-b--web-paywall-plan-compare` — _2.52% mismatch_ — approved by W. Mindenhall on 2026-06-26 (cosmetic accept)
 - [x] `contextual-paywalls--web-limit-hit-modal` — _3.09% mismatch_ — approved by W. Mindenhall on 2026-06-26 (cosmetic accept)
 - [x] `free-trial-lifecycle--web-trial-ending-page` — _2.02% mismatch_ — approved by W. Mindenhall on 2026-06-26 (cosmetic accept)
-- [ ] `subscription-in-settings--web-settings-subscription-pro-active` — _17.55% mismatch · ⚠ DIVERGENCE (Pile 3): app has no dedicated Subscription page (inline on /settings). Disposition: accept inline for v3 (see decisions 2026-06-26) — needs your explicit OK to check_ — approved by ___ on ___
+- [x] `subscription-in-settings--web-settings-subscription-pro-active` — _17.55% mismatch · ⚠ DIVERGENCE: app composes the Pro card inline on /settings (no dedicated Subscription page + usage meter)_ — approved by W. Mindenhall on 2026-06-26 (accept inline for v3; dedicated page + usage meter is a post-launch enhancement — see decisions 2026-06-26)
 
 ## Mobile frames (37)
 
@@ -68,29 +69,29 @@ scale. % = latest measured.
 - [ ] `pantry-consume-flow--3-consume-sheet` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
 - [ ] `chat-against-a-recipe--mobile-1-entry-on-recipe` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
 - [ ] `chat-against-a-recipe--mobile-2-chat-sheet-open` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
-- [ ] `marketing-auth--mobile-login` _[deep-link]_ — _12.74% mismatch · ✓ captured (relaunch after deleting the server session; the in-app sign-out button does not end the session on this build)_ — approved by ___ on ___
-- [ ] `home--mobile-home` _[deep-link]_ — _13.79% mismatch · ✓ captured (Maestro)_ — approved by ___ on ___
+- [x] `marketing-auth--mobile-login` _[deep-link]_ — _12.74% mismatch · ✓ captured_ — approved by W. Mindenhall on 2026-06-26 (cosmetic accept · mobile geometry, side-by-side)
+- [x] `home--mobile-home` _[deep-link]_ — _13.79% mismatch · ✓ captured (Maestro)_ — approved by W. Mindenhall on 2026-06-26 (cosmetic accept · mobile geometry, side-by-side)
 - [ ] `home--mobile-home-selecting` _[needs dev deep-link]_ — _61.88% mismatch_ — approved by ___ on ___
 - [ ] `home--mobile-home-browse-pantry` _[needs dev deep-link]_ — _67.77% mismatch_ — approved by ___ on ___
 - [ ] `result-after-generation--mobile-result` _[deep-link]_ — _BUG FIXED (2026-06-26) · now capturable. The "hit a snag (stream 0.0s)" failure had TWO Hermes causes, both fixed: (1) tRPC v11's `httpSubscriptionLink` resource disposal needs `Symbol.dispose`/`Symbol.asyncDispose`/`SuppressedError`, which Hermes lacks — polyfilled at a custom entry (`apps/mobile/index.js` → `src/lib/polyfills.ts`); (2) the real trigger, surfaced once (1) let the error through legibly: `newRequestId()` called the bare global `crypto.randomUUID()`, but Hermes has no `crypto` global, throwing `ReferenceError: Property 'crypto' doesn't exist` (wrapped as the empty `SuppressedError`). Fixed by a non-crypto UUID fallback in `@pantry/api-client` `request-id.ts`. Verified on iPhone 15 sim: `maestro test e2e/mobile/generation.yaml` passes end-to-end (Thinking → Drafting → §02 Result + branch re-prompt)._ — approved by ___ on ___
-- [ ] `cook-tab-library--mobile-cook-default` _[deep-link]_ — _12.27% mismatch · ✓ captured (Maestro)_ — approved by ___ on ___
+- [x] `cook-tab-library--mobile-cook-default` _[deep-link]_ — _12.27% mismatch · ✓ captured (Maestro)_ — approved by W. Mindenhall on 2026-06-26 (cosmetic accept · mobile geometry, side-by-side)
 - [ ] `cook-tab-library--mobile-cook-with-resume` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
 - [ ] `cook-tab-library--mobile-cook-new-tapped` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
 - [ ] `cook-tab-at-the-stove--mobile-cook-in-session` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
 - [ ] `generating-state--mobile-1-thinking` _[needs dev deep-link]_ — _60.81% mismatch_ — approved by ___ on ___
 - [ ] `generating-state--mobile-2-drafting` _[needs dev deep-link]_ — _61.10% mismatch_ — approved by ___ on ___
-- [ ] `mobile-pantry-recipe--pantry-tap-to-cook` _[deep-link]_ — _17.78% mismatch · ✓ captured (Maestro) · empty pantry (maestro user has no items)_ — approved by ___ on ___
+- [x] `mobile-pantry-recipe--pantry-tap-to-cook` _[deep-link]_ — _17.78% mismatch · ✓ captured (Maestro) · empty pantry (maestro user has no items)_ — approved by W. Mindenhall on 2026-06-26 (cosmetic accept · layout matches; recapture with a seeded pantry if a populated frame is wanted)
 - [ ] `mobile-pantry-recipe--recipe-detail` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
-- [ ] `mobile-camera-scan-flow--1-viewfinder` _[deep-link]_ — _24.88% mismatch · ✓ captured (Maestro)_ — approved by ___ on ___
+- [x] `mobile-camera-scan-flow--1-viewfinder` _[deep-link]_ — _24.88% mismatch · ✓ captured (Maestro)_ — approved by W. Mindenhall on 2026-06-26 (cosmetic accept · mobile geometry, side-by-side)
 - [ ] `mobile-camera-scan-flow--2-detecting` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
 - [ ] `mobile-camera-scan-flow--3-review-items` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
 - [ ] `mobile-camera-scan-flow--4-added-to-pantry` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
-- [ ] `mobile-add-ingredient-edit-ingredient--add-ingredient` _[deep-link]_ — _17.24% mismatch · ✓ captured (Maestro)_ — approved by ___ on ___
+- [x] `mobile-add-ingredient-edit-ingredient--add-ingredient` _[deep-link]_ — _17.24% mismatch · ✓ captured (Maestro)_ — approved by W. Mindenhall on 2026-06-26 (cosmetic accept · mobile geometry, side-by-side)
 - [ ] `mobile-add-ingredient-edit-ingredient--edit-ingredient` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
 - [ ] `mobile-bottom-sheets--category-picker` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
 - [ ] `mobile-bottom-sheets--location-picker` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
 - [ ] `mobile-bottom-sheets--best-by-picker` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
-- [ ] `mobile-account--account` _[deep-link]_ — _11.07% mismatch · ✓ captured (Maestro)_ — approved by ___ on ___
+- [x] `mobile-account--account` _[deep-link]_ — _11.07% mismatch · ✓ captured (Maestro)_ — approved by W. Mindenhall on 2026-06-26 (cosmetic accept · mobile geometry, side-by-side)
 - [ ] `paywall-variation-a--mobile-paywall` _[deep-link]_ — _not captured · blocked: no in-app entry point + deep links blocked on dev build_ — approved by ___ on ___
 - [ ] `paywall-variation-b--mobile-paywall` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
 - [ ] `contextual-paywalls--mobile-limit-hit-sheet` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
