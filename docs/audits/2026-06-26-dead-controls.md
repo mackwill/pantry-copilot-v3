@@ -52,6 +52,18 @@ These were the `flag` rows; recorded here with the final call.
 - `QuickActions.tsx:12` — Receipt card → **REMOVE** (receipt OCR deferred).
 - `QuickActions.tsx:12` — Speak card → **REMOVE** (voice deferred; no new deps).
 
+## Remediation status (M10)
+
+**Done (committed):**
+- Slider: WeirdnessSlider thumb now transform/translateX (Phase 3).
+- Web simple: HomeContextCards Pantry/Recipes nav; RecipeDetail Share (Web Share API) + Print removed; OneRecipeCard Share removed; HeroPrompt Mic removed; ProfileCard Change photo removed; GenerateScreen Start cooking wired; CollapsedReasoning toggle wired.
+- Mobile simple: scan flash/flip/back/rescan + Added ideas card wired; QuickActions Scan wired with Receipt/Speak removed; LocationSheet "Add a place" removed; CookTray Cook wired; RecipeDetail Share wired; GenerateScreen Start cooking + Save wired.
+
+**Remaining — net-new features (backend and/or new screens):**
+- Web: Inventory Scan ("mobile-only" msg) + Import modal; AccountSidebar removes (Pantry preferences / Notifications / Connections) + Billing → /upgrade + Diet & allergies; PreferencesCard inline edit; LoginForm forgot-password.
+- Mobile: Pantry search + filter sheet; Library search + sort sheet; ReviewStep edit sheet; AccountScreen profile-edit screen; SettingsRow per-row destinations; LoginForm forgot-password; Diet & allergies surface.
+- Backend: `user` router preferences (diet & allergies) + generation prompt integration; auth password-reset.
+
 ### Important note from the user
 
 Continue to cross reference with the v2 reference repo on these. You may find some
