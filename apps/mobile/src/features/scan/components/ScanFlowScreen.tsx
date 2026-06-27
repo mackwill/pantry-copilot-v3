@@ -19,7 +19,7 @@ export function ScanFlowScreen() {
     case 'detecting':
       return <DetectingStep testID="scan-detecting" />;
     case 'review':
-      return <ReviewStep flow={flow} />;
+      return <ReviewStep flow={flow} onBack={flow.reset} onRescan={flow.reset} />;
     case 'added':
       return flow.summary === null ? (
         <View />

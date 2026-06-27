@@ -1,23 +1,29 @@
 import { Button, Eyebrow, Icon, Pill, fonts } from '@pantry/design-system/native';
 import { tokens } from '@pantry/design-system/tokens';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import type { UseScanFlow } from '../useScanFlow';
 import { scanStrings } from '../strings';
 import { ReviewRow } from './ReviewRow';
 
 interface ReviewStepProps {
   flow: UseScanFlow;
+  onBack: () => void;
+  onRescan: () => void;
 }
 
-export function ReviewStep({ flow }: ReviewStepProps) {
+export function ReviewStep({ flow, onBack, onRescan }: ReviewStepProps) {
   const { rows, selectedCount } = flow;
   return (
     <View style={styles.root}>
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.headerRow}>
-          <Icon name="ChevronLeft" size={22} color={tokens.fg} />
+          <Pressable testID="review-back" onPress={onBack} hitSlop={8}>
+            <Icon name="ChevronLeft" size={22} color={tokens.fg} />
+          </Pressable>
           <Pill tone="success">{scanStrings.review.complete}</Pill>
-          <Icon name="RefreshCw" size={18} color={tokens.fgMuted} />
+          <Pressable testID="review-rescan" onPress={onRescan} hitSlop={8}>
+            <Icon name="RefreshCw" size={18} color={tokens.fgMuted} />
+          </Pressable>
         </View>
 
         <Eyebrow>{scanStrings.review.eyebrow}</Eyebrow>

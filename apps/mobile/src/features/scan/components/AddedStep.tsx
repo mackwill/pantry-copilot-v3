@@ -31,7 +31,7 @@ export function AddedStep({ summary, onSeeIdeas, onViewPantry, onClose }: AddedS
         </Text>
         <Text style={styles.body}>{scanStrings.added.body(summary.pantryTotal, summary.attention)}</Text>
 
-        <View style={styles.ideasCard}>
+        <Pressable testID="scan-ideas-card" onPress={onSeeIdeas} style={styles.ideasCard}>
           <View style={styles.ideasIcon}>
             <Icon name="Sparkles" size={18} color={tokens.accent} />
           </View>
@@ -40,7 +40,7 @@ export function AddedStep({ summary, onSeeIdeas, onViewPantry, onClose }: AddedS
             <Text style={styles.ideasSubtitle}>{scanStrings.added.ideasSubtitle}</Text>
           </View>
           <Icon name="ChevronRight" size={16} color={tokens.fgSubtle} />
-        </View>
+        </Pressable>
       </View>
 
       <View style={styles.actions}>

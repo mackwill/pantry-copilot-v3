@@ -1,6 +1,6 @@
 import { Icon } from '@pantry/design-system/native';
-import { CameraView, useCameraPermissions } from 'expo-camera';
-import { useRef } from 'react';
+import { CameraView, type CameraType, useCameraPermissions } from 'expo-camera';
+import { useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import type { ScanAsset } from '../useScanFlow';
 import { scanStrings } from '../strings';
@@ -19,6 +19,8 @@ export function ViewfinderStep({ onCapture, onClose }: ViewfinderStepProps) {
   const [permission] = useCameraPermissions();
   const cameraRef = useRef<CameraView>(null);
   const cameraReady = permission?.granted === true;
+  const [flash, setFlash] = useState(false);
+  const [facing, setFacing] = useState<CameraType>('back');
 
   const shoot = () => {
     void (async () => {
@@ -36,7 +38,13 @@ export function ViewfinderStep({ onCapture, onClose }: ViewfinderStepProps) {
   return (
     <View style={styles.root}>
       {cameraReady ? (
-        <CameraView ref={cameraRef} style={StyleSheet.absoluteFill} facing="back" />
+        <CameraView
+          testID="scan-camera"
+          ref={cameraRef}
+          style={StyleSheet.absoluteFill}
+          facing={facing}
+          enableTorch={flash}
+        />
       ) : (
         <View style={[StyleSheet.absoluteFill, styles.scene]}>
           {scanTheme.sceneItems.map((s, i) => (
@@ -56,9 +64,14 @@ export function ViewfinderStep({ onCapture, onClose }: ViewfinderStepProps) {
           <Icon name="ScanLine" size={11} color={scanTheme.textOnDark} />
           <Text style={styles.badgeText}>{scanStrings.viewfinder.badge}</Text>
         </View>
-        <View style={styles.circle}>
-          <Icon name="Zap" size={16} color={scanTheme.textOnDark} />
-        </View>
+        <Pressable
+          testID="scan-flash"
+          onPress={() => { setFlash((on) => !on); }}
+          hitSlop={8}
+          style={styles.circle}
+        >
+          <Icon name="Zap" size={16} color={flash ? scanTheme.reticle : scanTheme.textOnDark} />
+        </Pressable>
       </View>
 
       <View style={styles.hint}>
@@ -81,9 +94,13 @@ export function ViewfinderStep({ onCapture, onClose }: ViewfinderStepProps) {
         <Pressable testID="scan-shutter" onPress={shoot} style={styles.shutterOuter}>
           <View style={styles.shutterInner} />
         </Pressable>
-        <View style={styles.sideControl}>
+        <Pressable
+          testID="scan-flip"
+          onPress={() => { setFacing((cur) => (cur === 'back' ? 'front' : 'back')); }}
+          style={styles.sideControl}
+        >
           <Icon name="RefreshCw" size={18} color={scanTheme.textOnDark} />
-        </View>
+        </Pressable>
       </View>
     </View>
   );
