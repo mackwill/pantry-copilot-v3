@@ -32,6 +32,15 @@ export const scanStrings = {
     addToPantry: (n: number): string => `Add ${String(n)} to pantry`,
     untitledItem: 'New item',
   },
+  editSheet: {
+    eyebrow: 'Edit item',
+    title: 'Fix what we got wrong',
+    nameLabel: 'Name',
+    quantityLabel: 'Quantity',
+    categoryLabel: 'Category',
+    cancel: 'Cancel',
+    save: 'Save',
+  },
   added: {
     eyebrow: 'Pantry updated',
     headlineLead: 'Added ',

@@ -1,8 +1,10 @@
 import { Button, Eyebrow, Icon, Pill, fonts } from '@pantry/design-system/native';
 import { tokens } from '@pantry/design-system/tokens';
+import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import type { UseScanFlow } from '../useScanFlow';
 import { scanStrings } from '../strings';
+import { EditItemSheet } from './EditItemSheet';
 import { ReviewRow } from './ReviewRow';
 
 interface ReviewStepProps {
@@ -13,6 +15,8 @@ interface ReviewStepProps {
 
 export function ReviewStep({ flow, onBack, onRescan }: ReviewStepProps) {
   const { rows, selectedCount } = flow;
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const editingRow = rows.find((row) => row.id === editingId) ?? null;
   return (
     <View style={styles.root}>
       <ScrollView contentContainerStyle={styles.content}>
@@ -41,7 +45,7 @@ export function ReviewStep({ flow, onBack, onRescan }: ReviewStepProps) {
               row={row}
               isLast={i === rows.length - 1}
               onToggle={flow.toggle}
-              onEdit={() => { /* Inline edit sheet is a follow-up; affordance shown per board §08. */ }}
+              onEdit={setEditingId}
             />
           ))}
         </View>
@@ -63,6 +67,18 @@ export function ReviewStep({ flow, onBack, onRescan }: ReviewStepProps) {
           {scanStrings.review.addToPantry(selectedCount)}
         </Button>
       </View>
+
+      <EditItemSheet
+        key={editingId ?? 'none'}
+        open={editingRow !== null}
+        row={editingRow}
+        onSave={(patch) => {
+          if (editingId !== null) flow.editRow(editingId, patch);
+        }}
+        onClose={() => {
+          setEditingId(null);
+        }}
+      />
     </View>
   );
 }
