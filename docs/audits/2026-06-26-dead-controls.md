@@ -55,14 +55,16 @@ These were the `flag` rows; recorded here with the final call.
 ## Remediation status (M10)
 
 **Done (committed):**
-- Slider: WeirdnessSlider thumb now transform/translateX (Phase 3).
+- Slider: WeirdnessSlider thumb transform/translateX **and** stutter fix (memoized gradient SVG so drags don't repaint it) + deterministic vertical centering. _Needs device re-verification._
 - Web simple: HomeContextCards Pantry/Recipes nav; RecipeDetail Share (Web Share API) + Print removed; OneRecipeCard Share removed; HeroPrompt Mic removed; ProfileCard Change photo removed; GenerateScreen Start cooking wired; CollapsedReasoning toggle wired.
 - Mobile simple: scan flash/flip/back/rescan + Added ideas card wired; QuickActions Scan wired with Receipt/Speak removed; LocationSheet "Add a place" removed; CookTray Cook wired; RecipeDetail Share wired; GenerateScreen Start cooking + Save wired.
+- Diet & allergies **backend**: `user_preferences` table + migration 0010; `user.preferences`/`updatePreferences`; `dietary[]` on AIGenerationRequest rendered as hard rules in the generation system prompt (both providers). Integration + prompt tests green.
+- Diet & allergies **web**: `/settings/diet` DietPreferencesScreen (toggle-chip multiselect + custom tags); AccountSidebar restructured — Billing → /upgrade, Diet → /settings/diet, removed Pantry preferences/Notifications/Connections.
 
-**Remaining — net-new features (backend and/or new screens):**
-- Web: Inventory Scan ("mobile-only" msg) + Import modal; AccountSidebar removes (Pantry preferences / Notifications / Connections) + Billing → /upgrade + Diet & allergies; PreferencesCard inline edit; LoginForm forgot-password.
-- Mobile: Pantry search + filter sheet; Library search + sort sheet; ReviewStep edit sheet; AccountScreen profile-edit screen; SettingsRow per-row destinations; LoginForm forgot-password; Diet & allergies surface.
-- Backend: `user` router preferences (diet & allergies) + generation prompt integration; auth password-reset.
+**Remaining — net-new features (decision: build autonomously, magic-link for forgot-password):**
+- Diet & allergies **mobile**: a diet screen + route + wire the Cooking "Diet"/"Allergies" settings rows to it.
+- Web: Inventory Scan ("mobile-only" msg) + Import modal; PreferencesCard inline edit; LoginForm forgot-password (magic-link).
+- Mobile: Pantry search + filter sheet; Library search + sort sheet; ReviewStep edit sheet; AccountScreen profile-edit screen; remaining SettingsRow destinations; LoginForm forgot-password (magic-link).
 
 ### Important note from the user
 
