@@ -1,7 +1,9 @@
 import { Button, Eyebrow, Icon, fonts } from '@pantry/design-system/native';
 import { tokens } from '@pantry/design-system/tokens';
+import { useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { api } from '../../../lib/api';
 import { LimitHitSheet } from '../../billing/sheets/LimitHitSheet';
 import { type GenerationSubscribe, useGeneration } from '../useGeneration';
 import { generationStrings } from '../strings';
@@ -50,7 +52,22 @@ export interface GenerateScreenProps {
 export function GenerateScreen({ prompt, weirdness, pantryItemIds, onClose, onUpgrade, subscribe }: GenerateScreenProps) {
   const gen = useGeneration(subscribe === undefined ? undefined : { subscribe });
   const { start } = gen;
+  const router = useRouter();
   const elapsedMs = useElapsedMs(gen.isStreaming);
+
+  const startCooking = (): void => {
+    if (gen.recipeId === null) return;
+    void api.cook.start
+      .mutate({ recipeId: gen.recipeId })
+      .then(() => {
+        router.push('/session');
+      })
+      .catch(() => undefined);
+  };
+  const saveRecipe = (): void => {
+    if (gen.recipeId === null) return;
+    void api.recipes.setFavorite.mutate({ recipeId: gen.recipeId, favorited: true }).catch(() => undefined);
+  };
 
   useEffect(() => {
     start({ prompt, pantryItemIds, weirdness });
@@ -99,7 +116,7 @@ export function GenerateScreen({ prompt, weirdness, pantryItemIds, onClose, onUp
         {gen.status === 'result' && gen.recipe !== null && (
           <View style={styles.block}>
             <CollapsedReasoningMobile elapsed={thoughtFor} toolCount={gen.tools.length} />
-            <OneRecipeCardMobile recipe={gen.recipe} />
+            <OneRecipeCardMobile recipe={gen.recipe} onStartCooking={startCooking} onSave={saveRecipe} />
             <BranchGrid onBranch={gen.branch} />
           </View>
         )}

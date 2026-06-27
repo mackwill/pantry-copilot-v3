@@ -66,7 +66,8 @@ export function PantryScreen() {
           count={selection.count}
           chipLabels={chipLabels}
           onCook={() => {
-            /* M4 wires generation; no-op stub this milestone. */
+            const ids = selection.selectedItems(items).map((item) => item.id);
+            router.push({ pathname: '/generate', params: { items: ids.join(',') } });
           }}
         />
       ) : null}

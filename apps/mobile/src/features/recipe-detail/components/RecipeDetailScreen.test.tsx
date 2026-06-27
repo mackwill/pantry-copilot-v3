@@ -1,5 +1,6 @@
 import type { RecipeDetail } from '@pantry/contracts';
 import { fireEvent, render, screen } from '@testing-library/react';
+import { Share } from 'react-native';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { recipeDetailStrings } from '../strings';
 import { RecipeDetailScreen } from './RecipeDetailScreen';
@@ -65,5 +66,15 @@ describe('RecipeDetailScreen (mobile)', () => {
     render(<RecipeDetailScreen recipe={makeRecipe()} onBack={onBack} />);
     fireEvent.click(screen.getByTestId('recipe-back'));
     expect(onBack).toHaveBeenCalledTimes(1);
+  });
+
+  it('shares the recipe when the share icon is tapped', () => {
+    const shareSpy = vi.spyOn(Share, 'share').mockResolvedValue({ action: 'sharedAction' } as never);
+    render(<RecipeDetailScreen recipe={makeRecipe()} onBack={vi.fn()} />);
+    fireEvent.click(screen.getByTestId('recipe-share'));
+    expect(shareSpy).toHaveBeenCalledWith(
+      expect.objectContaining({ title: 'Charred scallion oil noodles' }),
+    );
+    shareSpy.mockRestore();
   });
 });

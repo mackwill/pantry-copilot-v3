@@ -1,7 +1,7 @@
 import type { RecipeDetail } from '@pantry/contracts';
 import { Button, Eyebrow, Icon, fonts } from '@pantry/design-system/native';
 import { tokens } from '@pantry/design-system/tokens';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, Share, StyleSheet, Text, View } from 'react-native';
 import { RecipeChatEntry } from '../../recipe-chat/components/RecipeChatEntry';
 import { recipeDetailStrings as s } from '../strings';
 import { useFavorite } from '../useFavorite';
@@ -20,6 +20,10 @@ export interface RecipeDetailScreenProps {
 export function RecipeDetailScreen({ recipe, onBack, onStartCooking, onTweak }: RecipeDetailScreenProps) {
   const { favorited, toggle } = useFavorite(recipe.id, recipe.favorited);
 
+  const shareRecipe = (): void => {
+    void Share.share({ title: recipe.title, message: recipe.summary });
+  };
+
   const meta: readonly [string, string][] = [
     [s.metaTime, s.timeValue(recipe.timeMinutes)],
     [s.metaServes, s.servesPlaceholder],
@@ -37,7 +41,7 @@ export function RecipeDetailScreen({ recipe, onBack, onStartCooking, onTweak }: 
             <Pressable testID="favorite-button" onPress={toggle} hitSlop={8}>
               <Icon name="Bookmark" size={20} color={favorited ? tokens.accent : tokens.fg} />
             </Pressable>
-            <Pressable testID="recipe-share" hitSlop={8}>
+            <Pressable testID="recipe-share" onPress={shareRecipe} hitSlop={8}>
               <Icon name="Share2" size={20} color={tokens.fg} />
             </Pressable>
           </View>
