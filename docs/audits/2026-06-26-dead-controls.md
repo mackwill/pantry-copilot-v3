@@ -9,7 +9,7 @@ definition and the wire/remove recommendation rule.
 
 - Web: 18 dead controls (3 wire / 0 remove / 15 flag)
 - Mobile: 21 dead controls (9 wire / 0 remove / 12 flag)
-- Design-system: <N> dead controls (<wire> wire / <remove> remove / <flag> flag)
+- Design-system: 0 dead controls (0 wire / 0 remove / 0 flag)
 
 ## Needs your decision (flag rows)
 
@@ -97,3 +97,5 @@ definition and the wire/remove recommendation rule.
 
 | File:line | Control | Current behavior | Board says | Recommendation | Notes |
 | --------- | ------- | ---------------- | ---------- | -------------- | ----- |
+
+_No dead controls found at the primitive level._ Every interactive primitive (`Button`, `BottomSheet`/`SheetRow`, `MobileTabBar`, `Tabs`, `WebShell`, `NLPrompt`, `WeirdnessControl`, `WeirdnessSlider`/`SliderTrack`) correctly accepts and forwards its handler prop (`onClick`, `onPress`, `onChange`, `onClose`, `onNavigate`, `onSubmit`). Where a prop is typed optional (`?:`), the primitive uses optional chaining (`handler?.()`) so the silent-no-op case is intentional API design, not a dead control. All consumer-level dead behaviors are attributed to the Web or Mobile rows above.
