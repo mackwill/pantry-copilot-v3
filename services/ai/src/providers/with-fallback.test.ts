@@ -90,7 +90,7 @@ describe('withFallback', () => {
 
   it('falls back to the secondary stream when the primary throws before yielding', async () => {
     const onError = vi.fn();
-    const req: AIGenerationRequest = { prompt: 'x', weirdness: 10, pantry: [], mustInclude: [] };
+    const req: AIGenerationRequest = { prompt: 'x', weirdness: 10, pantry: [], mustInclude: [], dietary: [] };
     const done: GenerationEvent = {
       type: 'done',
       recipe: {

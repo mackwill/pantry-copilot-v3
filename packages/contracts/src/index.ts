@@ -14,6 +14,7 @@ export * from './recipes/tweak-events';
 export * from './recipes/library';
 export * from './cook/session';
 export * from './cook/consume';
+export * from './user/preferences';
 export * from './subscription/enums';
 export * from './subscription/state';
 export * from './subscription/plans';

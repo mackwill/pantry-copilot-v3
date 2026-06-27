@@ -2,7 +2,7 @@ import type { AIGenerationRequest, AITweakRequest, GenerationEvent } from '@pant
 import { describe, expect, it, vi } from 'vitest';
 import { createHttpAiStreamClient } from './ai-stream-client.js';
 
-const REQ: AIGenerationRequest = { prompt: 'soup', weirdness: 20, pantry: [], mustInclude: [] };
+const REQ: AIGenerationRequest = { prompt: 'soup', weirdness: 20, pantry: [], mustInclude: [], dietary: [] };
 
 const TWEAK_REQ: AITweakRequest = {
   recipe: {

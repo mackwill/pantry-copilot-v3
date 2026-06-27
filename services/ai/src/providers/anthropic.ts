@@ -89,7 +89,7 @@ async function* streamRaw(
   req: AIGenerationRequest,
   signal: AbortSignal,
 ): AsyncIterable<RawProviderEvent> {
-  const system = buildGenerationSystemPrompt(req.weirdness, req.pantry);
+  const system = buildGenerationSystemPrompt(req.weirdness, req.pantry, { dietary: req.dietary });
   const stream = client.messages.stream(
     {
       model,

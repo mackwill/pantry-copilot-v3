@@ -15,7 +15,7 @@ import {
 } from '@pantry/contracts';
 import { TRPCError } from '@trpc/server';
 import { and, asc, count, desc, eq, inArray } from 'drizzle-orm';
-import { pantryItems, recipeFavorites, recipeGenerationJobs, recipeTweaks, recipes } from '../../db/schema/index.js';
+import { pantryItems, recipeFavorites, recipeGenerationJobs, recipeTweaks, recipes, userPreferences } from '../../db/schema/index.js';
 import { assertAiActionAllowed } from '../../modules/subscription/limits.js';
 import { aiRateLimitedProcedure, protectedProcedure, router } from '../init.js';
 
@@ -68,6 +68,15 @@ function expiresInDays(bestBy: string | null): number | null {
   return Math.round((ms - Date.now()) / 86_400_000);
 }
 
+/** Render stored diet/allergy tags as imperative rules for the system prompt. */
+function dietaryRules(diet: readonly string[], allergies: readonly string[]): string[] {
+  const humanize = (tag: string): string => tag.replace(/_/g, ' ');
+  return [
+    ...diet.map((d) => `Must be ${humanize(d)}.`),
+    ...allergies.map((a) => `Must contain no ${humanize(a)} (allergy).`),
+  ];
+}
+
 type JobStatus = 'streaming' | 'succeeded' | 'failed' | 'aborted';
 
 export const recipesRouter = router({
@@ -95,7 +104,19 @@ export const recipesRouter = router({
       expiresInDays: expiresInDays(r.bestBy),
     }));
 
-    const aiReq: AIGenerationRequest = { prompt: input.prompt, weirdness: input.weirdness, pantry, mustInclude: [] };
+    const [prefRow] = await ctx.db
+      .select()
+      .from(userPreferences)
+      .where(eq(userPreferences.userId, userId));
+    const dietary = dietaryRules(prefRow?.diet ?? [], prefRow?.allergies ?? []);
+
+    const aiReq: AIGenerationRequest = {
+      prompt: input.prompt,
+      weirdness: input.weirdness,
+      pantry,
+      mustInclude: [],
+      dietary,
+    };
 
     await assertAiActionAllowed(ctx.db, userId, 'recipe', ctx.env);
 

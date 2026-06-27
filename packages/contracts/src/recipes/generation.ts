@@ -31,5 +31,7 @@ export const aiGenerationRequestSchema = z.object({
   weirdness: z.number().int().min(0).max(100),
   pantry: z.array(aiPantryChipSchema).default([]),
   mustInclude: z.array(z.string().min(1).max(120)).default([]),
+  /** Hard dietary constraints (diet + allergies), surfaced verbatim in the system prompt. */
+  dietary: z.array(z.string().min(1).max(120)).default([]),
 });
 export type AIGenerationRequest = z.infer<typeof aiGenerationRequestSchema>;

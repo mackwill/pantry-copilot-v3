@@ -10,6 +10,7 @@ const genRequest: AIGenerationRequest = {
   weirdness: 40,
   pantry: [{ name: 'Scallions', quantity: 1, unit: 'bunch', expiresInDays: 2 }],
   mustInclude: [],
+  dietary: [],
 };
 
 const tweakRequest: AITweakRequest = {

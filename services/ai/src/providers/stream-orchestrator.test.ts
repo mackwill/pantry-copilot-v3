@@ -10,6 +10,7 @@ const REQ: AIGenerationRequest = {
     { name: 'Rice', quantity: 1, unit: 'bag', expiresInDays: 90 },
   ],
   mustInclude: [],
+  dietary: [],
 };
 
 const RECIPE: AIRecipe = {
