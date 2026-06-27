@@ -3,6 +3,7 @@ import { tokens } from '../../tokens/native.js';
 import { fonts } from '../fonts.js';
 import { Icon } from '../Icon/Icon.js';
 import { SliderTrack } from '../WeirdnessSlider/SliderTrack.js';
+import { useSliderValue } from '../WeirdnessSlider/useSliderValue.js';
 import { weirdnessLabel } from '../WeirdnessSlider/weirdness.js';
 
 export type WeirdnessControlSize = 'sm' | 'md';
@@ -17,6 +18,7 @@ export interface WeirdnessControlProps {
 // label · gradient track · current vocabulary word.
 export function WeirdnessControl({ value = 30, onChange, size = 'md' }: WeirdnessControlProps) {
   const sm = size === 'sm';
+  const { live, handleChange } = useSliderValue(value, onChange);
   return (
     <View style={[styles.row, sm ? styles.rowSm : null]}>
       <View style={styles.labelGroup}>
@@ -25,8 +27,8 @@ export function WeirdnessControl({ value = 30, onChange, size = 'md' }: Weirdnes
       </View>
       <View style={[styles.trackWrap, sm ? styles.trackWrapSm : null]}>
         <SliderTrack
-          value={value}
-          onChange={onChange}
+          value={live}
+          onChange={handleChange}
           label="Weirdness"
           trackHeight={6}
           thumbSize={sm ? 16 : 18}
@@ -35,7 +37,7 @@ export function WeirdnessControl({ value = 30, onChange, size = 'md' }: Weirdnes
         />
       </View>
       <Text style={[styles.current, sm ? styles.currentSm : null]} numberOfLines={1}>
-        {weirdnessLabel(value)}
+        {weirdnessLabel(live)}
       </Text>
     </View>
   );

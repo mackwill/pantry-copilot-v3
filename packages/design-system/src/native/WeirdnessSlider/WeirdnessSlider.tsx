@@ -2,6 +2,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { tokens } from '../../tokens/native.js';
 import { fonts } from '../fonts.js';
 import { SliderTrack } from './SliderTrack.js';
+import { useSliderValue } from './useSliderValue.js';
 import { WEIRDNESS_LABELS, weirdnessLabel } from './weirdness.js';
 
 export interface WeirdnessSliderProps {
@@ -11,17 +12,18 @@ export interface WeirdnessSliderProps {
 }
 
 export function WeirdnessSlider({ value, onChange, compact = false }: WeirdnessSliderProps) {
+  const { live, handleChange } = useSliderValue(value, onChange);
   return (
     <View>
       <View style={[styles.header, compact ? styles.headerCompact : null]}>
         <Text style={styles.eyebrow}>Weirdness</Text>
         <Text style={[styles.current, compact ? styles.currentCompact : null]}>
-          {weirdnessLabel(value)}
+          {weirdnessLabel(live)}
         </Text>
       </View>
       <SliderTrack
-        value={value}
-        onChange={onChange}
+        value={live}
+        onChange={handleChange}
         label="Weirdness"
         trackHeight={8}
         thumbSize={24}
