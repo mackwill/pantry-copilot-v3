@@ -129,6 +129,7 @@
 }
 
 .editLink {
+  all: unset;
   font: 400 14px/1.4 var(--font-sans);
   color: var(--accent);
   text-decoration: none;

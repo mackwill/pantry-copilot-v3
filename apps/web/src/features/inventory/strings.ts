@@ -30,4 +30,9 @@ export const inventoryStrings = {
   },
   filterAll: 'All',
   empty: 'Nothing here yet. Add your first ingredient.',
+  scanModal: {
+    title: 'Scanning is in the app',
+    body: 'Point-and-scan ingredient capture lives in the Pantry CoPilot mobile app — grab it to scan your shelves.',
+    close: 'Got it',
+  },
 } as const;

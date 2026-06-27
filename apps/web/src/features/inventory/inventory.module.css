@@ -187,3 +187,36 @@
   color: var(--fg-subtle);
   font: 400 14px/1.4 var(--font-sans);
 }
+
+.scanOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(14, 18, 14, 0.42);
+  backdrop-filter: blur(3px);
+}
+
+.scanCard {
+  max-width: 360px;
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 24px 26px;
+  box-shadow: 0 24px 60px rgba(14, 18, 14, 0.22);
+}
+
+.scanTitle {
+  font: 400 22px/1.2 var(--font-display);
+  color: var(--fg);
+  margin: 0 0 8px;
+}
+
+.scanBody {
+  font: 400 14px/1.5 var(--font-sans);
+  color: var(--fg-muted);
+  margin: 0 0 18px;
+}
