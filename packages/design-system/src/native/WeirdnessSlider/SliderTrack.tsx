@@ -2,7 +2,7 @@ import { useEffect, useId, useRef, useState } from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 import { tokens } from '../../tokens/native.js';
-import { parseGradientStops, valueFromTouch } from './weirdness.js';
+import { parseGradientStops, thumbTranslateX, valueFromTouch } from './weirdness.js';
 
 const GRADIENT_STOPS = parseGradientStops(tokens.weirdGradient);
 const A11Y_STEP = 5;
@@ -33,7 +33,7 @@ export function SliderTrack({
   thumbShadow,
 }: SliderTrackProps) {
   const gradientId = useId();
-  const trackWidthRef = useRef(0);
+  const [trackWidth, setTrackWidth] = useState(0);
 
   // The thumb glides off this Animated.Value, set imperatively from the touch
   // — its paint never waits on the controlled `value` prop round-tripping back
@@ -53,14 +53,17 @@ export function SliderTrack({
   }, [value, thumbAnim]);
 
   const handleTouch = (x: number) => {
-    const next = valueFromTouch(x, trackWidthRef.current);
+    const next = valueFromTouch(x, trackWidth);
     thumbAnim.setValue(next);
     onChange?.(next);
   };
 
-  const thumbLeft = thumbAnim.interpolate({
+  // translateX in pixels off the measured track width is compositor-only,
+  // unlike animating `left` as a percentage string which forced a JS-thread
+  // layout pass per frame and stuttered during drags.
+  const thumbTranslate = thumbAnim.interpolate({
     inputRange: [0, 100],
-    outputRange: ['0%', '100%'],
+    outputRange: [thumbTranslateX(0, trackWidth), thumbTranslateX(100, trackWidth)],
   });
 
   return (
@@ -76,7 +79,7 @@ export function SliderTrack({
         onChange?.(Math.min(100, Math.max(0, value + delta)));
       }}
       onLayout={(event) => {
-        trackWidthRef.current = event.nativeEvent.layout.width;
+        setTrackWidth(event.nativeEvent.layout.width);
       }}
       onStartShouldSetResponder={() => true}
       onMoveShouldSetResponder={() => true}
@@ -116,9 +119,10 @@ export function SliderTrack({
           {
             width: thumbSize,
             height: thumbSize,
-            left: thumbLeft,
+            left: 0,
             marginLeft: -thumbSize / 2,
             marginTop: -thumbSize / 2,
+            transform: [{ translateX: thumbTranslate }],
             boxShadow: thumbShadow,
           },
         ]}
