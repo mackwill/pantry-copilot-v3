@@ -20,6 +20,7 @@ import { Route as AuthedHomeRouteImport } from './routes/_authed/home'
 import { Route as AuthedRecipesIndexRouteImport } from './routes/_authed/recipes.index'
 import { Route as AuthedPantryIndexRouteImport } from './routes/_authed/pantry.index'
 import { Route as AuthedCookIndexRouteImport } from './routes/_authed/cook.index'
+import { Route as AuthedSettingsDietRouteImport } from './routes/_authed/settings.diet'
 import { Route as AuthedRecipesRecipeIdRouteImport } from './routes/_authed/recipes.$recipeId'
 import { Route as AuthedPantryNewRouteImport } from './routes/_authed/pantry.new'
 import { Route as AuthedPantryItemIdRouteImport } from './routes/_authed/pantry.$itemId'
@@ -80,6 +81,11 @@ const AuthedCookIndexRoute = AuthedCookIndexRouteImport.update({
   path: '/cook/',
   getParentRoute: () => AuthedRoute,
 } as any)
+const AuthedSettingsDietRoute = AuthedSettingsDietRouteImport.update({
+  id: '/diet',
+  path: '/diet',
+  getParentRoute: () => AuthedSettingsRoute,
+} as any)
 const AuthedRecipesRecipeIdRoute = AuthedRecipesRecipeIdRouteImport.update({
   id: '/recipes/$recipeId',
   path: '/recipes/$recipeId',
@@ -111,7 +117,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/home': typeof AuthedHomeRoute
-  '/settings': typeof AuthedSettingsRoute
+  '/settings': typeof AuthedSettingsRouteWithChildren
   '/trial': typeof AuthedTrialRoute
   '/upgrade': typeof AuthedUpgradeRoute
   '/cook/generate': typeof AuthedCookGenerateRoute
@@ -119,6 +125,7 @@ export interface FileRoutesByFullPath {
   '/pantry/$itemId': typeof AuthedPantryItemIdRoute
   '/pantry/new': typeof AuthedPantryNewRoute
   '/recipes/$recipeId': typeof AuthedRecipesRecipeIdRoute
+  '/settings/diet': typeof AuthedSettingsDietRoute
   '/cook/': typeof AuthedCookIndexRoute
   '/pantry/': typeof AuthedPantryIndexRoute
   '/recipes/': typeof AuthedRecipesIndexRoute
@@ -128,7 +135,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/home': typeof AuthedHomeRoute
-  '/settings': typeof AuthedSettingsRoute
+  '/settings': typeof AuthedSettingsRouteWithChildren
   '/trial': typeof AuthedTrialRoute
   '/upgrade': typeof AuthedUpgradeRoute
   '/cook/generate': typeof AuthedCookGenerateRoute
@@ -136,6 +143,7 @@ export interface FileRoutesByTo {
   '/pantry/$itemId': typeof AuthedPantryItemIdRoute
   '/pantry/new': typeof AuthedPantryNewRoute
   '/recipes/$recipeId': typeof AuthedRecipesRecipeIdRoute
+  '/settings/diet': typeof AuthedSettingsDietRoute
   '/cook': typeof AuthedCookIndexRoute
   '/pantry': typeof AuthedPantryIndexRoute
   '/recipes': typeof AuthedRecipesIndexRoute
@@ -147,7 +155,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/_authed/home': typeof AuthedHomeRoute
-  '/_authed/settings': typeof AuthedSettingsRoute
+  '/_authed/settings': typeof AuthedSettingsRouteWithChildren
   '/_authed/trial': typeof AuthedTrialRoute
   '/_authed/upgrade': typeof AuthedUpgradeRoute
   '/_authed/cook/generate': typeof AuthedCookGenerateRoute
@@ -155,6 +163,7 @@ export interface FileRoutesById {
   '/_authed/pantry/$itemId': typeof AuthedPantryItemIdRoute
   '/_authed/pantry/new': typeof AuthedPantryNewRoute
   '/_authed/recipes/$recipeId': typeof AuthedRecipesRecipeIdRoute
+  '/_authed/settings/diet': typeof AuthedSettingsDietRoute
   '/_authed/cook/': typeof AuthedCookIndexRoute
   '/_authed/pantry/': typeof AuthedPantryIndexRoute
   '/_authed/recipes/': typeof AuthedRecipesIndexRoute
@@ -174,6 +183,7 @@ export interface FileRouteTypes {
     | '/pantry/$itemId'
     | '/pantry/new'
     | '/recipes/$recipeId'
+    | '/settings/diet'
     | '/cook/'
     | '/pantry/'
     | '/recipes/'
@@ -191,6 +201,7 @@ export interface FileRouteTypes {
     | '/pantry/$itemId'
     | '/pantry/new'
     | '/recipes/$recipeId'
+    | '/settings/diet'
     | '/cook'
     | '/pantry'
     | '/recipes'
@@ -209,6 +220,7 @@ export interface FileRouteTypes {
     | '/_authed/pantry/$itemId'
     | '/_authed/pantry/new'
     | '/_authed/recipes/$recipeId'
+    | '/_authed/settings/diet'
     | '/_authed/cook/'
     | '/_authed/pantry/'
     | '/_authed/recipes/'
@@ -300,6 +312,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthedCookIndexRouteImport
       parentRoute: typeof AuthedRoute
     }
+    '/_authed/settings/diet': {
+      id: '/_authed/settings/diet'
+      path: '/diet'
+      fullPath: '/settings/diet'
+      preLoaderRoute: typeof AuthedSettingsDietRouteImport
+      parentRoute: typeof AuthedSettingsRoute
+    }
     '/_authed/recipes/$recipeId': {
       id: '/_authed/recipes/$recipeId'
       path: '/recipes/$recipeId'
@@ -338,9 +357,21 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthedSettingsRouteChildren {
+  AuthedSettingsDietRoute: typeof AuthedSettingsDietRoute
+}
+
+const AuthedSettingsRouteChildren: AuthedSettingsRouteChildren = {
+  AuthedSettingsDietRoute: AuthedSettingsDietRoute,
+}
+
+const AuthedSettingsRouteWithChildren = AuthedSettingsRoute._addFileChildren(
+  AuthedSettingsRouteChildren,
+)
+
 interface AuthedRouteChildren {
   AuthedHomeRoute: typeof AuthedHomeRoute
-  AuthedSettingsRoute: typeof AuthedSettingsRoute
+  AuthedSettingsRoute: typeof AuthedSettingsRouteWithChildren
   AuthedTrialRoute: typeof AuthedTrialRoute
   AuthedUpgradeRoute: typeof AuthedUpgradeRoute
   AuthedCookGenerateRoute: typeof AuthedCookGenerateRoute
@@ -355,7 +386,7 @@ interface AuthedRouteChildren {
 
 const AuthedRouteChildren: AuthedRouteChildren = {
   AuthedHomeRoute: AuthedHomeRoute,
-  AuthedSettingsRoute: AuthedSettingsRoute,
+  AuthedSettingsRoute: AuthedSettingsRouteWithChildren,
   AuthedTrialRoute: AuthedTrialRoute,
   AuthedUpgradeRoute: AuthedUpgradeRoute,
   AuthedCookGenerateRoute: AuthedCookGenerateRoute,

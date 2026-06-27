@@ -195,3 +195,54 @@
   font: 400 13px/1.4 var(--font-sans);
   color: var(--fg-muted);
 }
+
+.dietSubtitle {
+  font: 400 14px/1.5 var(--font-sans);
+  color: var(--fg-muted);
+  margin-bottom: 22px;
+}
+
+.dietSection {
+  margin-bottom: 26px;
+}
+
+.dietHeading {
+  font: 600 13px var(--font-sans);
+  color: var(--fg);
+  margin-bottom: 12px;
+}
+
+.chipRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.chip {
+  all: unset;
+  cursor: pointer;
+  padding: 7px 14px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line);
+  background: var(--bg-raised);
+  font: 500 13px var(--font-sans);
+  color: var(--fg-muted);
+}
+
+.chipActive {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.customRow {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  max-width: 360px;
+}
+
+.dietActions {
+  margin-top: 8px;
+}

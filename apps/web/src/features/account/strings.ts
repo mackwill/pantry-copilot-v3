@@ -1,16 +1,23 @@
 export const accountStrings = {
   back: 'Back',
   settingsEyebrow: 'Settings',
-  settingsNav: [
-    'Account',
-    'Pantry preferences',
-    'Diet & allergies',
-    'Notifications',
-    'Connections',
-    'Billing',
-    'Sign out',
-  ] as const,
+  settingsNav: {
+    account: 'Account',
+    diet: 'Diet & allergies',
+    billing: 'Billing',
+  },
   title: 'Account',
+  diet: {
+    title: 'Diet & allergies',
+    subtitle: 'These guide every recipe the copilot generates for you.',
+    dietHeading: 'Dietary preferences',
+    allergyHeading: 'Allergies',
+    addCustomPlaceholder: 'Add your own…',
+    add: 'Add',
+    save: 'Save preferences',
+    saved: 'Saved',
+    empty: 'None selected',
+  },
   fieldLabels: {
     displayName: 'Display name',
     email: 'Email',
