@@ -1,5 +1,5 @@
 import type { SubscriptionState } from '@pantry/contracts';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { AccountScreen } from './components/AccountScreen';
 
@@ -64,5 +64,13 @@ describe('AccountScreen (mobile)', () => {
   it('renders the subscription section when subscription is provided', () => {
     render(<AccountScreen user={user} subscription={proSubscription} />);
     expect(screen.getByTestId('subscription-section-pro')).toBeTruthy();
+  });
+
+  it('opens the diet editor when the Diet/Allergies rows are pressed', () => {
+    const onEditDiet = vi.fn();
+    render(<AccountScreen user={user} onEditDiet={onEditDiet} />);
+    fireEvent.click(screen.getByTestId('settings-row-Diet'));
+    fireEvent.click(screen.getByTestId('settings-row-Allergies'));
+    expect(onEditDiet).toHaveBeenCalledTimes(2);
   });
 });

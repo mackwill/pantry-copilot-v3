@@ -15,6 +15,8 @@ export interface AccountScreenProps {
   /** Free → paywall trial; trial/pro → manage subscription. */
   onUpgrade?: (() => void) | undefined;
   onManage?: (() => void) | undefined;
+  /** Open the diet & allergies editor (Cooking → Diet/Allergies rows). */
+  onEditDiet?: (() => void) | undefined;
 }
 
 function initialsOf(name: string): string {
@@ -26,7 +28,11 @@ function initialsOf(name: string): string {
     .toUpperCase();
 }
 
-export function AccountScreen({ user, subscription, onUpgrade, onManage }: AccountScreenProps) {
+export function AccountScreen({ user, subscription, onUpgrade, onManage, onEditDiet }: AccountScreenProps) {
+  const rowHandlers =
+    onEditDiet === undefined
+      ? undefined
+      : Object.fromEntries(accountStrings.dietRowLabels.map((label) => [label, onEditDiet]));
   return (
     <ScrollView
       style={styles.screen}
@@ -60,6 +66,7 @@ export function AccountScreen({ user, subscription, onUpgrade, onManage }: Accou
           key={section.title}
           title={section.title}
           rows={section.rows}
+          rowHandlers={rowHandlers}
         />
       ))}
 

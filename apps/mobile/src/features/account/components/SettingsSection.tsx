@@ -7,9 +7,11 @@ import { SettingsRow } from './SettingsRow';
 export interface SettingsSectionProps {
   title: string;
   rows: readonly (readonly [string, string])[];
+  /** Per-row press handlers keyed by row label; rows without an entry are inert. */
+  rowHandlers?: Record<string, () => void>;
 }
 
-export function SettingsSection({ title, rows }: SettingsSectionProps) {
+export function SettingsSection({ title, rows, rowHandlers }: SettingsSectionProps) {
   return (
     <View style={styles.wrapper}>
       <Eyebrow style={styles.eyebrow}>{title}</Eyebrow>
@@ -21,6 +23,7 @@ export function SettingsSection({ title, rows }: SettingsSectionProps) {
             value={row[1]}
             last={index === rows.length - 1}
             weirdnessValue={row[0] === accountStrings.weirdnessLabel}
+            onPress={rowHandlers?.[row[0]]}
           />
         ))}
       </View>

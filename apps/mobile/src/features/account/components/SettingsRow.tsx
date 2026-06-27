@@ -1,12 +1,13 @@
 import { fonts, Icon } from '@pantry/design-system/native';
 import { tokens } from '@pantry/design-system/tokens';
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 export interface SettingsRowProps {
   label: string;
   value: string;
   last?: boolean;
   weirdnessValue?: boolean;
+  onPress?: () => void;
 }
 
 export function SettingsRow({
@@ -14,21 +15,28 @@ export function SettingsRow({
   value,
   last = false,
   weirdnessValue = false,
+  onPress,
 }: SettingsRowProps) {
+  const inner = (
+    <View style={styles.row}>
+      <Text style={styles.label}>{label}</Text>
+      <View style={styles.right}>
+        <Text style={[styles.value, weirdnessValue && styles.weirdnessValue]} numberOfLines={1}>
+          {value}
+        </Text>
+        <Icon name="ChevronRight" size={14} color={tokens.fgSubtle} />
+      </View>
+    </View>
+  );
   return (
     <View style={styles.wrapper}>
-      <View style={styles.row}>
-        <Text style={styles.label}>{label}</Text>
-        <View style={styles.right}>
-          <Text
-            style={[styles.value, weirdnessValue && styles.weirdnessValue]}
-            numberOfLines={1}
-          >
-            {value}
-          </Text>
-          <Icon name="ChevronRight" size={14} color={tokens.fgSubtle} />
-        </View>
-      </View>
+      {onPress === undefined ? (
+        inner
+      ) : (
+        <Pressable testID={`settings-row-${label}`} onPress={onPress}>
+          {inner}
+        </Pressable>
+      )}
       {!last && <View style={styles.divider} />}
     </View>
   );

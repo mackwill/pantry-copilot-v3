@@ -19,6 +19,9 @@ export default function Screen() {
       onManage={() => {
         router.push('/(billing)/manage');
       }}
+      onEditDiet={() => {
+        router.push('/settings/diet');
+      }}
     />
   );
 }

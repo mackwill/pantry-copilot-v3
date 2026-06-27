@@ -35,6 +35,18 @@ export const accountStrings = {
   // The "curious" weirdness value renders in display-font italic.
   // The screen checks row[0] === weirdnessLabel to apply special styling.
   weirdnessLabel: 'Default weirdness',
+  /** Cooking-section rows that navigate to the diet & allergies editor. */
+  dietRowLabels: ['Diet', 'Allergies'] as readonly string[],
+  diet: {
+    title: 'Diet & allergies',
+    subtitle: 'These guide every recipe the copilot generates for you.',
+    dietHeading: 'Dietary preferences',
+    allergyHeading: 'Allergies',
+    addPlaceholder: 'Add your own…',
+    add: 'Add',
+    save: 'Save',
+    saved: 'Saved',
+  },
   signOut: 'Sign out',
   version: 'v1.4.0 · build 214',
 } as const;
