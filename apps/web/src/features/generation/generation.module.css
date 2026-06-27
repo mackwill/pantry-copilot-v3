@@ -330,6 +330,9 @@
   font: 500 12px var(--font-sans);
   color: var(--fg-muted);
   cursor: pointer;
+  border: none;
+  background: none;
+  padding: 0;
 }
 .draftCard {
   background: var(--bg-raised);

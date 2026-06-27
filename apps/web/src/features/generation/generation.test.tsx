@@ -1,5 +1,6 @@
 import type { GenerationEvent } from '@pantry/contracts';
 import { act, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { GenerateScreen } from './components/GenerateScreen';
 import type { GenerationSubscribe } from './useGeneration';
@@ -10,6 +11,14 @@ vi.mock('@tanstack/react-router', () => ({
   Link: ({ children, params }: { children: unknown; params?: { recipeId?: string } }) => {
     const href = params?.recipeId !== undefined ? `/recipes/${params.recipeId}` : '#';
     return <a href={href}>{children as never}</a>;
+  },
+}));
+
+const cookStart = vi.fn<(input: unknown) => Promise<unknown>>().mockResolvedValue({});
+vi.mock('../../lib/api', () => ({
+  api: {
+    cook: { start: { mutate: (input: unknown): Promise<unknown> => cookStart(input) } },
+    recipes: { setFavorite: { mutate: (): Promise<unknown> => Promise.resolve({ favorited: true }) } },
   },
 }));
 
@@ -87,6 +96,28 @@ describe('generation flow (Thinking → Drafting → Result)', () => {
     expect(screen.getByRole('button', { name: /Start cooking/ })).toBeTruthy();
     expect(screen.getByText('Weirder')).toBeTruthy();
     expect(screen.getByText('Different angle')).toBeTruthy();
+  });
+
+  it('starts a cook session and navigates when "Start cooking" is clicked', async () => {
+    const fake = makeFake();
+    render(<GenerateScreen prompt="cozy carrots" weirdness={40} user={user} subscribe={fake.subscribe} />);
+    for (const event of tape) fake.emit(event);
+
+    await userEvent.click(screen.getByRole('button', { name: /Start cooking/ }));
+    expect(cookStart).toHaveBeenCalledWith({ recipeId: 'a151a2bf-3bb5-45e9-9d11-11b3be8b7c3b' });
+    await vi.waitFor(() => {
+      expect(navigate).toHaveBeenCalledWith({ to: '/cook/session' });
+    });
+  });
+
+  it('reveals the reasoning transcript when "show reasoning" is toggled', async () => {
+    const fake = makeFake();
+    render(<GenerateScreen prompt="cozy carrots" weirdness={40} user={user} subscribe={fake.subscribe} />);
+    for (const event of tape) fake.emit(event);
+
+    expect(screen.queryByText(/Anchoring on the expiring scallions/)).toBeNull();
+    await userEvent.click(screen.getByRole('button', { name: /show reasoning/ }));
+    expect(screen.getByText(/Anchoring on the expiring scallions/)).toBeTruthy();
   });
 
   it('opens the limit-hit paywall modal when generation hits the weekly limit', () => {

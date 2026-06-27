@@ -1,6 +1,7 @@
 import { Button, Eyebrow, Icon, WebShell } from '@pantry/design-system/web';
 import { useNavigate } from '@tanstack/react-router';
 import { useEffect, useRef, useState } from 'react';
+import { api } from '../../../lib/api';
 import { LimitHitModal } from '../../billing/components/LimitHitModal';
 import { useShellNav, webShellUser } from '../../pantry-shared/nav';
 import { useFavorite } from '../../recipe-detail/useFavorite';
@@ -55,6 +56,10 @@ export function GenerateScreen({ prompt, weirdness, user, subscribe }: GenerateS
   const { start } = gen;
   const elapsedMs = useElapsedMs(gen.isStreaming);
   const favorite = useFavorite(gen.recipeId ?? '', false);
+  const [showReasoning, setShowReasoning] = useState(false);
+  const toggleReasoning = (): void => {
+    setShowReasoning((prev) => !prev);
+  };
 
   useEffect(() => {
     start({ prompt, pantryItemIds: [], weirdness });
@@ -62,6 +67,13 @@ export function GenerateScreen({ prompt, weirdness, user, subscribe }: GenerateS
 
   const goHome = (): void => {
     void navigate({ to: '/cook' });
+  };
+  const startCooking = (): void => {
+    if (gen.recipeId === null) return;
+    void api.cook.start
+      .mutate({ recipeId: gen.recipeId })
+      .then(() => navigate({ to: '/cook/session' }))
+      .catch(() => undefined);
   };
   const elapsed = secs(elapsedMs);
   const thoughtFor = secs(gen.thinkingMs);
@@ -92,7 +104,15 @@ export function GenerateScreen({ prompt, weirdness, user, subscribe }: GenerateS
 
         {gen.status === 'drafting' && (
           <>
-            <CollapsedReasoning elapsed={thoughtFor} toolCount={gen.tools.length} />
+            <CollapsedReasoning
+              elapsed={thoughtFor}
+              toolCount={gen.tools.length}
+              expanded={showReasoning}
+              onToggle={toggleReasoning}
+            />
+            {showReasoning && (
+              <ThinkingPanel transcript={gen.transcript} toolCount={gen.tools.length} elapsed={elapsed} />
+            )}
             {gen.recipe !== null && (
               <div style={{ marginTop: 22 }}>
                 <DraftingRecipe recipe={gen.recipe} />
@@ -106,9 +126,19 @@ export function GenerateScreen({ prompt, weirdness, user, subscribe }: GenerateS
 
         {gen.status === 'result' && gen.recipe !== null && (
           <>
-            <CollapsedReasoning elapsed={thoughtFor} toolCount={gen.tools.length} className={styles['collapsedResult']} />
+            <CollapsedReasoning
+              elapsed={thoughtFor}
+              toolCount={gen.tools.length}
+              expanded={showReasoning}
+              onToggle={toggleReasoning}
+              className={styles['collapsedResult']}
+            />
+            {showReasoning && (
+              <ThinkingPanel transcript={gen.transcript} toolCount={gen.tools.length} elapsed={elapsed} />
+            )}
             <OneRecipeCard
               recipe={gen.recipe}
+              onStartCooking={startCooking}
               {...(gen.recipeId !== null
                 ? { recipeId: gen.recipeId, saved: favorite.favorited, onSave: favorite.toggle }
                 : {})}

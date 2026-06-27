@@ -40,6 +40,7 @@ export const generationStrings = {
     thoughtFor: (elapsed: string): string => `Thought for ${elapsed}`,
     summary: (tools: number): string => `${tools.toString()} tool calls · settled on the pick`,
     showReasoning: 'show reasoning ↓',
+    hideReasoning: 'hide reasoning ↑',
   },
   result: {
     backLabel: 'Home',
