@@ -38,6 +38,21 @@ export function RecipeDetailScreen({ user, recipe, onTweak }: RecipeDetailScreen
       .catch(() => undefined);
   };
 
+  const shareRecipe = (): void => {
+    // lib.dom types share/clipboard as always-present; narrow to an optional
+    // shape so feature detection for older browsers isn't flagged as dead.
+    const nav: {
+      share?: (data: ShareData) => Promise<void>;
+      clipboard?: { writeText: (text: string) => Promise<void> };
+    } = navigator;
+    const url = window.location.href;
+    if (nav.share !== undefined) {
+      void nav.share({ title: recipe.title, url }).catch(() => undefined);
+    } else {
+      void nav.clipboard?.writeText(url).catch(() => undefined);
+    }
+  };
+
   const meta: readonly [string, string][] = [
     [s.metaTime, s.timeValue(recipe.timeMinutes)],
     [s.metaServes, s.servesPlaceholder],
@@ -66,11 +81,8 @@ export function RecipeDetailScreen({ user, recipe, onTweak }: RecipeDetailScreen
           <Button kind="secondary" size="sm" leftIcon={<Icon name="Bookmark" size={14} />} onClick={toggle}>
             {favorited ? s.saved : s.save}
           </Button>
-          <Button kind="secondary" size="sm" leftIcon={<Icon name="Share2" size={14} />}>
+          <Button kind="secondary" size="sm" leftIcon={<Icon name="Share2" size={14} />} onClick={shareRecipe}>
             {s.share}
-          </Button>
-          <Button kind="secondary" size="sm" leftIcon={<Icon name="Printer" size={14} />}>
-            {s.print}
           </Button>
           {onTweak !== undefined && (
             <Button

@@ -1,4 +1,5 @@
 import { Card, Eyebrow, Icon, Pill, type PillTone } from '@pantry/design-system/web';
+import { Link } from '@tanstack/react-router';
 import { generationStrings } from '../strings';
 import styles from '../generation.module.css';
 
@@ -31,7 +32,9 @@ export function HomeContextCards({ expiring, recent, tryHint }: HomeContextCards
       <Card padding={0} style={{ padding: '20px 22px' }}>
         <div className={styles['ctxHead']}>
           <Eyebrow>{s.contextWantUsing}</Eyebrow>
-          <span className={styles['ctxLink']}>{s.pantryLink}</span>
+          <Link to="/pantry" className={styles['ctxLink']}>
+            {s.pantryLink}
+          </Link>
         </div>
         {expiring.map((row) => (
           <div key={row.name} className={styles['ctxRow']}>
@@ -55,7 +58,9 @@ export function HomeContextCards({ expiring, recent, tryHint }: HomeContextCards
       <Card padding={0} style={{ padding: '20px 22px' }}>
         <div className={styles['ctxHead']}>
           <Eyebrow>{s.contextRecentlySaved}</Eyebrow>
-          <span className={styles['ctxLink']}>{s.recipesLink}</span>
+          <Link to="/recipes" className={styles['ctxLink']}>
+            {s.recipesLink}
+          </Link>
         </div>
         {recent.map((row) => (
           <div key={row.title} className={styles['ctxRow']}>

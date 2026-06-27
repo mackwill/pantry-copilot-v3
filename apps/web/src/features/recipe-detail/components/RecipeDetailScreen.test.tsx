@@ -72,4 +72,18 @@ describe('RecipeDetailScreen', () => {
     await userEvent.click(screen.getByRole('button', { name: new RegExp(recipeDetailStrings.save) }));
     expect(mutate).toHaveBeenCalledWith({ recipeId: '123e4567-e89b-12d3-a456-426614174000', favorited: true });
   });
+
+  it('invokes the Web Share API with the recipe title when Share is clicked', async () => {
+    const share = vi.fn<(data: ShareData) => Promise<void>>().mockResolvedValue(undefined);
+    vi.stubGlobal('navigator', { share });
+    render(<RecipeDetailScreen user={user} recipe={makeRecipe()} />);
+    await userEvent.click(screen.getByRole('button', { name: new RegExp(recipeDetailStrings.share) }));
+    expect(share).toHaveBeenCalledWith(expect.objectContaining({ title: 'Charred scallion oil noodles' }));
+    vi.unstubAllGlobals();
+  });
+
+  it('does not render a Print button', () => {
+    render(<RecipeDetailScreen user={user} recipe={makeRecipe()} />);
+    expect(screen.queryByRole('button', { name: /Print/ })).toBeNull();
+  });
 });

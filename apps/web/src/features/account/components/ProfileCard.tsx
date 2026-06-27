@@ -1,4 +1,4 @@
-import { Button, Card, Field, Input } from '@pantry/design-system/web';
+import { Card, Field, Input } from '@pantry/design-system/web';
 import { accountStrings as s } from '../strings';
 import styles from '../account.module.css';
 
@@ -29,11 +29,6 @@ export function ProfileCard({ user }: ProfileCardProps) {
           <div className={styles['profileSub']}>
             {`${user.email}${staticVals.sep}${staticVals.joined}`}
           </div>
-        </div>
-        <div className={styles['profileActions']}>
-          <Button kind="secondary" size="sm">
-            {s.changePhoto}
-          </Button>
         </div>
       </div>
       <div className={styles['fieldGrid']}>

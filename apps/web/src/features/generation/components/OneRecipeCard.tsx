@@ -88,9 +88,6 @@ export function OneRecipeCard({ recipe, recipeId, saved = false, onStartCooking,
         <Button kind="secondary" leftIcon={<Icon name="Bookmark" size={15} />} {...(onSave === undefined ? {} : { onClick: onSave })}>
           {saved ? s.saved : s.save}
         </Button>
-        <Button kind="ghost" leftIcon={<Icon name="Share2" size={15} />}>
-          {s.share}
-        </Button>
       </div>
     </div>
   );

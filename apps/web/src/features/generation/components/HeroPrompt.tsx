@@ -51,9 +51,6 @@ export function HeroPrompt({ value, onChange, weirdness, onWeirdnessChange, onSu
         </div>
         <div className={styles['heroChipsRow']}>
           <div className={styles['heroChips']}>{chips}</div>
-          <button type="button" aria-label={s.micLabel} className={styles['heroMic']}>
-            <Icon name="Mic" size={16} />
-          </button>
           <Button kind="primary" rightIcon={<Icon name="ArrowRight" size={14} color="var(--accent-fg)" />} onClick={onSubmit}>
             {s.submit}
           </Button>

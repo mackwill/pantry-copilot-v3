@@ -11,7 +11,6 @@ export const accountStrings = {
     'Sign out',
   ] as const,
   title: 'Account',
-  changePhoto: 'Change photo',
   fieldLabels: {
     displayName: 'Display name',
     email: 'Email',

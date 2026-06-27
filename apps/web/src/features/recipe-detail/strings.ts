@@ -15,7 +15,6 @@ export const recipeDetailStrings = {
   save: 'Save',
   saved: 'Saved',
   share: 'Share',
-  print: 'Print',
   metaEyebrow: (difficulty: string, min: number): string => `${difficulty} · ${String(min)} min`,
   metaTime: 'time',
   metaServes: 'serves',

@@ -8,6 +8,7 @@ import { generationStrings } from '../strings';
 const navigate = vi.fn();
 vi.mock('@tanstack/react-router', () => ({
   useNavigate: () => navigate,
+  Link: ({ children, to }: { children: React.ReactNode; to: string }) => <a href={to}>{children}</a>,
 }));
 
 const today = new Date();
