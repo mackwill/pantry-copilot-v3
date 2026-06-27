@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState } from 'react';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 import { tokens } from '../../tokens/native.js';
@@ -38,8 +38,6 @@ export function SliderTrack({
   // The thumb glides off this Animated.Value, set imperatively from the touch
   // — its paint never waits on the controlled `value` prop round-tripping back
   // through parent state, so fast drags stay smooth regardless of re-renders.
-  // Lazy `useState` (not a ref) keeps the instance stable while staying
-  // readable during render for the interpolation below.
   const [thumbAnim] = useState(() => new Animated.Value(value));
   const draggingRef = useRef(false);
 
@@ -52,19 +50,63 @@ export function SliderTrack({
     }
   }, [value, thumbAnim]);
 
-  const handleTouch = (x: number) => {
+  const handleTouch = (x: number): void => {
     const next = valueFromTouch(x, trackWidth);
     thumbAnim.setValue(next);
     onChange?.(next);
   };
 
-  // translateX in pixels off the measured track width is compositor-only,
-  // unlike animating `left` as a percentage string which forced a JS-thread
-  // layout pass per frame and stuttered during drags.
-  const thumbTranslate = thumbAnim.interpolate({
-    inputRange: [0, 100],
-    outputRange: [thumbTranslateX(0, trackWidth), thumbTranslateX(100, trackWidth)],
-  });
+  // translateX in pixels off the measured track width is compositor-only and
+  // recomputed only when the width changes — never per drag frame.
+  const thumbTranslate = useMemo(
+    () =>
+      thumbAnim.interpolate({
+        inputRange: [0, 100],
+        outputRange: [thumbTranslateX(0, trackWidth), thumbTranslateX(100, trackWidth)],
+      }),
+    [thumbAnim, trackWidth],
+  );
+
+  // The gradient Svg is expensive to reconcile; memoizing it by reference keeps
+  // react-native-svg from repainting the track on every controlled re-render
+  // during a drag (the real source of the stutter).
+  const track = useMemo(
+    () => (
+      <Svg width="100%" height={trackHeight}>
+        <Defs>
+          <LinearGradient id={gradientId} x1="0" y1="0" x2="1" y2="0">
+            {GRADIENT_STOPS.map((stop) => (
+              <Stop key={stop.offset} offset={percent(stop.offset)} stopColor={stop.color} />
+            ))}
+          </LinearGradient>
+        </Defs>
+        <Rect width="100%" height={trackHeight} rx={trackHeight / 2} fill={`url(#${gradientId})`} />
+      </Svg>
+    ),
+    [gradientId, trackHeight],
+  );
+
+  // Deterministic vertical centre of the thumb on the track (no `top: '50%'`,
+  // whose percentage base shifted the thumb off-centre on device).
+  const thumbTop = verticalPadding + trackHeight / 2 - thumbSize / 2;
+  const thumb = useMemo(
+    () => (
+      <Animated.View
+        style={[
+          styles.thumb,
+          {
+            width: thumbSize,
+            height: thumbSize,
+            top: thumbTop,
+            marginLeft: -thumbSize / 2,
+            transform: [{ translateX: thumbTranslate }],
+            boxShadow: thumbShadow,
+          },
+        ]}
+      />
+    ),
+    [thumbSize, thumbTop, thumbTranslate, thumbShadow],
+  );
 
   return (
     <View
@@ -98,35 +140,8 @@ export function SliderTrack({
       }}
       style={{ paddingVertical: verticalPadding }}
     >
-      <Svg width="100%" height={trackHeight}>
-        <Defs>
-          <LinearGradient id={gradientId} x1="0" y1="0" x2="1" y2="0">
-            {GRADIENT_STOPS.map((stop) => (
-              <Stop key={stop.offset} offset={percent(stop.offset)} stopColor={stop.color} />
-            ))}
-          </LinearGradient>
-        </Defs>
-        <Rect
-          width="100%"
-          height={trackHeight}
-          rx={trackHeight / 2}
-          fill={`url(#${gradientId})`}
-        />
-      </Svg>
-      <Animated.View
-        style={[
-          styles.thumb,
-          {
-            width: thumbSize,
-            height: thumbSize,
-            left: 0,
-            marginLeft: -thumbSize / 2,
-            marginTop: -thumbSize / 2,
-            transform: [{ translateX: thumbTranslate }],
-            boxShadow: thumbShadow,
-          },
-        ]}
-      />
+      {track}
+      {thumb}
     </View>
   );
 }
@@ -134,7 +149,6 @@ export function SliderTrack({
 const styles = StyleSheet.create({
   thumb: {
     position: 'absolute',
-    top: '50%',
     borderRadius: tokens.rPill,
     backgroundColor: tokens.bgRaised,
     borderWidth: 1.5,
