@@ -57,12 +57,12 @@ addressable route.
 work against the installed dev build — iOS shows an unavoidable "Open in app?"
 prompt and the expo-dev-client intercepts the scheme (grey screen). The working
 method is **Maestro UI navigation** (`tools/design-fidelity/maestro/fidelity-capture.yaml`),
-after `e2e/mobile/sign-in.yaml` establishes a session. **7 frames captured**
-(✓ below); login was captured by deleting the server session
-(`delete from sessions …`) and relaunching. 4 `[deep-link]` frames remain
-blocked in this build (app-side fixes needed — noted inline). Each captured shot
-is sips-resized to its reference width; `normalizeForDiff` handles residual
-scale. % = latest measured.
+after `e2e/mobile/sign-in.yaml` establishes a session. **All 8 reachable
+`[deep-link]` frames captured + approved** (✓ below): login, home, cook, account,
+pantry, scan viewfinder, add-ingredient, and result (after the generation bug
+fix). 3 `[deep-link]` frames remain blocked pending app-side work (paywall /
+trial / manage — no in-app entry point). Each captured shot is sips-resized to
+its reference width; `normalizeForDiff` handles residual scale. % = latest measured.
 
 - [ ] `pantry-consume-flow--1-result-pantry-shown-inline` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
 - [ ] `pantry-consume-flow--2-end-of-cook-the-ask` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
@@ -73,7 +73,7 @@ scale. % = latest measured.
 - [x] `home--mobile-home` _[deep-link]_ — _13.79% mismatch · ✓ captured (Maestro)_ — approved by W. Mindenhall on 2026-06-26 (cosmetic accept · mobile geometry, side-by-side)
 - [ ] `home--mobile-home-selecting` _[needs dev deep-link]_ — _61.88% mismatch_ — approved by ___ on ___
 - [ ] `home--mobile-home-browse-pantry` _[needs dev deep-link]_ — _67.77% mismatch_ — approved by ___ on ___
-- [ ] `result-after-generation--mobile-result` _[deep-link]_ — _BUG FIXED (2026-06-26) · now capturable. The "hit a snag (stream 0.0s)" failure had TWO Hermes causes, both fixed: (1) tRPC v11's `httpSubscriptionLink` resource disposal needs `Symbol.dispose`/`Symbol.asyncDispose`/`SuppressedError`, which Hermes lacks — polyfilled at a custom entry (`apps/mobile/index.js` → `src/lib/polyfills.ts`); (2) the real trigger, surfaced once (1) let the error through legibly: `newRequestId()` called the bare global `crypto.randomUUID()`, but Hermes has no `crypto` global, throwing `ReferenceError: Property 'crypto' doesn't exist` (wrapped as the empty `SuppressedError`). Fixed by a non-crypto UUID fallback in `@pantry/api-client` `request-id.ts`. Verified on iPhone 15 sim: `maestro test e2e/mobile/generation.yaml` passes end-to-end (Thinking → Drafting → §02 Result + branch re-prompt)._ — approved by ___ on ___
+- [x] `result-after-generation--mobile-result` _[deep-link]_ — _13.94% mismatch · ✓ captured (Maestro, after the generation bug fix). The original "hit a snag (stream 0.0s)" failure had two Hermes causes, both fixed (see decisions 2026-06-26): tRPC v11 `httpSubscriptionLink` disposal needs `Symbol.dispose`/`asyncDispose`/`SuppressedError` (polyfilled at `apps/mobile/index.js`), masking the real trigger — `newRequestId()` → missing `crypto.randomUUID()` global (now a non-crypto UUID fallback in `@pantry/api-client`)._ — approved by W. Mindenhall on 2026-06-26 (cosmetic accept · mobile geometry, side-by-side)
 - [x] `cook-tab-library--mobile-cook-default` _[deep-link]_ — _12.27% mismatch · ✓ captured (Maestro)_ — approved by W. Mindenhall on 2026-06-26 (cosmetic accept · mobile geometry, side-by-side)
 - [ ] `cook-tab-library--mobile-cook-with-resume` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
 - [ ] `cook-tab-library--mobile-cook-new-tapped` _[needs dev deep-link]_ — _not captured_ — approved by ___ on ___
