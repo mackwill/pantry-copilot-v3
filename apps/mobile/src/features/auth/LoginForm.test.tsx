@@ -11,11 +11,13 @@ vi.mock('expo-router', () => ({
 
 const signInEmail = vi.fn();
 const signInSocial = vi.fn();
+const signInMagicLink = vi.fn();
 vi.mock('../../lib/auth-client', () => ({
   authClient: {
     signIn: {
       email: (...args: unknown[]) => signInEmail(...args) as unknown,
       social: (...args: unknown[]) => signInSocial(...args) as unknown,
+      magicLink: (...args: unknown[]) => signInMagicLink(...args) as unknown,
     },
   },
 }));
@@ -27,6 +29,7 @@ describe('LoginForm (mobile)', () => {
     vi.clearAllMocks();
     signInEmail.mockResolvedValue({ data: {}, error: null });
     signInSocial.mockResolvedValue({ data: {}, error: null });
+    signInMagicLink.mockResolvedValue({ data: {}, error: null });
   });
 
   it('renders the strings-driven controls and forgot link', () => {
@@ -50,6 +53,16 @@ describe('LoginForm (mobile)', () => {
       email: 'mara@example.com',
       password: 'hunter2hunter2',
     });
+  });
+
+  it('sends a magic link and confirms when Forgot password is tapped', async () => {
+    render(<LoginForm />);
+    await userEvent.type(screen.getByTestId('login-email'), 'mara@example.com');
+    await userEvent.click(screen.getByTestId('login-forgot'));
+    expect(signInMagicLink).toHaveBeenCalledWith(
+      expect.objectContaining({ email: 'mara@example.com' }),
+    );
+    expect(await screen.findByText(s.magicSent)).toBeTruthy();
   });
 
   it('shows the invalid-credentials string after a failed sign-in', async () => {

@@ -63,8 +63,16 @@ export function LoginForm() {
               </button>
               {s.keepSignedIn}
             </label>
-            <span className={styles['forgot']}>{s.forgotPassword}</span>
+            <button
+              type="button"
+              className={styles['forgot']}
+              onClick={() => void login.forgot()}
+              disabled={login.pending}
+            >
+              {s.forgotPassword}
+            </button>
           </div>
+          {login.notice !== undefined && <p className={styles['notice']}>{login.notice}</p>}
           <Button
             kind="primary"
             size="lg"

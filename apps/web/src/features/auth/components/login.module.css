@@ -79,9 +79,16 @@
 }
 
 .forgot {
+  all: unset;
   font: 500 13px var(--font-sans);
   color: var(--accent);
   cursor: pointer;
+}
+
+.notice {
+  margin-top: 10px;
+  font: 500 13px var(--font-sans);
+  color: var(--accent);
 }
 
 .divider {

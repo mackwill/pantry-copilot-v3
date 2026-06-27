@@ -10,6 +10,7 @@ export function useLogin() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | undefined>(undefined);
+  const [notice, setNotice] = useState<string | undefined>(undefined);
   const [pending, setPending] = useState(false);
 
   const submit = async (): Promise<void> => {
@@ -32,6 +33,23 @@ export function useLogin() {
     router.replace('/(tabs)');
   };
 
+  const forgot = async (): Promise<void> => {
+    if (email === '') {
+      setError(authStrings.login.errors.emailRequired);
+      return;
+    }
+    setError(undefined);
+    setNotice(undefined);
+    setPending(true);
+    const result = await authClient.signIn.magicLink({ email, callbackURL: '/(tabs)' });
+    setPending(false);
+    if (result.error !== null) {
+      setError(authStrings.login.errors.magicFailed);
+      return;
+    }
+    setNotice(authStrings.login.magicSent);
+  };
+
   const oauth = async (provider: OAuthProvider): Promise<void> => {
     const result = await authClient.signIn.social({
       provider,
@@ -46,8 +64,10 @@ export function useLogin() {
     password,
     setPassword,
     error,
+    notice,
     pending,
     submit,
+    forgot,
     oauth,
   };
 }

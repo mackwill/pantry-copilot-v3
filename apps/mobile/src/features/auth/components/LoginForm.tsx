@@ -1,6 +1,6 @@
 import { Button, Eyebrow, Field, fonts, Icon, Input, Wordmark } from '@pantry/design-system/native';
 import { tokens } from '@pantry/design-system/tokens';
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { authStrings } from '../strings';
 import { useLogin } from '../useLogin';
 
@@ -41,7 +41,10 @@ export function LoginForm() {
               leftIcon={<Icon name="Lock" size={15} color={tokens.fgSubtle} />}
             />
           </Field>
-          <Text style={styles.forgot}>{s.forgotPassword}</Text>
+          <Pressable testID="login-forgot" onPress={() => void login.forgot()} disabled={login.pending}>
+            <Text style={styles.forgot}>{s.forgotPassword}</Text>
+          </Pressable>
+          {login.notice !== undefined && <Text style={styles.notice}>{login.notice}</Text>}
           <Button
             testID="login-submit"
             kind="primary"
@@ -116,6 +119,7 @@ const styles = StyleSheet.create({
     color: tokens.accent,
     marginTop: -2,
   },
+  notice: { fontFamily: fonts.sans, fontSize: 13, fontWeight: '500', color: tokens.accent, marginTop: 2 },
   submit: { marginTop: 8 },
   divider: { flexDirection: 'row', alignItems: 'center', gap: 12, marginVertical: 4 },
   dividerLine: { flex: 1, height: 1, backgroundColor: tokens.line },

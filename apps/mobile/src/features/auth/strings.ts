@@ -6,6 +6,7 @@ export const authStrings = {
     emailLabel: 'Email',
     passwordLabel: 'Password',
     forgotPassword: 'Forgot password',
+    magicSent: 'Check your email — we sent you a sign-in link.',
     submit: 'Sign in',
     divider: 'or',
     oauthApple: 'Continue with Apple',
@@ -17,6 +18,7 @@ export const authStrings = {
       passwordRequired: 'Enter your password.',
       invalidCredentials: 'That email and password don’t match.',
       oauthFailed: 'That sign-in method isn’t available right now.',
+      magicFailed: 'Could not send the link. Try again.',
     },
   },
 } as const;
