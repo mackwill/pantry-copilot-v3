@@ -8,7 +8,7 @@ definition and the wire/remove recommendation rule.
 ## Summary
 
 - Web: 18 dead controls (3 wire / 0 remove / 15 flag)
-- Mobile: <N> dead controls (<wire> wire / <remove> remove / <flag> flag)
+- Mobile: 21 dead controls (9 wire / 0 remove / 12 flag)
 - Design-system: <N> dead controls (<wire> wire / <remove> remove / <flag> flag)
 
 ## Needs your decision (flag rows)
@@ -28,6 +28,21 @@ definition and the wire/remove recommendation rule.
 - `AccountSidebar.tsx:33` — "Notifications" nav button — board shows in §06 sidebar; destination not built; options: (a) wire to `/settings/notifications`, (b) disable visually
 - `AccountSidebar.tsx:33` — "Connections" nav button — board shows in §06 sidebar; destination not built; options: (a) wire to `/settings/connections`, (b) disable visually
 - `AccountSidebar.tsx:33` — "Billing" nav button — board shows in §06 sidebar; destination not built; options: (a) wire to existing `/upgrade` route, (b) wire to `/settings/subscription` once built
+
+### Mobile flag rows
+
+- `PantryScreen.tsx:30` — Search icon (no Pressable) — board §07 MobilePantry shows search icon in pantry header but no search screen exists; options: (a) open an inline search/filter on the list, (b) remove the icon until a pantry search screen is built
+- `PantryScreen.tsx:31` — SlidersHorizontal icon (no Pressable) — board §07 shows sliders icon in pantry header but no filter sheet exists; options: (a) open a filter BottomSheet, (b) remove the icon until a filter sheet is built
+- `LocationSheet.tsx:26` — "Add a place" Button (no onPress) — board §09.5 LocationSheet shows the button but no custom-location form exists; options: (a) open a form to add a custom storage location, (b) remove the button and keep the fixed location list only
+- `RecipeDetailScreen.tsx:40` — Share Pressable (no onPress) — board §07 MobileRecipe shows share-2 icon in the recipe detail header but no share UX is specified; options: (a) `Share.share()` from `react-native`, (b) clipboard copy of a deep-link, (c) remove until share UX is defined
+- `LoginForm.tsx:44` — "Forgot password" Text (no Pressable) — board §00 MobileLogin shows it as accent-colored link text but no forgot-password flow exists for mobile; options: (a) route to a `/forgot-password` screen, (b) call a magic-link reset API and show a success toast, (c) remove until the flow is built
+- `AccountScreen.tsx:37` — Profile row View with ChevronRight (no Pressable) — board §10 MobileAccount shows the row with a chevron-right but no profile-edit screen exists; options: (a) route to a profile-edit screen, (b) remove the chevron until the edit screen is built
+- `SettingsRow.tsx:19` — All settings rows — View with ChevronRight (no Pressable) — board §10 shows every settings row with a chevron-right but no settings sub-screens exist for mobile; options: (a) implement per-setting edit screens, (b) remove the chevrons until destinations are built
+- `LibraryHeader.tsx:18` — Search icon (no Pressable) — board §03 MobileCookTabEmpty shows search icon in the Cook library header but no recipe search screen exists; options: (a) open an inline search input, (b) remove the icon until a search screen is built
+- `LibraryHeader.tsx:19` — ArrowDownUp sort icon (no Pressable) — board §03 shows sort icon in the Cook library header but no sort sheet exists; options: (a) open a sort BottomSheet, (b) remove the icon until a sort sheet is built
+- `ReviewStep.tsx:38` — Pencil edit per-row (no-op stub in ReviewStep) — board §08 MobileCam3_Review shows a pencil icon for each detected item; inline edit sheet not yet defined; options: (a) open a BottomSheet with editable name/quantity/category per row, (b) remove the pencil icon until the inline edit sheet is built
+- `QuickActions.tsx:12` — Receipt shortcut card (plain View, no Pressable) — board §09 MobileAddIngredient shows it as a shortcut card but no receipt-scan flow exists; options: (a) navigate to a receipt OCR flow when built, (b) remove the card until the flow exists
+- `QuickActions.tsx:12` — Speak shortcut card (plain View, no Pressable) — board §09 shows it as a shortcut card but no voice-input flow exists; options: (a) open a microphone for voice-to-ingredient name, (b) remove the card until the flow exists
 
 ## Web (`apps/web`)
 
@@ -56,6 +71,27 @@ definition and the wire/remove recommendation rule.
 
 | File:line | Control | Current behavior | Board says | Recommendation | Notes |
 | --------- | ------- | ---------------- | ---------- | -------------- | ----- |
+| `PantryScreen.tsx:30` | Search `Icon` (no Pressable) | Bare icon in header — tap does nothing | §07 mobile-screens-a.jsx MobilePantry header shows search icon | **flag** | No pantry search screen on board; see "Needs your decision" |
+| `PantryScreen.tsx:31` | SlidersHorizontal `Icon` (no Pressable) | Bare icon in header — tap does nothing | §07 mobile-screens-a.jsx MobilePantry header shows sliders icon | **flag** | No filter sheet on board; see "Needs your decision" |
+| `PantryScreen.tsx:68` | CookTray "Cook →" `Pressable` | `onCook={() => { /* M4 wires generation; no-op stub this milestone. */ }}` — tap does nothing | §07 MobilePantry "Cook" button should launch the generation flow with selected items | **wire** | Pass `selection.selectedItems(items).map(i => i.id)` as `pantryItemIds`; navigate to `/(generate)/generate` |
+| `LocationSheet.tsx:26` | "Add a place" `Button` (no onPress) | `kind="ghost"` Button renders but tap does nothing | §09.5 board LocationSheet footer shows "Add a place" button | **flag** | No custom-location form on board; see "Needs your decision" |
+| `RecipeDetailScreen.tsx:40` | Share `Pressable` (no onPress) | `<Pressable testID="recipe-share" hitSlop={8}>` — no `onPress`; tap does nothing | §07 mobile-screens-b.jsx MobileRecipe header shows share-2 icon in action row | **flag** | Share UX not specified for mobile; see "Needs your decision" |
+| `GenerateScreen.tsx:102` | "Start cooking" button in `OneRecipeCardMobile` | `onStartCooking` not passed to `OneRecipeCardMobile`; button renders but tap does nothing | §02 home-cook-v2.jsx MobileCookResult shows "Start cooking" as primary action | **wire** | Call `api.cook.start.mutate({ recipeId: gen.recipeId })` then `router.push('/(cook)/session')`; `gen.recipeId` is non-null at `status === 'result'` |
+| `GenerateScreen.tsx:102` | "Save" button in `OneRecipeCardMobile` | `onSave` not passed to `OneRecipeCardMobile`; button renders but tap does nothing | §02 home-cook-v2.jsx:895 shows "Save" (bookmark icon) as secondary action on the result card | **wire** | Call `api.recipes.save.mutate({ recipeId: gen.recipeId })` and show a success toast |
+| `LoginForm.tsx:44` | "Forgot password" plain `Text` | `<Text style={styles.forgot}>` — accent-colored but no Pressable; tap does nothing | §00 mobile-screens-a.jsx MobileLogin shows "Forgot password" as accent-colored link text | **flag** | No forgot-password flow on board; see "Needs your decision" |
+| `AccountScreen.tsx:37` | Profile row `View` with ChevronRight (no Pressable) | Outer `<View style={styles.profileRow}>` — no Pressable; tap on the row does nothing | §10 mobile-screens-a.jsx MobileAccount shows profile row with chevron-right | **flag** | No profile-edit screen on board; see "Needs your decision" |
+| `SettingsRow.tsx:19` | All settings rows — `View` with ChevronRight (no Pressable) | `<View style={styles.wrapper}>` — no Pressable on any row; tapping any settings row does nothing | §10 mobile-screens-a.jsx MobileAccount shows every settings row with chevron-right | **flag** | No settings sub-screens on board for mobile; affects Cooking, Household, and App sections; see "Needs your decision" |
+| `LibraryHeader.tsx:18` | Search `Icon` in Cook library header (no Pressable) | Bare icon — tap does nothing | §03 home-cook-v2.jsx MobileCookTabEmpty header shows search icon | **flag** | No recipe search screen on board; see "Needs your decision" |
+| `LibraryHeader.tsx:19` | ArrowDownUp sort `Icon` in Cook library header (no Pressable) | Bare icon — tap does nothing | §03 home-cook-v2.jsx MobileCookTabEmpty header shows arrow-down-up icon | **flag** | No sort sheet on board; see "Needs your decision" |
+| `ViewfinderStep.tsx:59` | Flash `Zap` icon in plain `View` (not Pressable) | `<View style={styles.circle}>` — tap does nothing | §08 mobile-screens-b.jsx MobileCam1_Viewfinder shows Zap button in a top-right circle button | **wire** | Toggle `CameraView` `torch` prop; add local `flash` boolean state to `ViewfinderStep` |
+| `ViewfinderStep.tsx:84` | Camera-flip `RefreshCw` icon in plain `View` (not Pressable) | `<View style={styles.sideControl}>` — tap does nothing | §08 mobile-screens-b.jsx MobileCam1_Viewfinder shows RefreshCw button in bottom controls | **wire** | Toggle `CameraView` `facing` prop between `'back'` and `'front'`; add local `facing` state to `ViewfinderStep` |
+| `ReviewStep.tsx:18` | ChevronLeft back `Icon` (no Pressable, in header) | Plain `<Icon>` in `styles.headerRow` — tap does nothing | §08 mobile-screens-b.jsx MobileCam3_Review header shows chevron-left back button | **wire** | Add `onBack` prop to `ReviewStep`; pass `flow.reset` from `ScanFlowScreen` |
+| `ReviewStep.tsx:20` | RefreshCw re-scan `Icon` (no Pressable, in header) | Plain `<Icon>` in `styles.headerRow` — tap does nothing | §08 mobile-screens-b.jsx MobileCam3_Review header shows refresh-cw re-scan button | **wire** | Add `onRescan` prop to `ReviewStep`; pass `flow.reset` from `ScanFlowScreen` |
+| `ReviewStep.tsx:38` | Pencil edit button per row (no-op stub passed as `onEdit`) | `onEdit={() => { /* Inline edit sheet is a follow-up; affordance shown per board §08. */ }}` — Pressable renders but tap does nothing | §08 mobile-screens-b.jsx MobileCam3_Review shows pencil icon for each detected item | **flag** | Inline edit sheet not defined; see "Needs your decision" |
+| `AddedStep.tsx:34` | "Ideas ready" card `View` with ChevronRight (no Pressable) | `<View style={styles.ideasCard}>` — no Pressable wrapper; tap does nothing | §08 mobile-screens-b.jsx MobileCam4_Added shows card with chevron-right suggesting navigation | **wire** | Wrap card in `Pressable` and call `onSeeIdeas` (already passed from `ScanFlowScreen` as `goCook`) |
+| `QuickActions.tsx:12` | Scan shortcut card plain `View` | All three shortcut cards are `<View>` not `Pressable` — tapping Scan does nothing | §09 mobile-screens-b.jsx MobileAddIngredient shows Scan shortcut card as an interactive tile | **wire** | Wrap in `Pressable`; call `router.push('/(scan)/scan')`; expose router from parent (`AddIngredientScreen`) |
+| `QuickActions.tsx:12` | Receipt shortcut card plain `View` | Plain `<View>` — tap does nothing | §09 mobile-screens-b.jsx shows Receipt shortcut card as an interactive tile | **flag** | No receipt-scan flow on board; see "Needs your decision" |
+| `QuickActions.tsx:12` | Speak shortcut card plain `View` | Plain `<View>` — tap does nothing | §09 mobile-screens-b.jsx shows Speak shortcut card as an interactive tile | **flag** | No voice-input flow on board; see "Needs your decision" |
 
 ## Design system (`packages/design-system`)
 
