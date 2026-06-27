@@ -61,10 +61,15 @@ These were the `flag` rows; recorded here with the final call.
 - Diet & allergies **backend**: `user_preferences` table + migration 0010; `user.preferences`/`updatePreferences`; `dietary[]` on AIGenerationRequest rendered as hard rules in the generation system prompt (both providers). Integration + prompt tests green.
 - Diet & allergies **web**: `/settings/diet` DietPreferencesScreen (toggle-chip multiselect + custom tags); AccountSidebar restructured — Billing → /upgrade, Diet → /settings/diet, removed Pantry preferences/Notifications/Connections.
 
-**Remaining — net-new features (decision: build autonomously, magic-link for forgot-password):**
-- Diet & allergies **mobile**: a diet screen + route + wire the Cooking "Diet"/"Allergies" settings rows to it.
-- Web: Inventory Scan ("mobile-only" msg) + Import modal; PreferencesCard inline edit; LoginForm forgot-password (magic-link).
-- Mobile: Pantry search + filter sheet; Library search + sort sheet; ReviewStep edit sheet; AccountScreen profile-edit screen; remaining SettingsRow destinations; LoginForm forgot-password (magic-link).
+- Diet & allergies **mobile**: `/settings/diet` editor + Cooking Diet/Allergies rows wired. ✓
+- **Forgot password** (web + mobile): magic-link send + confirmation. ✓
+- Slider stutter: **root-cause fix** — `useSliderValue` decouples drag from parent re-renders (throttled upward onChange). ✓
+- Web Inventory **Scan**: "mobile only" modal. ✓
+- Web **PreferencesCard Edit** → /settings/diet. ✓
+
+**Remaining — net-new features:**
+- Web: Inventory **Import** modal (needs an import endpoint — larger).
+- Mobile: Pantry search + filter sheet; Library search + sort sheet; ReviewStep edit sheet; AccountScreen profile-edit screen; remaining (non-diet) SettingsRow destinations.
 
 ### Important note from the user
 
