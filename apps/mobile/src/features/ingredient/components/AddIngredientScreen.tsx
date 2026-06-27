@@ -1,5 +1,6 @@
 import { Button, Eyebrow, Icon, Input, fonts } from '@pantry/design-system/native';
 import { tokens } from '@pantry/design-system/tokens';
+import { useRouter } from 'expo-router';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { BestBySheet } from '../sheets/BestBySheet';
 import { CategorySheet } from '../sheets/CategorySheet';
@@ -13,6 +14,7 @@ import { SuggestionPills } from './SuggestionPills';
 
 export function AddIngredientScreen() {
   const form = useIngredientForm();
+  const router = useRouter();
   const { values, setField } = form;
 
   const handleSave = (): void => {
@@ -26,7 +28,7 @@ export function AddIngredientScreen() {
     <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
       <IngredientHeader title={formStrings.addTitle} onClose={form.cancel} onSave={handleSave} />
 
-      <QuickActions />
+      <QuickActions onScan={() => { router.push('/scan'); }} />
 
       <Eyebrow style={styles.sectionEyebrow}>{formStrings.manually}</Eyebrow>
       <View style={styles.nameCard}>

@@ -12,7 +12,6 @@ export const sheetStrings = {
   location: {
     eyebrow: 'Where does it live',
     title: 'Pick a spot',
-    addPlace: 'Add a place',
     use: (label: string): string => `Use ${label}`,
   },
   bestBy: {
@@ -53,11 +52,9 @@ export const formStrings = {
   autoDetected: 'from receipt scan',
   autoLead: 'auto: best by',
   noBestBy: 'no best-by set',
-  quickActions: [
-    { icon: 'ScanLine', label: 'Scan' },
-    { icon: 'Camera', label: 'Receipt' },
-    { icon: 'Mic', label: 'Speak' },
-  ],
+  quickActions: {
+    scan: 'Scan',
+  },
   nameSuggestions: ['Milk', 'Eggs', 'Butter', 'Yogurt', 'Cheese'],
   unitPills: ['ea', 'g', 'lb', 'cup'],
   useItInRecipes: [

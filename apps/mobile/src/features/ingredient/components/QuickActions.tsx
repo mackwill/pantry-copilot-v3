@@ -1,18 +1,20 @@
-import { Icon, type IconName, fonts } from '@pantry/design-system/native';
+import { Icon, fonts } from '@pantry/design-system/native';
 import { tokens } from '@pantry/design-system/tokens';
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { formStrings } from '../strings';
 
-/** Static three-card shortcut row (Scan / Receipt / Speak). Non-functional this milestone. */
-export function QuickActions() {
+interface QuickActionsProps {
+  onScan: () => void;
+}
+
+/** Scan shortcut card above the manual add form (board §09). */
+export function QuickActions({ onScan }: QuickActionsProps) {
   return (
     <View style={styles.grid}>
-      {formStrings.quickActions.map((action) => (
-        <View key={action.label} style={styles.card}>
-          <Icon name={action.icon as IconName} size={20} color={tokens.accent} />
-          <Text style={styles.label}>{action.label}</Text>
-        </View>
-      ))}
+      <Pressable testID="quick-action-scan" style={styles.card} onPress={onScan}>
+        <Icon name="ScanLine" size={20} color={tokens.accent} />
+        <Text style={styles.label}>{formStrings.quickActions.scan}</Text>
+      </Pressable>
     </View>
   );
 }

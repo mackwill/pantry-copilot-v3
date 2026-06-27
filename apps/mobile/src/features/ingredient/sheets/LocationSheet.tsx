@@ -1,5 +1,5 @@
 import type { PantryLocation } from '@pantry/contracts';
-import { BottomSheet, Button, Icon, SheetRow } from '@pantry/design-system/native';
+import { BottomSheet, Button, SheetRow } from '@pantry/design-system/native';
 import { StyleSheet, View } from 'react-native';
 import { LOCATION_OPTIONS, LOCATION_SHORT_LABELS } from '../pickerOptions';
 import { sheetStrings } from '../strings';
@@ -13,7 +13,7 @@ export interface LocationSheetProps {
   onClose: () => void;
 }
 
-/** Location picker — selection applies live via `onSelect`. "Add a place" is a no-op for now. */
+/** Location picker — selection applies live via `onSelect`. */
 export function LocationSheet({ open, value, onSelect, onClose }: LocationSheetProps) {
   return (
     <BottomSheet
@@ -23,9 +23,6 @@ export function LocationSheet({ open, value, onSelect, onClose }: LocationSheetP
       title={s.title}
       footer={
         <View style={styles.footer}>
-          <Button kind="ghost" full leftIcon={<Icon name="Plus" size={14} />}>
-            {s.addPlace}
-          </Button>
           <Button kind="primary" full onPress={onClose}>
             {s.use(LOCATION_SHORT_LABELS[value])}
           </Button>
