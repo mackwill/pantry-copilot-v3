@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { tokens } from '../../tokens/native.js';
-import { parseGradientStops, valueFromTouch, weirdnessLabel } from './weirdness.js';
+import { parseGradientStops, thumbTranslateX, valueFromTouch, weirdnessLabel } from './weirdness.js';
 
 describe('weirdnessLabel', () => {
   it('maps values to the design vocabulary at breakpoints 25/55/85', () => {
@@ -37,5 +37,19 @@ describe('valueFromTouch', () => {
     expect(valueFromTouch(-10, 200)).toBe(0);
     expect(valueFromTouch(260, 200)).toBe(100);
     expect(valueFromTouch(50, 0)).toBe(0);
+  });
+});
+
+describe('thumbTranslateX', () => {
+  it('maps a value to a pixel offset across the track', () => {
+    expect(thumbTranslateX(0, 200)).toBe(0);
+    expect(thumbTranslateX(50, 200)).toBe(100);
+    expect(thumbTranslateX(100, 200)).toBe(200);
+  });
+
+  it('clamps out-of-range values and guards a zero width', () => {
+    expect(thumbTranslateX(-10, 200)).toBe(0);
+    expect(thumbTranslateX(150, 200)).toBe(200);
+    expect(thumbTranslateX(50, 0)).toBe(0);
   });
 });
