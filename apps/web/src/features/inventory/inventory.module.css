@@ -220,3 +220,43 @@
   color: var(--fg-muted);
   margin: 0 0 18px;
 }
+
+.importCard {
+  width: 460px;
+  max-width: 100%;
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 24px 26px;
+  box-shadow: 0 24px 60px rgba(14, 18, 14, 0.22);
+}
+
+.importTextarea {
+  width: 100%;
+  box-sizing: border-box;
+  resize: vertical;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--bg-sunk);
+  padding: 12px 14px;
+  font: 400 13px/1.5 var(--font-mono);
+  color: var(--fg);
+}
+
+.importStatus {
+  display: flex;
+  justify-content: space-between;
+  margin: 12px 0 16px;
+  font: 500 13px var(--font-sans);
+  color: var(--fg-muted);
+}
+
+.importErrors {
+  color: var(--danger);
+}
+
+.importActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}

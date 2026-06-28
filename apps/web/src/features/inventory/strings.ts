@@ -35,4 +35,14 @@ export const inventoryStrings = {
     body: 'Point-and-scan ingredient capture lives in the Pantry CoPilot mobile app — grab it to scan your shelves.',
     close: 'Got it',
   },
+  importModal: {
+    title: 'Import items',
+    body: 'Paste rows as name, quantity, unit, category, location — one per line. A header row is optional.',
+    placeholder: 'Whole milk, 1, gallon, dairy, fridge_top',
+    cancel: 'Cancel',
+    parsed: (n: number): string => `${String(n)} ready to import`,
+    errors: (n: number): string => `${String(n)} row(s) couldn’t be read`,
+    importBtn: (n: number): string => (n > 0 ? `Import ${String(n)}` : 'Import'),
+    importing: 'Importing…',
+  },
 } as const;

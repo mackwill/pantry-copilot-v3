@@ -761,3 +761,11 @@ transient states logged per the engineering standard.
   (M4 leftover) as `/home`, so `Dashboard` and `Cook` currently show the same
   screen. The board's distinct "Cook · empty" (resume-or-ask) screen is a separate
   fidelity item — to be built when Cook sessions fidelity is revisited.
+
+## 2026-06-28 — Inventory CSV import format (M10)
+
+The board shows an "Import" button in the WebInventory topbar but specifies no
+import UX. Composed from primitives: a paste-a-CSV modal with the plain format
+`name,quantity,unit,category,location` (optional header row), parsed client-side
+and created via the existing `pantry.create` mutation per row (no new endpoint).
+Quoted-comma CSV is intentionally unsupported to keep the parser simple.

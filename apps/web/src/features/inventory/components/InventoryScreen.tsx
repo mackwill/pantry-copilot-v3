@@ -1,12 +1,13 @@
 import type { PantryItem } from '@pantry/contracts';
 import { Button, Card, Icon, WebShell } from '@pantry/design-system/web';
-import { useNavigate } from '@tanstack/react-router';
+import { useNavigate, useRouter } from '@tanstack/react-router';
 import { useState } from 'react';
 import { useShellNav, webShellUser } from '../../pantry-shared/nav';
 import { useInventory } from '../useInventory';
 import { inventoryStrings } from '../strings';
 import styles from '../inventory.module.css';
 import { CategoryFilter } from './CategoryFilter';
+import { ImportModal } from './ImportModal';
 import { InventoryHeader } from './InventoryHeader';
 import { InventoryStats } from './InventoryStats';
 import { InventoryTable } from './InventoryTable';
@@ -18,10 +19,10 @@ export interface InventoryScreenUser {
 
 const a = inventoryStrings.actions;
 
-function Topbar({ onAdd, onScan }: { onAdd: () => void; onScan: () => void }) {
+function Topbar({ onAdd, onScan, onImport }: { onAdd: () => void; onScan: () => void; onImport: () => void }) {
   return (
     <>
-      <Button kind="secondary" size="sm" leftIcon={<Icon name="Upload" size={14} />}>
+      <Button kind="secondary" size="sm" leftIcon={<Icon name="Upload" size={14} />} onClick={onImport}>
         {a.import}
       </Button>
       <Button kind="secondary" size="sm" leftIcon={<Icon name="ScanLine" size={14} />} onClick={onScan}>
@@ -49,14 +50,20 @@ export function InventoryScreen({
   const { activeCategory, setActiveCategory, categories, stats, visibleItems, locationsCount } =
     useInventory(items);
   const navigate = useNavigate();
+  const router = useRouter();
   const shellNav = useShellNav('pantry');
   const [scanOpen, setScanOpen] = useState(false);
+  const [importOpen, setImportOpen] = useState(false);
   return (
     <WebShell
       {...shellNav}
       user={webShellUser(user)}
       topbarRight={
-        <Topbar onAdd={() => void navigate({ to: '/pantry/new' })} onScan={() => { setScanOpen(true); }} />
+        <Topbar
+          onAdd={() => void navigate({ to: '/pantry/new' })}
+          onScan={() => { setScanOpen(true); }}
+          onImport={() => { setImportOpen(true); }}
+        />
       }
     >
       <InventoryHeader count={stats.total} locationsCount={locationsCount} />
@@ -69,6 +76,15 @@ export function InventoryScreen({
         />
       </Card>
       {scanOpen && <ScanInfoModal onClose={() => { setScanOpen(false); }} />}
+      {importOpen && (
+        <ImportModal
+          onClose={() => { setImportOpen(false); }}
+          onImported={() => {
+            setImportOpen(false);
+            void router.invalidate();
+          }}
+        />
+      )}
     </WebShell>
   );
 }
