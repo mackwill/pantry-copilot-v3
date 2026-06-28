@@ -6,17 +6,24 @@ import { libraryStrings as s } from '../strings';
 export interface LibraryHeaderProps {
   savedCount: number;
   onNew: () => void;
+  onToggleSearch: () => void;
+  searchActive: boolean;
+  onOpenSort: () => void;
 }
 
 /** Board §03 mobile header — eyebrow, search/sort/New cluster, display heading + counts. */
-export function LibraryHeader({ savedCount, onNew }: LibraryHeaderProps) {
+export function LibraryHeader({ savedCount, onNew, onToggleSearch, searchActive, onOpenSort }: LibraryHeaderProps) {
   return (
     <View style={styles.wrap}>
       <View style={styles.topRow}>
         <Eyebrow>{s.eyebrow}</Eyebrow>
         <View style={styles.cluster}>
-          <Icon name="Search" size={18} color={tokens.fgMuted} />
-          <Icon name="ArrowDownUp" size={18} color={tokens.fgMuted} />
+          <Pressable testID="library-search-toggle" onPress={onToggleSearch} hitSlop={8}>
+            <Icon name="Search" size={18} color={searchActive ? tokens.accent : tokens.fgMuted} />
+          </Pressable>
+          <Pressable testID="library-sort-toggle" onPress={onOpenSort} hitSlop={8}>
+            <Icon name="ArrowDownUp" size={18} color={tokens.fgMuted} />
+          </Pressable>
           <Pressable testID="cook-new-button" style={styles.newPill} onPress={onNew}>
             <Icon name="Sparkles" size={12} color={tokens.accentFg} />
             <Text style={styles.newText}>{s.newButton}</Text>

@@ -42,6 +42,21 @@ describe('RecipeLibraryScreen (mobile)', () => {
     expect(screen.getByTestId('new-ask-sheet')).toBeTruthy();
   });
 
+  it('filters the library list by the search query', () => {
+    render(<RecipeLibraryScreen items={[makeItem({ title: 'Scallion noodles' }), makeItem({ title: 'Tomato soup' })]} />);
+    expect(screen.getAllByTestId('recipe-card')).toHaveLength(2);
+    fireEvent.click(screen.getByTestId('library-search-toggle'));
+    fireEvent.change(screen.getByTestId('library-search-input'), { target: { value: 'soup' } });
+    expect(screen.getAllByTestId('recipe-card')).toHaveLength(1);
+  });
+
+  it('sorts the list alphabetically when chosen', () => {
+    render(<RecipeLibraryScreen items={[makeItem({ title: 'Zucchini bake' }), makeItem({ title: 'Apple crumble' })]} />);
+    fireEvent.click(screen.getByTestId('library-sort-toggle'));
+    fireEvent.click(screen.getByText(libraryStrings.sort.alpha));
+    expect(screen.getAllByTestId('recipe-card')[0]?.textContent).toContain('Apple crumble');
+  });
+
   it('navigates to a recipe when its card is pressed', () => {
     const item = makeItem({ title: 'Openable' });
     render(<RecipeLibraryScreen items={[item]} />);
