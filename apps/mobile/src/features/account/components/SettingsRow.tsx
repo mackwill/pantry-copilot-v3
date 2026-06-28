@@ -24,7 +24,8 @@ export function SettingsRow({
         <Text style={[styles.value, weirdnessValue && styles.weirdnessValue]} numberOfLines={1}>
           {value}
         </Text>
-        <Icon name="ChevronRight" size={14} color={tokens.fgSubtle} />
+        {/* The chevron is an interactive affordance — only show it where the row navigates. */}
+        {onPress !== undefined && <Icon name="ChevronRight" size={14} color={tokens.fgSubtle} />}
       </View>
     </View>
   );

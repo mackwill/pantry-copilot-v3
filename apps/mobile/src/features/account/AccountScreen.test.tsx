@@ -66,6 +66,13 @@ describe('AccountScreen (mobile)', () => {
     expect(screen.getByTestId('subscription-section-pro')).toBeTruthy();
   });
 
+  it('opens the profile editor when the profile row is pressed', () => {
+    const onEditProfile = vi.fn();
+    render(<AccountScreen user={user} onEditProfile={onEditProfile} />);
+    fireEvent.click(screen.getByTestId('profile-row'));
+    expect(onEditProfile).toHaveBeenCalledTimes(1);
+  });
+
   it('opens the diet editor when the Diet/Allergies rows are pressed', () => {
     const onEditDiet = vi.fn();
     render(<AccountScreen user={user} onEditDiet={onEditDiet} />);

@@ -37,6 +37,14 @@ export const accountStrings = {
   weirdnessLabel: 'Default weirdness',
   /** Cooking-section rows that navigate to the diet & allergies editor. */
   dietRowLabels: ['Diet', 'Allergies'] as readonly string[],
+  profile: {
+    title: 'Your profile',
+    nameLabel: 'Display name',
+    emailLabel: 'Email',
+    emailHint: 'Contact support to change your email.',
+    save: 'Save',
+    saved: 'Saved',
+  },
   diet: {
     title: 'Diet & allergies',
     subtitle: 'These guide every recipe the copilot generates for you.',

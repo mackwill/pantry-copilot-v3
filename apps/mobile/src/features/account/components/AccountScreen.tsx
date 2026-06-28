@@ -1,7 +1,7 @@
 import type { SubscriptionState } from '@pantry/contracts';
 import { Button, Eyebrow, fonts, Icon } from '@pantry/design-system/native';
 import { tokens } from '@pantry/design-system/tokens';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { authClient } from '../../../lib/auth-client';
 import { SubscriptionSection } from '../../billing/components/SubscriptionSection';
 import { accountStrings } from '../strings';
@@ -17,6 +17,8 @@ export interface AccountScreenProps {
   onManage?: (() => void) | undefined;
   /** Open the diet & allergies editor (Cooking → Diet/Allergies rows). */
   onEditDiet?: (() => void) | undefined;
+  /** Open the profile editor (the top profile row). */
+  onEditProfile?: (() => void) | undefined;
 }
 
 function initialsOf(name: string): string {
@@ -28,7 +30,7 @@ function initialsOf(name: string): string {
     .toUpperCase();
 }
 
-export function AccountScreen({ user, subscription, onUpgrade, onManage, onEditDiet }: AccountScreenProps) {
+export function AccountScreen({ user, subscription, onUpgrade, onManage, onEditDiet, onEditProfile }: AccountScreenProps) {
   const rowHandlers =
     onEditDiet === undefined
       ? undefined
@@ -40,7 +42,12 @@ export function AccountScreen({ user, subscription, onUpgrade, onManage, onEditD
     >
       <Eyebrow style={styles.screenEyebrow}>{accountStrings.eyebrow}</Eyebrow>
 
-      <View style={styles.profileRow}>
+      <Pressable
+        testID="profile-row"
+        disabled={onEditProfile === undefined}
+        onPress={onEditProfile}
+        style={styles.profileRow}
+      >
         <View style={styles.avatar}>
           <Text style={styles.avatarText}>{initialsOf(user.name)}</Text>
         </View>
@@ -48,8 +55,8 @@ export function AccountScreen({ user, subscription, onUpgrade, onManage, onEditD
           <Text style={styles.profileName}>{user.name}</Text>
           <Text style={styles.profileEmail}>{user.email}</Text>
         </View>
-        <Icon name="ChevronRight" size={18} color={tokens.fgSubtle} />
-      </View>
+        {onEditProfile !== undefined && <Icon name="ChevronRight" size={18} color={tokens.fgSubtle} />}
+      </Pressable>
 
       <AccountStatsCard />
 

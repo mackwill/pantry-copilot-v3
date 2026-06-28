@@ -22,6 +22,9 @@ export default function Screen() {
       onEditDiet={() => {
         router.push('/settings/diet');
       }}
+      onEditProfile={() => {
+        router.push('/settings/profile');
+      }}
     />
   );
 }
