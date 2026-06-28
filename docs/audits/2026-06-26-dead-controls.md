@@ -67,9 +67,16 @@ These were the `flag` rows; recorded here with the final call.
 - Web Inventory **Scan**: "mobile only" modal. ✓
 - Web **PreferencesCard Edit** → /settings/diet. ✓
 
-**Remaining — net-new features:**
-- Web: Inventory **Import** modal (needs an import endpoint — larger).
-- Mobile: Pantry search + filter sheet; Library search + sort sheet; ReviewStep edit sheet; AccountScreen profile-edit screen; remaining (non-diet) SettingsRow destinations.
+- Web Inventory **Import**: paste-a-CSV modal (`pantry.create` per row + `router.invalidate`). ✓
+- Mobile **Pantry search + filter sheet**. ✓
+- Mobile **Library search + sort sheet**. ✓
+- Mobile **scan ReviewStep edit sheet** (name/quantity/category). ✓
+- Mobile **profile-edit screen** + inert SettingsRow chevrons removed. ✓
+
+**All inventory rows remediated.** Repo gates: `pnpm lint` + `pnpm typecheck` green;
+every workspace's test suite passes (the api workspace shows an intermittent
+postgres teardown race — `57P01` in pre-existing `db-schema`/`context` integration
+files — that passes clean on isolated re-run; all 83 api tests pass).
 
 ### Important note from the user
 
