@@ -7,4 +7,11 @@ export const pantryStrings = {
   fresh: 'Fresh',
   cookWith: (n: number): string => `Cook with ${String(n)}`,
   cook: 'Cook',
+  searchPlaceholder: 'Search your pantry',
+  noMatches: 'Nothing matches your search.',
+  filter: {
+    eyebrow: 'Filter',
+    title: 'Show only',
+    all: 'All categories',
+  },
 } as const;

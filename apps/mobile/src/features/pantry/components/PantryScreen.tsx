@@ -1,11 +1,14 @@
-import { Icon, Eyebrow, fonts } from '@pantry/design-system/native';
+import type { PantryCategory, PantryItem } from '@pantry/contracts';
+import { Icon, Eyebrow, Input, fonts } from '@pantry/design-system/native';
 import { tokens } from '@pantry/design-system/tokens';
 import { useRouter } from 'expo-router';
+import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { pantryStrings } from '../strings';
 import { useCookSelection } from '../useCookSelection';
 import { usePantry } from '../usePantry';
 import { CookTray } from './CookTray';
+import { PantryFilterSheet } from './PantryFilterSheet';
 import { PantrySection } from './PantrySection';
 
 const MAX_CHIPS = 3;
@@ -14,6 +17,19 @@ export function PantryScreen() {
   const { needsUsing, fresh, expiringCount, items } = usePantry();
   const selection = useCookSelection();
   const router = useRouter();
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [query, setQuery] = useState('');
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [category, setCategory] = useState<PantryCategory | null>(null);
+
+  const matches = (item: PantryItem): boolean => {
+    const byQuery = query.trim() === '' || item.name.toLowerCase().includes(query.trim().toLowerCase());
+    const byCategory = category === null || item.category === category;
+    return byQuery && byCategory;
+  };
+  const filteredNeedsUsing = needsUsing.filter(matches);
+  const filteredFresh = fresh.filter(matches);
+  const hasMatches = filteredNeedsUsing.length > 0 || filteredFresh.length > 0;
 
   const chipLabels = selection
     .selectedItems(items)
@@ -27,8 +43,24 @@ export function PantryScreen() {
           <View style={styles.eyebrowRow}>
             <Eyebrow>{pantryStrings.eyebrow}</Eyebrow>
             <View style={styles.icons}>
-              <Icon name="Search" size={18} color={tokens.fgMuted} />
-              <Icon name="SlidersHorizontal" size={18} color={tokens.fgMuted} />
+              <Pressable
+                testID="pantry-search-toggle"
+                onPress={() => {
+                  setSearchOpen((open) => !open);
+                }}
+                hitSlop={8}
+              >
+                <Icon name="Search" size={18} color={searchOpen ? tokens.accent : tokens.fgMuted} />
+              </Pressable>
+              <Pressable
+                testID="pantry-filter-toggle"
+                onPress={() => {
+                  setFilterOpen(true);
+                }}
+                hitSlop={8}
+              >
+                <Icon name="SlidersHorizontal" size={18} color={category === null ? tokens.fgMuted : tokens.accent} />
+              </Pressable>
               <Pressable
                 testID="add-ingredient-button"
                 onPress={() => {
@@ -47,19 +79,41 @@ export function PantryScreen() {
           </Text>
         </View>
 
+        {searchOpen && (
+          <View style={styles.searchRow}>
+            <Input
+              testID="pantry-search-input"
+              value={query}
+              onChangeText={setQuery}
+              placeholder={pantryStrings.searchPlaceholder}
+              leftIcon={<Icon name="Search" size={15} color={tokens.fgSubtle} />}
+            />
+          </View>
+        )}
+
         <PantrySection
           title={pantryStrings.needsUsing}
-          items={needsUsing}
+          items={filteredNeedsUsing}
           isSelected={selection.isSelected}
           onToggle={selection.toggle}
         />
         <PantrySection
           title={pantryStrings.fresh}
-          items={fresh}
+          items={filteredFresh}
           isSelected={selection.isSelected}
           onToggle={selection.toggle}
         />
+        {!hasMatches && <Text style={styles.noMatches}>{pantryStrings.noMatches}</Text>}
       </ScrollView>
+
+      <PantryFilterSheet
+        open={filterOpen}
+        value={category}
+        onSelect={setCategory}
+        onClose={() => {
+          setFilterOpen(false);
+        }}
+      />
 
       {selection.count > 0 ? (
         <CookTray
@@ -111,5 +165,15 @@ const styles = StyleSheet.create({
   },
   subtitleCount: {
     color: tokens.warning,
+  },
+  searchRow: {
+    marginTop: 4,
+  },
+  noMatches: {
+    fontFamily: fonts.sans,
+    fontSize: 14,
+    color: tokens.fgSubtle,
+    paddingVertical: 24,
+    textAlign: 'center',
   },
 });
