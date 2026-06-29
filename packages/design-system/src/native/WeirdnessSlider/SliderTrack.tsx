@@ -41,6 +41,12 @@ export function SliderTrack({
   const [thumbAnim] = useState(() => new Animated.Value(value));
   const draggingRef = useRef(false);
 
+  // Absolute page-x of the track's left edge, captured at touch-down. Drag math
+  // uses page coordinates (not the target-relative `locationX`, which flips
+  // coordinate systems whenever a child slides under the finger) so the value
+  // tracks the finger regardless of which node is the touch target.
+  const trackPageXRef = useRef(0);
+
   // Mirror external `value` changes (a11y step, programmatic set) onto the
   // thumb — but never mid-drag, where a stale round-tripped prop would fight
   // the imperative updates and stutter.
@@ -50,8 +56,8 @@ export function SliderTrack({
     }
   }, [value, thumbAnim]);
 
-  const handleTouch = (x: number): void => {
-    const next = valueFromTouch(x, trackWidth);
+  const handleTouch = (pageX: number): void => {
+    const next = valueFromTouch(pageX - trackPageXRef.current, trackWidth);
     thumbAnim.setValue(next);
     onChange?.(next);
   };
@@ -92,6 +98,7 @@ export function SliderTrack({
   const thumb = useMemo(
     () => (
       <Animated.View
+        pointerEvents="none"
         style={[
           styles.thumb,
           {
@@ -125,12 +132,20 @@ export function SliderTrack({
       }}
       onStartShouldSetResponder={() => true}
       onMoveShouldSetResponder={() => true}
+      // Hold the responder for the whole drag: deny an ancestor ScrollView's
+      // request to take over when the finger drifts vertically, which would
+      // otherwise terminate the gesture mid-slide and freeze the thumb.
+      onResponderTerminationRequest={() => false}
       onResponderGrant={(event) => {
         draggingRef.current = true;
-        handleTouch(event.nativeEvent.locationX);
+        // With the thumb non-interactive the down-target is always the track,
+        // so page-left = pageX − locationX is the track's true page origin.
+        const { pageX, locationX } = event.nativeEvent;
+        trackPageXRef.current = pageX - locationX;
+        handleTouch(pageX);
       }}
       onResponderMove={(event) => {
-        handleTouch(event.nativeEvent.locationX);
+        handleTouch(event.nativeEvent.pageX);
       }}
       onResponderRelease={() => {
         draggingRef.current = false;

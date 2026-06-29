@@ -769,3 +769,16 @@ import UX. Composed from primitives: a paste-a-CSV modal with the plain format
 `name,quantity,unit,category,location` (optional header row), parsed client-side
 and created via the existing `pantry.create` mutation per row (no new endpoint).
 Quoted-comma CSV is intentionally unsupported to keep the parser simple.
+
+## 2026-06-28 — Home weirdness control: stacked (deliberate board deviation)
+
+The board's `WeirdnessControl size="sm"` (board `primitives.jsx` line 190) is an
+inline single row — `[label · gradient track · current word]` — and the Home hero
+(`home-cook-v2.jsx`) uses it. We matched that faithfully. **Deviation:** the inline
+layout proved too cramped on device and its 16px thumb was hard to grab, so the
+Home cards (`HeroPromptMobile`, `PromptWithChips`) now use the stacked
+`WeirdnessSlider compact` instead — eyebrow + value on top, full-width 8px track /
+24px thumb on its own line below, vocabulary row omitted to keep the card short.
+This mirrors the `WeirdnessSlider` already used in the New-ask bottomsheet
+(board-faithful there). `WeirdnessControl` remains the board layout elsewhere
+(e.g. web hero). Driven by the usability bug, not a board change.

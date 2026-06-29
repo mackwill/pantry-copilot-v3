@@ -1,4 +1,4 @@
-import { Eyebrow, Icon, WeirdnessControl, fonts } from '@pantry/design-system/native';
+import { Eyebrow, Icon, WeirdnessSlider, fonts } from '@pantry/design-system/native';
 import { tokens } from '@pantry/design-system/tokens';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { generationStrings } from '../strings';
@@ -56,7 +56,7 @@ export function PromptWithChips({
       </View>
       <View style={styles.footer}>
         <View style={styles.weirdRow}>
-          <WeirdnessControl value={weirdness} onChange={onWeirdnessChange} size="sm" />
+          <WeirdnessSlider value={weirdness} onChange={onWeirdnessChange} compact />
         </View>
         <View style={styles.submitRow}>
           <Text style={styles.ready}>{generationStrings.home.readySummary(chips.length)}</Text>
