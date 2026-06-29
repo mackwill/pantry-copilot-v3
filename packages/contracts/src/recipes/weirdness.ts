@@ -11,3 +11,28 @@ export function weirdnessBand(score: number): WeirdnessBand {
   if (score <= 80) return 'adventurous';
   return 'chaotic';
 }
+
+/** Ordered slider display words, one per band (ascending intensity). */
+export const WEIRDNESS_BAND_LABELS = [
+  'normal',
+  'curious',
+  'interesting',
+  'adventurous',
+  'chaotic evil',
+] as const;
+
+export type WeirdnessLabel = (typeof WEIRDNESS_BAND_LABELS)[number];
+
+/** Band → slider display word. Identity except `chaotic` → "chaotic evil". */
+export const WEIRDNESS_BAND_LABEL: Record<WeirdnessBand, WeirdnessLabel> = {
+  normal: 'normal',
+  curious: 'curious',
+  interesting: 'interesting',
+  adventurous: 'adventurous',
+  chaotic: 'chaotic evil',
+};
+
+/** Score → slider display word, via the band mapping. */
+export function weirdnessLabel(score: number): WeirdnessLabel {
+  return WEIRDNESS_BAND_LABEL[weirdnessBand(score)];
+}
