@@ -34,4 +34,26 @@ describe('buildGenerationSystemPrompt', () => {
     expect(prompt).toContain('label');
     expect(prompt).toContain('durationMinutes');
   });
+
+  it('escalates the required divergence count band by band', () => {
+    expect(buildGenerationSystemPrompt(10, [])).toMatch(/zero departures/i);
+    expect(buildGenerationSystemPrompt(30, [])).toMatch(/exactly one/i);
+    expect(buildGenerationSystemPrompt(50, [])).toMatch(/one full departure/i);
+    expect(buildGenerationSystemPrompt(70, [])).toMatch(/two or more departures/i);
+    const chaotic = buildGenerationSystemPrompt(95, []);
+    expect(chaotic).toMatch(/three or more/i);
+    expect(chaotic).toMatch(/core expectation/i);
+  });
+
+  it('forbids a lone single-ingredient change above curious', () => {
+    expect(buildGenerationSystemPrompt(70, [])).toMatch(
+      /single ingredient is NOT a departure/i,
+    );
+  });
+
+  it('requires a pre-emit divergence self-audit kept out of whySuggested', () => {
+    const prompt = buildGenerationSystemPrompt(70, []);
+    expect(prompt).toMatch(/self-audit/i);
+    expect(prompt).toMatch(/whySuggested/);
+  });
 });

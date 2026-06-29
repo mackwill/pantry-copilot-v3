@@ -9,17 +9,22 @@ import { type AIPantryChip, type WeirdnessBand, weirdnessBand } from '@pantry/co
  *     pantry ingredients, or a freeform prompt. Each entry defines the
  *     failure mode (the floor) rather than prescribing the destination.
  */
+/** The axes a recipe can diverge along — named once, referenced by the band
+ *  requirements below and the brainstorm step. */
+const DEPARTURE_AXES =
+  'cuisine, technique, flavor profile, hero ingredient, format, course, temperature, time of day';
+
 const BAND_GUIDANCE: Record<WeirdnessBand, string> = {
   normal:
-    'Posture: classic and conservative. Lean on familiar, broadly-recognized combinations and canonical techniques. Failure mode: a recipe a competent home cook would consider strange or attention-seeking.',
+    'Required divergence: ZERO departures. Stay canonical and conservative on purpose — familiar, broadly-recognized combinations and canonical technique. Failure mode: a recipe a competent home cook would consider strange or attention-seeking.',
   curious:
-    'Posture: mostly familiar with a light personal touch — one modest swap, addition, or technique tweak. The dish should still read as the thing it is. Failure mode: a perfectly textbook execution with no personality, or a dish whose central identity has been swapped out entirely.',
+    'Required divergence: EXACTLY ONE small move. A single ingredient swap or addition is acceptable ONLY in this band. The dish must still read as the thing it is. Failure mode: a perfectly textbook execution with no personality, or swapping out the dish\'s central identity.',
   interesting:
-    'Posture: notably creative while clearly edible and approachable. Vary one meaningful dimension — flavor profile, technique, or hero ingredient — but keep the result coherent and inviting. Failure mode: a recipe a cook would call "just the normal version."',
+    `Required divergence: ONE FULL departure on a meaningful axis (${DEPARTURE_AXES}) — more than an ingredient swap — while keeping the result coherent and inviting. Failure mode: a recipe a cook would call "just the normal version."`,
   adventurous:
-    'Posture: bold and inventive. Depart from the obvious answer along some meaningful axis — flavor profile, technique, cuisine cross-pollination, format, hero ingredient, course, or temperature. A lone ingredient swap is NOT a meaningful departure. Failure mode: the canonical/textbook version, or that version with a single item traded.',
+    `Required divergence: TWO OR MORE departures on DISTINCT axes (${DEPARTURE_AXES}). Failure mode: the canonical/textbook version, or that version with a single item traded.`,
   chaotic:
-    'Posture: genuinely unexpected and boundary-pushing, while always food-safe and actually edible. Meaningfully subvert expectations along whichever axis you choose (temperature, sweetness, texture, format, cuisine, course, time of day). Failure mode: anything a reader would call "normal."',
+    `Required divergence: THREE OR MORE departures on DISTINCT axes (${DEPARTURE_AXES}), at least one of which subverts a CORE expectation of the dish — its format, temperature, course, or cuisine identity. Always food-safe and genuinely edible. Failure mode: anything a reader would call "normal."`,
 };
 
 const BAND_BOUNDS: Record<WeirdnessBand, readonly [number, number]> = {
@@ -79,11 +84,13 @@ export function buildGenerationSystemPrompt(
     '- `rank_candidates` — after YOU brainstorm a wide candidate pool, pass the ideas in to get a pantry-aware shortlist.',
     '- `emit_recipe` — TERMINAL. Emit the final selected recipe as structured JSON.',
     'Workflow: think out loud about the request, call `read_pantry` first so you know what the user has, optionally triage with the other tools, then end with exactly one `emit_recipe` call that satisfies the schema.',
-    'Brainstorming discipline (the single biggest lever on quality): before committing, generate at least SIX distinct candidate ideas spanning at least FOUR axes (cuisine, format, technique, hero ingredient, course, temperature). Narrow ideation is the most common cause of bland output — do not skip the wide pass.',
+    `Brainstorming discipline (the single biggest lever on quality): before committing, generate at least SIX distinct candidate ideas spanning at least FOUR departure axes (${DEPARTURE_AXES}). Narrow ideation is the most common cause of bland output — do not skip the wide pass.`,
     'Pick the single strongest candidate for the user\'s request and emit exactly one recipe.',
     'Do not narrate your tool plans in `whySuggested` — that field is for the user.',
     `Weirdness band: ${band} (score ${String(weirdness)}/100). ${BAND_GUIDANCE[band]}`,
     intensityCalibration(weirdness, band),
+    'Departure floor: adding, removing, or substituting a single ingredient is NOT a departure for any band above `curious` — count such a change as zero.',
+    'Pre-emit self-audit: before calling `emit_recipe`, in your thinking list the departure axes you used and the resulting count, confirm the count meets the current band\'s required-divergence floor, and revise the recipe if it falls short. Keep this audit in your reasoning — never narrate it in `whySuggested`.',
   ];
 
   if (dietary.length > 0) {
