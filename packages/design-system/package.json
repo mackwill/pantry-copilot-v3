@@ -27,6 +27,7 @@
     "react-native-svg": { "optional": true }
   },
   "dependencies": {
+    "@pantry/contracts": "workspace:*",
     "lucide-react": "1.17.0",
     "lucide-react-native": "1.17.0"
   },

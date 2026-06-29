@@ -3,14 +3,16 @@ import { tokens } from '../../tokens/native.js';
 import { parseGradientStops, thumbTranslateX, valueFromTouch, weirdnessLabel } from './weirdness.js';
 
 describe('weirdnessLabel', () => {
-  it('maps values to the design vocabulary at breakpoints 25/55/85', () => {
+  it('maps values to the five-band design vocabulary', () => {
     expect(weirdnessLabel(0)).toBe('normal');
-    expect(weirdnessLabel(24)).toBe('normal');
-    expect(weirdnessLabel(25)).toBe('curious');
-    expect(weirdnessLabel(54)).toBe('curious');
-    expect(weirdnessLabel(55)).toBe('adventurous');
-    expect(weirdnessLabel(84)).toBe('adventurous');
-    expect(weirdnessLabel(85)).toBe('chaotic evil');
+    expect(weirdnessLabel(20)).toBe('normal');
+    expect(weirdnessLabel(21)).toBe('curious');
+    expect(weirdnessLabel(40)).toBe('curious');
+    expect(weirdnessLabel(41)).toBe('interesting');
+    expect(weirdnessLabel(60)).toBe('interesting');
+    expect(weirdnessLabel(61)).toBe('adventurous');
+    expect(weirdnessLabel(80)).toBe('adventurous');
+    expect(weirdnessLabel(81)).toBe('chaotic evil');
     expect(weirdnessLabel(100)).toBe('chaotic evil');
   });
 });

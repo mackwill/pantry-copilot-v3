@@ -15,6 +15,8 @@ describe('WeirdnessControl (native)', () => {
     expect(screen.getAllByText('normal').length).toBeGreaterThan(0);
     rerender(<WeirdnessControl value={95} />);
     expect(screen.getAllByText('chaotic evil').length).toBeGreaterThan(0);
+    rerender(<WeirdnessControl value={50} />);
+    expect(screen.getAllByText('interesting').length).toBeGreaterThan(0);
   });
 
   // The current word lives in a fixed-width slot: every vocabulary word is

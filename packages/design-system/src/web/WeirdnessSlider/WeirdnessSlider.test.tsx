@@ -13,20 +13,23 @@ describe('WeirdnessSlider', () => {
     expect(screen.getByText(label)).toBeTruthy();
   });
 
-  it('crosses label breakpoints at 25/55/85', () => {
-    const { rerender } = render(<WeirdnessSlider value={24} compact />);
+  it('crosses label breakpoints on the five-band scale', () => {
+    const { rerender } = render(<WeirdnessSlider value={20} compact />);
     expect(screen.getByText('normal')).toBeTruthy();
-    rerender(<WeirdnessSlider value={25} compact />);
+    rerender(<WeirdnessSlider value={21} compact />);
     expect(screen.getByText('curious')).toBeTruthy();
-    rerender(<WeirdnessSlider value={55} compact />);
+    rerender(<WeirdnessSlider value={41} compact />);
+    expect(screen.getByText('interesting')).toBeTruthy();
+    rerender(<WeirdnessSlider value={61} compact />);
     expect(screen.getByText('adventurous')).toBeTruthy();
-    rerender(<WeirdnessSlider value={85} compact />);
+    rerender(<WeirdnessSlider value={81} compact />);
     expect(screen.getByText('chaotic evil')).toBeTruthy();
   });
 
   it('shows the full vocabulary row only when not compact', () => {
     render(<WeirdnessSlider value={10} />);
     expect(screen.getByText('curious')).toBeTruthy();
+    expect(screen.getByText('interesting')).toBeTruthy();
     expect(screen.getByText('adventurous')).toBeTruthy();
     expect(screen.getByText('chaotic evil')).toBeTruthy();
     // current label + vocab row both say "normal" at value 10

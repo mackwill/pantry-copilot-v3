@@ -6,6 +6,7 @@ describe('WeirdnessControl', () => {
   it.each([
     [10, 'normal'],
     [40, 'curious'],
+    [50, 'interesting'],
     [70, 'adventurous'],
     [95, 'chaotic evil'],
   ])('shows the current vocabulary word for value %i', (value, label) => {

@@ -782,3 +782,17 @@ Home cards (`HeroPromptMobile`, `PromptWithChips`) now use the stacked
 This mirrors the `WeirdnessSlider` already used in the New-ask bottomsheet
 (board-faithful there). `WeirdnessControl` remains the board layout elsewhere
 (e.g. web hero). Driven by the usability bug, not a board change.
+
+## 2026-06-29 — Weirdness slider: 5-band vocabulary + contracts as source of truth
+
+The slider now renders **five** tick words (`normal · curious · interesting ·
+adventurous · chaotic evil`) instead of four. The board is silent on the
+weirdness slider (already a composed-from-primitives decision), so the band
+count is ours; we matched it to the 5-band system that drives the generation
+prompt so the visible label always equals the band feeding the model. The old
+`design-system` copy (4 labels, cutoffs 25/55/85) was a duplicate of the
+contracts band scheme and the source of the label/output mismatch — deleted.
+`design-system` now takes a real `@pantry/contracts` dependency and
+`shared/weirdness.ts` re-exports the vocabulary from there. The native
+current-word slot still sizes to the widest already-present words
+("adventurous" / "chaotic evil"); "interesting" is narrower, so no new max.
